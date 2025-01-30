@@ -1,26 +1,33 @@
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="./README/vapelogo-white.png">
-    <source media="(prefers-color-scheme: light)" srcset="./README/vapelogo-dark.png">
-    <img alt="vape logo" src="./README/vapelogo.png">
+    <source media="(prefers-color-scheme: dark)" srcset="./README/Lunar Vape Logo Dark.png">
+    <source media="(prefers-color-scheme: light)" srcset="./README/Lunar Vape Logo Light.png">
+    <img alt="vape logo" src="./README/Lunar Vape Logo Dark.png">
   </picture>
 </p>
 <h2 align="center">
-  A Roblox script built from the ground up for your precise needs!
+  A Fork of a powerful Roblox Script, made for ease of use.
   <br/>
-  Rise up to the top while remaining completely untouchable.
+  Be Stylish while crushing those against you.
 </h2>
 
 ## Contacts
-[Discord](https://discord.gg/ZqS836yx9k)
+- [Lunar Vape Discord](https://discord/dEKX9XnZwS)
 <br/>
-[Youtube](https://youtube.com/c/7GrandDadVape)
+- [Vape Discord](https://discord.gg/ZqS836yx9k)
+<br/>
+- [AtTheZenith's Youtube](https://youtube.com/c/AtTheZenith)
+<br/>
+- [Xylex's Youtube](https://youtube.com/c/7GrandDadVape)
 
 ## Usage
-1. Download the specific scripting utility of your choice.
+1. Download one of the supported executors below:
+    - PC: (AWP, Argon, Swift, Salad)
+    - Mobile: Any 100% UNC executor with quality functions
+
 2. Execute the provided loadstring below.
 ```luau
-loadstring(game:HttpGet("https://raw.githubusercontent.com/7GrandDadPGN/VapeV4ForRoblox/main/NewMainScript.lua", true))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/AtTheZenith/LunarVape/main/NewMainScript.lua", true))()
 ```
 
 ## Possible Issues
