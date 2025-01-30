@@ -8,7 +8,7 @@
 <h2 align="center">
   A Fork of a powerful Roblox Script, made for ease of use.
   <br/>
-  Be Stylish while crushing those against you.
+  Be stylish while crushing those against you without trying.
 </h2>
 
 ## Contacts
