@@ -13,12 +13,10 @@
 
 ## Contacts
 - [Lunar Vape Discord](https://discord/dEKX9XnZwS)
-<br/>
 - [Vape Discord](https://discord.gg/ZqS836yx9k)
-<br/>
 - [AtTheZenith's Youtube](https://youtube.com/c/AtTheZenith)
-<br/>
 - [Xylex's Youtube](https://youtube.com/c/7GrandDadVape)
+<br/>
 
 ## Usage
 1. Download one of the supported executors below:
