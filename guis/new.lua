@@ -6333,16 +6333,6 @@ mainapi:Clean(textgui.Children:GetPropertyChangedSignal('AbsolutePosition'):Conn
 	end
 end))
 
-local VapeLogoShadow = VapeLogo:Clone()
-VapeLogoShadow.Position = UDim2.fromOffset(1, 1)
-VapeLogoShadow.ZIndex = 0
-VapeLogoShadow.Visible = true
-VapeLogoShadow.ImageColor3 = Color3.new()
-VapeLogoShadow.ImageTransparency = 0.65
-VapeLogoShadow.Parent = VapeLogo
-VapeLogoShadow.Logo2.ZIndex = 0
-VapeLogoShadow.Logo2.ImageColor3 = Color3.new()
-VapeLogoShadow.Logo2.ImageTransparency = 0.65
 local VapeLogoGradient = Instance.new('UIGradient')
 VapeLogoGradient.Rotation = 90
 VapeLogoGradient.Parent = VapeLogo
