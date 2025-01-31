@@ -8,22 +8,20 @@
 <h2 align="center">
   A Fork of a powerful Roblox Script, made for ease of use.
   <br/>
-  Be Stylish while crushing those against you.
+  Be stylish while crushing those against you without trying.
 </h2>
 
 ## Contacts
 - [Lunar Vape Discord](https://discord/dEKX9XnZwS)
-<br/>
 - [Vape Discord](https://discord.gg/ZqS836yx9k)
+- [AtTheZenith's Youtube](https://youtube.com/@AtTheZenith)
+- [7GrandDad (xylex)'s Youtube](https://youtube.com/@7GrandDadVape)
 <br/>
-- [AtTheZenith's Youtube](https://youtube.com/c/AtTheZenith)
-<br/>
-- [Xylex's Youtube](https://youtube.com/c/7GrandDadVape)
 
 ## Usage
 1. Download one of the supported executors below:
-    - PC: (AWP, Argon, Swift, Salad)
-    - Mobile: Any 100% UNC executor with quality functions
+- PC: (AWP, Argon, Swift, Salad)
+- Mobile: Any 100% UNC executor with quality functions
 
 2. Execute the provided loadstring below.
 ```luau
@@ -35,14 +33,17 @@ Half of the time its usually the scripting utility at fault, please make sure th
 1. Supporting file functions & the debug library.
 2. Not implementing lua generated / half baked versions of such functions resulting in unintended behavior.
 3. Maintaing the same behavior across all usages of said functions.
+
 ### User Issues
 If its not the supposed utility at fault, please try some troubleshooting steps.
 1. Deleting the newvape folder (WITH THE GAME CLOSED).
-2. Making sure you have connection to [the main loadstring.](https://raw.githubusercontent.com/7GrandDadPGN/VapeV4ForRoblox/refs/heads/main/NewMainScript.lua)
+2. Making sure you have connection to [the main loadstring](https://raw.githubusercontent.com/7GrandDadPGN/VapeV4ForRoblox/refs/heads/main/NewMainScript.lua).
 3. Ensuring no external script is conflicting with vape.
 
 ## Developers & Credits
-[7GrandDad](https://github.com/7GrandDadPGN) - Lead maintainer of the project - vaperoblox on Discord
+[AtTheZenith](https://github.com/AtTheZenith) - Lead maintainer of the LunarVape fork - @atthezenith on Discord
+<br/>
+[7GrandDad](https://github.com/7GrandDadPGN) - Lead maintainer of the parent project, VapeV4ForRoblox - @vaperoblox on Discord
 <br/>
 [rce-incorporated](https://github.com/rce-incorporated/Fiu) - Luau bytecode disassembly with modifications
 <br/>
