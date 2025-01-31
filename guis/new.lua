@@ -1,18 +1,18 @@
 local mainapi = {
 	Categories = {},
 	GUIColor = {
-		Hue = 0.46,
-		Sat = 0.96,
-		Value = 0.52
+		Hue = 0.78,
+		Sat = 0.6,
+		Value = 0.62
 	},
 	HeldKeybinds = {},
-	Keybind = {'RightShift'},
+	Keybind = {'M'},
 	Loaded = false,
 	Libraries = {},
 	Modules = {},
 	Place = game.PlaceId,
-	Profile = 'default',
-	Profiles = {},
+	Profile = 'Moon Profile PC',
+	Profiles = {'Moon Profile PC','Moon Profile Mobile'},
 	RainbowSpeed = {Value = 1},
 	RainbowUpdateSpeed = {Value = 60},
 	RainbowTable = {},
@@ -51,11 +51,11 @@ local tween = {
 	tweenstwo = {}
 }
 local uipallet = {
-	Main = Color3.fromRGB(26, 25, 26),
-	Text = Color3.fromRGB(200, 200, 200),
-	Font = Font.fromEnum(Enum.Font.Arial),
-	FontSemiBold = Font.fromEnum(Enum.Font.Arial, Enum.FontWeight.SemiBold),
-	Tween = TweenInfo.new(0.16, Enum.EasingStyle.Linear)
+	Main = Color3.fromRGB(28, 20, 42),
+	Text = Color3.fromRGB(235, 225, 255),
+	Font = Font.fromEnum(Enum.Font.Gotham),
+	FontSemiBold = Font.fromEnum(Enum.Font.Gotham, Enum.FontWeight.SemiBold),
+	Tween = TweenInfo.new(0.15, Enum.EasingStyle.Circular)
 }
 
 local getcustomassets = {
@@ -2491,7 +2491,7 @@ function mainapi:CreateGUI()
 	local logov4 = Instance.new('ImageLabel')
 	logov4.Name = 'V4Logo'
 	logov4.Size = UDim2.fromOffset(19, 18)
-	logov4.Position = UDim2.new(0, -19, 0, 1)
+	logov4.Position = UDim2.new(0, -18, 0, 0)
 	logov4.BackgroundTransparency = 1
 	logov4.Image = getcustomasset('newvape/assets/new/guiv4.png')
 	logov4.Parent = logo
@@ -6304,7 +6304,7 @@ local VapeLabels = {}
 local VapeLogo = Instance.new('ImageLabel')
 VapeLogo.Name = 'Logo'
 VapeLogo.Size = UDim2.fromOffset(80, 21)
-VapeLogo.Position = UDim2.new(1, -122, 0, 3)
+VapeLogo.Position = UDim2.new(1, -98, 0, 3)
 VapeLogo.BackgroundTransparency = 1
 VapeLogo.BorderSizePixel = 0
 VapeLogo.Visible = false
@@ -6327,7 +6327,7 @@ end))
 local VapeLogoV4 = Instance.new('ImageLabel')
 VapeLogoV4.Name = 'Logo2'
 VapeLogoV4.Size = UDim2.fromOffset(22,21)
-VapeLogoV4.Position = UDim2.new(1, -142, 0, 1)
+VapeLogoV4.Position = UDim2.new(1, -120, 0, 1)
 VapeLogoV4.BackgroundColor3 = Color3.new()
 VapeLogoV4.BackgroundTransparency = 1
 VapeLogoV4.BorderSizePixel = 0
