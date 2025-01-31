@@ -20,8 +20,8 @@
 
 ## Usage
 1. Download one of the supported executors below:
-    - PC: (AWP, Argon, Swift, Salad)
-    - Mobile: Any 100% UNC executor with quality functions
+- PC: (AWP, Argon, Swift, Salad)
+- Mobile: Any 100% UNC executor with quality functions
 
 2. Execute the provided loadstring below.
 ```luau
