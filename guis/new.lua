@@ -6641,7 +6641,6 @@ function mainapi:UpdateTextGUI(afterload)
 		local right = textgui.Children.AbsolutePosition.X > (gui.AbsoluteSize.X / 2)
 		VapeLogo.Visible = textguiwatermark.Enabled
 		VapeLogo.Position = right and UDim2.new(1 / VapeTextScale.Scale, -113, 0, 6) or UDim2.fromOffset(0, 6)
-		VapeLogoShadow.Visible = textguishadow.Enabled
 		VapeLabelCustom.Text = textguibox.Value
 		VapeLabelCustom.FontFace = textguifontcustom.Value
 		VapeLabelCustom.Visible = VapeLabelCustom.Text ~= '' and textguitext.Enabled
