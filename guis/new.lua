@@ -2483,7 +2483,7 @@ function mainapi:CreateGUI()
 	local logo = Instance.new('ImageLabel')
 	logo.Name = 'VapeLogo'
 	logo.Size = UDim2.fromOffset(62, 18)
-	logo.Position = UDim2.fromOffset(30, 10)
+	logo.Position = UDim2.fromOffset(32, 10)
 	logo.BackgroundTransparency = 1
 	logo.Image = getcustomasset('newvape/assets/new/guivape.png')
 	logo.ImageColor3 = select(3, uipallet.Main:ToHSV()) > 0.5 and uipallet.Text or Color3.new(1, 1, 1)
@@ -3085,10 +3085,10 @@ function mainapi:CreateGUI()
 	function categoryapi:CreateGUISlider(optionsettings)
 		local optionapi = {
 			Type = 'GUISlider',
-			Notch = 4,
-			Hue = 0.46,
-			Sat = 0.96,
-			Value = 0.52,
+			Notch = 6,
+			Hue = 0.78,
+			Sat = 0.6,
+			Value = 0.62,
 			Rainbow = false,
 			CustomColor = false
 		}
@@ -3098,7 +3098,7 @@ function mainapi:CreateGUI()
 			Color3.fromRGB(252, 179, 22),
 			Color3.fromRGB(5, 133, 104),
 			Color3.fromRGB(47, 122, 229),
-			Color3.fromRGB(126, 84, 217),
+			Color3.fromRGB(153, 51, 153),
 			Color3.fromRGB(232, 96, 152)
 		}
 		local slidercolorpos = {
@@ -6303,8 +6303,8 @@ textguicolorcustom = textgui:CreateColorSlider({
 local VapeLabels = {}
 local VapeLogo = Instance.new('ImageLabel')
 VapeLogo.Name = 'Logo'
-VapeLogo.Size = UDim2.fromOffset(80, 21)
-VapeLogo.Position = UDim2.new(1, -98, 0, 3)
+VapeLogo.Size = UDim2.fromOffset(120, 31)
+VapeLogo.Position = UDim2.new(1, -56, 0, 3)
 VapeLogo.BackgroundTransparency = 1
 VapeLogo.BorderSizePixel = 0
 VapeLogo.Visible = false
@@ -6326,8 +6326,8 @@ end))
 
 local VapeLogoV4 = Instance.new('ImageLabel')
 VapeLogoV4.Name = 'Logo2'
-VapeLogoV4.Size = UDim2.fromOffset(22,21)
-VapeLogoV4.Position = UDim2.new(1, -120, 0, 1)
+VapeLogoV4.Size = UDim2.fromOffset(33,31)
+VapeLogoV4.Position = UDim2.new(1, -98, 0, 1)
 VapeLogoV4.BackgroundColor3 = Color3.new()
 VapeLogoV4.BackgroundTransparency = 1
 VapeLogoV4.BorderSizePixel = 0
