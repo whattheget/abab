@@ -3399,7 +3399,7 @@ run(function()
 	local Folder = Instance.new('Folder')
 	Folder.Parent = vape.gui
 	local methodused
-	local fontitems = {'Arial'}
+	local fontitems = {'Gotham'}
 	local kititems = {
 		jade = 'jade_hammer',
 		archer = 'tactical_crossbow',
@@ -3703,7 +3703,7 @@ run(function()
 	})
 	FontOption = NameTags:CreateFont({
 		Name = 'Font',
-		Blacklist = 'Arial',
+		Blacklist = 'Gotham',
 		Function = function() 
 			if NameTags.Enabled then 
 				NameTags:Toggle() 

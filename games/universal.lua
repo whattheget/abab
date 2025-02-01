@@ -4852,7 +4852,7 @@ run(function()
 	})
 	FontOption = NameTags:CreateFont({
 		Name = 'Font',
-		Blacklist = 'Arial',
+		Blacklist = 'Gotham',
 		Function = function()
 			if NameTags.Enabled then
 				NameTags:Toggle()
@@ -5389,7 +5389,7 @@ run(function()
 	})
 	FontOption = SessionInfo:CreateFont({
 		Name = 'Font',
-		Blacklist = 'Arial'
+		Blacklist = 'Gotham'
 	})
 	SessionInfo:CreateColorSlider({
 		Name = 'Background Color',
@@ -5733,7 +5733,7 @@ run(function()
 	})
 	FontOption = Waypoints:CreateFont({
 		Name = 'Font',
-		Blacklist = 'Arial',
+		Blacklist = 'Gotham',
 		Function = function()
 			if Waypoints.Enabled then
 				Waypoints:Toggle()

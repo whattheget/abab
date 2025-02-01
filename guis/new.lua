@@ -1,9 +1,9 @@
 local mainapi = {
 	Categories = {},
 	GUIColor = {
-		Hue = 0.78,
-		Sat = 0.6,
-		Value = 0.62
+		Hue = 0.82,
+		Sat = 0.56,
+		Value = 0.82
 	},
 	HeldKeybinds = {},
 	Keybind = {'M'},
@@ -19,7 +19,7 @@ local mainapi = {
 	Scale = {Value = 1},
 	ThreadFix = setthreadidentity and true or false,
 	ToggleNotifications = {},
-	Version = '4.18',
+	Version = 'preRelease 1',
 	Windows = {}
 }
 
@@ -538,9 +538,9 @@ components = {
 	ColorSlider = function(optionsettings, children, api)
 		local optionapi = {
 			Type = 'ColorSlider',
-			Hue = optionsettings.DefaultHue or 0.44,
-			Sat = optionsettings.DefaultSat or 1,
-			Value = optionsettings.DefaultValue or 1,
+			Hue = optionsettings.DefaultHue or 0.82,
+			Sat = optionsettings.DefaultSat or 0.56,
+			Value = optionsettings.DefaultValue or 0.82,
 			Opacity = optionsettings.DefaultOpacity or 1,
 			Rainbow = false,
 			Index = 0
@@ -2552,7 +2552,7 @@ function mainapi:CreateGUI()
 	settingsversion.Size = UDim2.new(1, 0, 0, 16)
 	settingsversion.Position = UDim2.new(0, 0, 1, -16)
 	settingsversion.BackgroundTransparency = 1
-	settingsversion.Text = 'Vape '..mainapi.Version..' '..(
+	settingsversion.Text = 'Lunar Vape '..mainapi.Version..' '..(
 		isfile('newvape/profiles/commit.txt') and readfile('newvape/profiles/commit.txt'):sub(1, 6) or ''
 	)..' '
 	settingsversion.TextColor3 = color.Dark(uipallet.Text, 0.43)
@@ -3085,30 +3085,24 @@ function mainapi:CreateGUI()
 	function categoryapi:CreateGUISlider(optionsettings)
 		local optionapi = {
 			Type = 'GUISlider',
-			Notch = 6,
-			Hue = 0.78,
-			Sat = 0.6,
-			Value = 0.62,
+			Notch = 4,
+			Hue = 0.82,
+			Sat = 0.56,
+			Value = 0.82,
 			Rainbow = false,
 			CustomColor = false
 		}
 		local slidercolors = {
-			Color3.fromRGB(250, 50, 56),
-			Color3.fromRGB(242, 99, 33),
-			Color3.fromRGB(252, 179, 22),
-			Color3.fromRGB(5, 133, 104),
-			Color3.fromRGB(47, 122, 229),
-			Color3.fromRGB(153, 51, 153),
-			Color3.fromRGB(232, 96, 152)
+			Color3.fromRGB(16, 67, 159),
+			Color3.fromRGB(135, 76, 204),
+			Color3.fromRGB(198, 91, 207),
+      Color3.fromRGB(242, 123, 189),
 		}
 		local slidercolorpos = {
-			4,
-			33,
-			62,
-			90,
-			119,
-			148,
-			177
+			13,
+			63,
+			113,
+			163
 		}
 
 		local function createSlider(name, gradientColor)
@@ -3249,9 +3243,9 @@ function mainapi:CreateGUI()
 		holder.BorderSizePixel = 0
 		holder.Parent = slider
 		local colornum = 0
-		for i, color in slidercolors do
+		for _, color in slidercolors do
 			local colorframe = Instance.new('Frame')
-			colorframe.Size = UDim2.fromOffset(27 + (((i + 1) % 2) == 0 and 1 or 0), 2)
+			colorframe.Size = UDim2.fromOffset(49, 2)
 			colorframe.Position = UDim2.fromOffset(colornum, 0)
 			colorframe.BackgroundColor3 = color
 			colorframe.BorderSizePixel = 0
@@ -3370,7 +3364,7 @@ function mainapi:CreateGUI()
 					self:Toggle()
 				end
 				self.CustomColor = false
-				h, s, v = slidercolors[n]:ToHSV()
+				h, s, v = slidercolors[math.clamp(n, 1, 4)]:ToHSV()
 			else
 				self.CustomColor = true
 			end
@@ -3399,7 +3393,7 @@ function mainapi:CreateGUI()
 				knob.Image = normalknob
 				knob.ImageColor3 = Color3.fromHSV(self.Hue, self.Sat, self.Value)
 				tween:Tween(knob, uipallet.Tween, {
-					Position = UDim2.fromOffset(slidercolorpos[n or 4] - 3, -5)
+					Position = UDim2.fromOffset(slidercolorpos[math.clamp((n or 4), 1, 4)], -5)
 				})
 			end
 
@@ -6113,7 +6107,7 @@ local textguisort = textgui:CreateDropdown({
 })
 local textguifont = textgui:CreateFont({
 	Name = 'Font',
-	Blacklist = 'Arial',
+	Blacklist = 'Gotham',
 	Function = function()
 		mainapi:UpdateTextGUI()
 	end
@@ -6271,7 +6265,7 @@ textguibox = textgui:CreateTextBox({
 })
 textguifontcustom = textgui:CreateFont({
 	Name = 'Custom Font',
-	Blacklist = 'Arial',
+	Blacklist = 'Gotham',
 	Function = function()
 		mainapi:UpdateTextGUI()
 	end,
@@ -6504,7 +6498,7 @@ targetinfob.Parent = targetinfobkg
 
 targetinfoobj:CreateFont({
 	Name = 'Font',
-	Blacklist = 'Arial',
+	Blacklist = 'Gotham',
 	Function = function(val)
 		targetinfoname.FontFace = val
 	end
@@ -6650,7 +6644,7 @@ function mainapi:UpdateTextGUI(afterload)
 	if textgui.Button.Enabled then
 		local right = textgui.Children.AbsolutePosition.X > (gui.AbsoluteSize.X / 2)
 		VapeLogo.Visible = textguiwatermark.Enabled
-	  VapeLogo.Position = right and UDim2.new(1 / VapeTextScale.Scale, -92, 0, 6) or UDim2.fromOffset(21, 6)
+	  VapeLogo.Position = right and UDim2.new(1 / VapeTextScale.Scale, -78, 0, 6) or UDim2.fromOffset(21, 6)
 	  VapeLogoShadow.Visible = textguishadow.Enabled	
     VapeLabelCustom.Text = textguibox.Value
 		VapeLabelCustom.FontFace = textguifontcustom.Value
@@ -6782,8 +6776,8 @@ function mainapi:UpdateGUI(hue, sat, val, default)
 	if not default and mainapi.GUIColor.Rainbow then return end
 	if textgui.Button.Enabled then
 		VapeLogoGradient.Color = ColorSequence.new({
-			ColorSequenceKeypoint.new(0, Color3.fromHSV(hue, sat, val)),
-			ColorSequenceKeypoint.new(1, textguigradient.Enabled and Color3.fromHSV(mainapi:Color((hue - 0.075) % 1)) or Color3.fromHSV(hue, sat, val))
+			ColorSequenceKeypoint.new(0, Color3.fromRGB(198,106,182)),
+			ColorSequenceKeypoint.new(1, Color3.fromRGB(142,106,208))
 		})
 		VapeLogoGradient2.Color = textguigradient.Enabled and textguigradientv4.Enabled and VapeLogoGradient.Color or ColorSequence.new({
 			ColorSequenceKeypoint.new(0, Color3.new(1, 1, 1)),
