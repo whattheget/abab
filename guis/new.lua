@@ -2483,7 +2483,7 @@ function mainapi:CreateGUI()
 	local logo = Instance.new('ImageLabel')
 	logo.Name = 'VapeLogo'
 	logo.Size = UDim2.fromOffset(62, 18)
-	logo.Position = UDim2.fromOffset(32, 10)
+	logo.Position = UDim2.fromOffset(30, 10)
 	logo.BackgroundTransparency = 1
 	logo.Image = getcustomasset('newvape/assets/new/guivape.png')
 	logo.ImageColor3 = select(3, uipallet.Main:ToHSV()) > 0.5 and uipallet.Text or Color3.new(1, 1, 1)
@@ -2491,7 +2491,7 @@ function mainapi:CreateGUI()
 	local logov4 = Instance.new('ImageLabel')
 	logov4.Name = 'V4Logo'
 	logov4.Size = UDim2.fromOffset(19, 18)
-	logov4.Position = UDim2.new(0, -18, 0, 0)
+	logov4.Position = UDim2.new(0, -19, 0, 0)
 	logov4.BackgroundTransparency = 1
 	logov4.Image = getcustomasset('newvape/assets/new/guiv4.png')
 	logov4.Parent = logo
@@ -6301,15 +6301,6 @@ textguicolorcustom = textgui:CreateColorSlider({
 ]]
 
 local VapeLabels = {}
-local VapeLogoV4 = Instance.new('ImageLabel')
-VapeLogoV4.Name = 'Logo2'
-VapeLogoV4.Size = UDim2.fromOffset(22,21)
-VapeLogoV4.Position = UDim2.new(0, 0, 0, 8)
-VapeLogoV4.BackgroundColor3 = Color3.new()
-VapeLogoV4.BackgroundTransparency = 1
-VapeLogoV4.BorderSizePixel = 0
-VapeLogoV4.Image = getcustomasset('newvape/assets/new/textv4.png')
-VapeLogoV4.Parent = textgui.Children
 local VapeLogo = Instance.new('ImageLabel')
 VapeLogo.Name = 'Logo'
 VapeLogo.Size = UDim2.fromOffset(80, 21)
@@ -6319,7 +6310,7 @@ VapeLogo.BorderSizePixel = 0
 VapeLogo.Visible = false
 VapeLogo.BackgroundColor3 = Color3.new()
 VapeLogo.Image = getcustomasset('newvape/assets/new/textvape.png')
-VapeLogo.Parent = VapeLogoV4
+VapeLogo.Parent = textgui.Children
 
 local lastside = textgui.Children.AbsolutePosition.X > (gui.AbsoluteSize.X / 2)
 mainapi:Clean(textgui.Children:GetPropertyChangedSignal('AbsolutePosition'):Connect(function()
@@ -6333,6 +6324,25 @@ mainapi:Clean(textgui.Children:GetPropertyChangedSignal('AbsolutePosition'):Conn
 	end
 end))
 
+local VapeLogoV4 = Instance.new('ImageLabel')
+VapeLogoV4.Name = 'Logo2'
+VapeLogoV4.Size = UDim2.fromOffset(22, 21)
+VapeLogoV4.Position = UDim2.new(0, -21, 0, 0)
+VapeLogoV4.BackgroundColor3 = Color3.new()
+VapeLogoV4.BackgroundTransparency = 1
+VapeLogoV4.BorderSizePixel = 0
+VapeLogoV4.Image = getcustomasset('newvape/assets/new/textv4.png')
+VapeLogoV4.Parent = VapeLogo
+local VapeLogoShadow = VapeLogo:Clone()
+VapeLogoShadow.Position = UDim2.fromOffset(1, 1)
+VapeLogoShadow.ZIndex = 0
+VapeLogoShadow.Visible = true
+VapeLogoShadow.ImageColor3 = Color3.new()
+VapeLogoShadow.ImageTransparency = 0.65
+VapeLogoShadow.Parent = VapeLogo
+VapeLogoShadow.Logo2.ZIndex = 0
+VapeLogoShadow.Logo2.ImageColor3 = Color3.new()
+VapeLogoShadow.Logo2.ImageTransparency = 0.65
 local VapeLogoGradient = Instance.new('UIGradient')
 VapeLogoGradient.Rotation = 90
 VapeLogoGradient.Parent = VapeLogo
@@ -6640,8 +6650,9 @@ function mainapi:UpdateTextGUI(afterload)
 	if textgui.Button.Enabled then
 		local right = textgui.Children.AbsolutePosition.X > (gui.AbsoluteSize.X / 2)
 		VapeLogo.Visible = textguiwatermark.Enabled
-		VapeLogo.Position = right and UDim2.new(1 / VapeTextScale.Scale, -113, 0, 6) or UDim2.fromOffset(0, 6)
-		VapeLabelCustom.Text = textguibox.Value
+	  VapeLogo.Position = right and UDim2.new(1 / VapeTextScale.Scale, -92, 0, 6) or UDim2.fromOffset(21, 6)
+	  VapeLogoShadow.Visible = textguishadow.Enabled	
+    VapeLabelCustom.Text = textguibox.Value
 		VapeLabelCustom.FontFace = textguifontcustom.Value
 		VapeLabelCustom.Visible = VapeLabelCustom.Text ~= '' and textguitext.Enabled
 		VapeLabelCustomShadow.Visible = VapeLabelCustom.Visible and textguishadow.Enabled
