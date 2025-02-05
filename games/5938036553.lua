@@ -1,7 +1,7 @@
 local loadstring = function(...)
 	local res, err = loadstring(...)
 	if err and vape then 
-		vape:CreateNotification('Vape', 'Failed to load : '..err, 30, 'alert') 
+		vape:CreateNotification('Lunar Vape', 'Failed to load : '..err, 30, 'alert') 
 	end
 	return res
 end
@@ -26,8 +26,10 @@ local function downloadFile(path, func)
 	end
 	return (func or readfile)(path)
 end
-local run = function(func) 
-	func() 
+local run = function(blacklist, func)
+  if type(blacklist) == 'function' then blacklist(); return end
+	if table.find(blacklist, (identifyexecutor())) then return end
+  func()
 end
 local cloneref = cloneref or function(obj) 
 	return obj 
@@ -83,11 +85,11 @@ if not select(1, ...) then
 					return
 				end
 			end
-			notif('Vape', 'Failed to find actor', 10, 'alert')
+			notif('Lunar Vape', 'Failed to find actor', 10, 'alert')
 		end)
 	else
 		vape.Load = function()
-			notif('Vape', 'Missing actor functions.', 10, 'alert')
+			notif('Lunar Vape', 'Missing actor functions.', 10, 'alert')
 		end
 	end
 
@@ -139,7 +141,7 @@ local function hookEvent(id, rfunc)
 	end)
 
 	if not suc then 
-		notif('Vape', 'Failed to hook ('..id..')', 10, 'alert') 
+		notif('Lunar Vape', 'Failed to hook ('..id..')', 10, 'alert') 
 	end
 
 	return type(res) == 'function' and res or function() end

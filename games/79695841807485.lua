@@ -1,4 +1,8 @@
-local run = function(func) func() end
+local run = function(blacklist, func)
+  if type(blacklist) == 'function' then blacklist(); return end
+  if table.find(blacklist, (identifyexecutor())) then return end     ■■ Undefined field `find`.
+  func()
+end
 local cloneref = cloneref or function(obj) return obj end
 
 local playersService = cloneref(game:GetService('Players'))
@@ -51,7 +55,7 @@ run(function()
 
 		for name in map do
 			if not scripts[name] then
-				vape:CreateNotification('Vape', 'Unable to find script: '..name, 10, 'alert')
+				vape:CreateNotification('Lunar Vape', 'Unable to find script: '..name, 10, 'alert')
 				return false
 			end
 		end

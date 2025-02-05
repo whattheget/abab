@@ -1,5 +1,7 @@
-local run = function(func)
-	func()
+local run = function(blacklist, func)
+  if type(blacklist) == 'function' then blacklist(); return end
+	if table.find(blacklist, (identifyexecutor())) then return end
+  func()
 end
 local cloneref = cloneref or function(obj)
 	return obj
@@ -23,7 +25,7 @@ local contextActionService = cloneref(game:GetService('ContextActionService'))
 local coreGui = cloneref(game:GetService('CoreGui'))
 local starterGui = cloneref(game:GetService('StarterGui'))
 
-local isnetworkowner = identifyexecutor and table.find({'AWP', 'Nihon'}, ({identifyexecutor()})[1]) and isnetworkowner or function()
+local isnetworkowner = identifyexecutor and table.find({'AWP', 'Nihon'}, (identifyexecutor())) and isnetworkowner or function()
 	return true
 end
 local gameCamera = workspace.CurrentCamera
@@ -784,7 +786,7 @@ run(function()
 	for i, v in remoteNames do
 		local remote = dumpRemote(debug.getconstants(v))
 		if remote == '' then
-			notif('Vape', 'Failed to grab remote ('..i..')', 10, 'alert')
+			notif('Lunar Vape', 'Failed to grab remote ('..i..')', 10, 'alert')
 		end
 		remotes[i] = remote
 	end
@@ -2271,7 +2273,7 @@ run(function()
 					end)
 				end
 
-				if Animation.Enabled and not (identifyexecutor and table.find({'Argon', 'Delta'}, ({identifyexecutor()})[1])) then
+				if Animation.Enabled and not (identifyexecutor and table.find({'Argon', 'Delta'}, (identifyexecutor()))) then
 					local fake = {
 						Controllers = {
 							ViewmodelController = {

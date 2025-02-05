@@ -77,7 +77,8 @@ local getcustomassets = {
 	['newvape/assets/old/textv4.png'] = 'rbxasset://textv4.png',
 	['newvape/assets/old/utilityicon.png'] = 'rbxasset://utilityicon.png',
 	['newvape/assets/old/vape.png'] = 'rbxassetid://14373395239',
-	['newvape/assets/old/worldicon.png'] = 'rbxasset://worldicon.png'
+	['newvape/assets/old/worldicon.png'] = 'rbxasset://worldicon.png',
+	['newvape/assets/old/lunar.png'] = 'rbxassetid://131166874245822',
 }
 
 local isfile = isfile or function(file)
@@ -3094,7 +3095,7 @@ function mainapi:Load(skipgui, profile)
 		guidata = loadJson('newvape/profiles/'..game.GameId..'.gui.txt')
 		if not guidata then
 			guidata = {Categories = {}}
-			self:CreateNotification('Vape', 'Failed to load GUI settings.', 10, 'alert')
+			self:CreateNotification('Lunar Vape', 'Failed to load GUI settings.', 10, 'alert')
 			savecheck = false
 		end
 
@@ -3142,7 +3143,7 @@ function mainapi:Load(skipgui, profile)
 				Modules = {},
 				Legit = {}
 			}
-			self:CreateNotification('Vape', 'Failed to load '..self.Profile..' profile.', 10, 'alert')
+			self:CreateNotification('Lunar Vape', 'Failed to load '..self.Profile..' profile.', 10, 'alert')
 			savecheck = false
 		end
 
@@ -3490,12 +3491,8 @@ mainapi:CreateCategory({
 	Icon = getcustomasset('newvape/assets/old/worldicon.png')
 })
 mainapi:CreateCategory({
-	Name = 'Inventory',
-	Icon = getcustomasset('newvape/assets/old/worldicon.png')
-})
-mainapi:CreateCategory({
-	Name = 'Minigames',
-	Icon = getcustomasset('newvape/assets/old/worldicon.png')
+	Name = 'Lunar Vape',
+	Icon = getcustomasset('newvape/assets/old/guiv4.png')
 })
 mainapi.Legit = mainapi:CreateLegit({
 	Name = 'Legit'

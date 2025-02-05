@@ -1,7 +1,7 @@
 local loadstring = function(...)
 	local res, err = loadstring(...)
 	if err and vape then
-		vape:CreateNotification('Vape', 'Failed to load : '..err, 30, 'alert')
+		vape:CreateNotification('Lunar Vape', 'Failed to load : '..err, 30, 'alert')
 	end
 	return res
 end
@@ -26,8 +26,10 @@ local function downloadFile(path, func)
 	end
 	return (func or readfile)(path)
 end
-local run = function(func)
-	func()
+local run = function(blacklist, func)
+  if type(blacklist) == 'function' then blacklist(); return end
+	if table.find(blacklist, (identifyexecutor())) then return end
+  func()
 end
 local queue_on_teleport = queue_on_teleport or function() end
 local cloneref = cloneref or function(obj)
@@ -49,7 +51,7 @@ local textChatService = cloneref(game:GetService('TextChatService'))
 local contextService = cloneref(game:GetService('ContextActionService'))
 local coreGui = cloneref(game:GetService('CoreGui'))
 
-local isnetworkowner = identifyexecutor and table.find({'AWP', 'Nihon'}, ({identifyexecutor()})[1]) and isnetworkowner or function()
+local isnetworkowner = identifyexecutor and table.find({'AWP', 'Nihon'}, (identifyexecutor())) and isnetworkowner or function()
 	return true
 end
 local gameCamera = workspace.CurrentCamera or workspace:FindFirstChildWhichIsA('Camera')
@@ -152,7 +154,7 @@ local function serverHop(pointer, filter)
 		table.insert(visited, game.JobId)
 	end
 	if not pointer then
-		notif('Vape', 'Searching for an available server.', 2)
+		notif('Lunar Vape', 'Searching for an available server.', 2)
 	end
 
 	local suc, httpdata = pcall(function()
@@ -165,7 +167,7 @@ local function serverHop(pointer, filter)
 				cacheExpire, cache = tick() + 60, httpdata
 				table.insert(attempted, v.id)
 
-				notif('Vape', 'Found! Teleporting.', 5)
+				notif('Lunar Vape', 'Found! Teleporting.', 5)
 				teleportService:TeleportToPlaceInstance(game.PlaceId, v.id)
 				return
 			end
@@ -174,10 +176,10 @@ local function serverHop(pointer, filter)
 		if data.nextPageCursor then
 			serverHop(data.nextPageCursor, filter)
 		else
-			notif('Vape', 'Failed to find an available server.', 5, 'warning')
+			notif('Lunar Vape', 'Failed to find an available server.', 5, 'warning')
 		end
 	else
-		notif('Vape', 'Failed to grab servers. ('..(data and data.errors[1].message or 'no data')..')', 5, 'warning')
+		notif('Lunar Vape', 'Failed to grab servers. ('..(data and data.errors[1].message or 'no data')..')', 5, 'warning')
 	end
 end
 
@@ -421,7 +423,7 @@ run(function()
 			if self.localprio == 0 then
 				olduninject = vape.Uninject
 				vape.Uninject = function()
-					notif('Vape', 'No escaping the private members :)', 10)
+					notif('Lunar Vape', 'No escaping the private members :)', 10)
 				end
 				if joined then
 					task.wait(10)
@@ -445,7 +447,7 @@ run(function()
 
 		if self.localprio > 0 and not self.said[plr.Name] and msg == 'helloimusinginhaler' and plr ~= lplr then
 			self.said[plr.Name] = true
-			notif('Vape', plr.Name..' is using vape!', 60)
+			notif('Lunar Vape', plr.Name..' is using vape!', 60)
 			self.customtags[plr.Name] = {{
 				text = 'VAPE USER',
 				color = Color3.new(1, 1, 0)
@@ -1130,7 +1132,7 @@ run(function()
 end)
 	
 local mouseClicked
-run(function()
+run({'Solara'}, function()
 	local SilentAim
 	local Target
 	local Mode
@@ -6220,7 +6222,7 @@ run(function()
 	})
 end)
 	
-run(function()
+run({'Solara'}, function()
 	local ServerHop
 	local Sort
 	
@@ -6692,7 +6694,7 @@ run(function()
 		end
 	end
 	
-	MurderMystery = vape.Categories.Minigames:CreateModule({
+	MurderMystery = vape.Categories.World:CreateModule({
 		Name = 'MurderMystery',
 		Function = function(callback)
 			if callback then

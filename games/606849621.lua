@@ -1,6 +1,6 @@
 local loadstring = function(...)
 	local res, err = loadstring(...)
-	if err and vape then vape:CreateNotification('Vape', 'Failed to load : '..err, 30, 'alert') end
+	if err and vape then vape:CreateNotification('Lunar Vape', 'Failed to load : '..err, 30, 'alert') end
 	return res
 end
 local isfile = isfile or function(file)
@@ -16,7 +16,11 @@ local function downloadFile(path, func)
 	end
 	return (func or readfile)(path)
 end
-local run = function(func) func() end
+local run = function(blacklist, func)
+  if type(blacklist) == 'function' then blacklist(); return end
+	if table.find(blacklist, (identifyexecutor())) then return end
+  func()
+end
 local cloneref = cloneref or function(obj) return obj end
 
 local playersService = cloneref(game:GetService('Players'))
@@ -318,7 +322,7 @@ run(function()
 
 	function jb:FireServer(id, ...)
 		if not remotes[id] then
-			notif('Vape', 'Failed to find remote ('..id..')', 10, 'alert')
+			notif('Lunar Vape', 'Failed to find remote ('..id..')', 10, 'alert')
 			return
 		end
 		return hook(remotetable, remotes[id], ...)
