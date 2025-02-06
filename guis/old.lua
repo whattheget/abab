@@ -3788,11 +3788,10 @@ topbar:CreateButton({
 			RenderCategory = 4,
 			UtilityCategory = 5,
 			WorldCategory = 6,
-			InventoryCategory = 7,
-			MinigamesCategory = 8,
-			LegitCategory = 9,
-			FriendsCategory = 10,
-			ProfilesCategory = 11
+			['Lunar VapeCategory'] = 7
+			LegitCategory = 8,
+			FriendsCategory = 9,
+			ProfilesCategory = 10
 		}
 		local categories = {}
 		for _, v in mainapi.Categories do

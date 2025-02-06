@@ -1642,7 +1642,7 @@ end)
 addMaid(mainapi)
 
 function mainapi:CreateGUI()
-	return self.Categories.Minigames:CreateModule({
+	return self.Categories['Lunar Vape']:CreateModule({
 		Name = 'Settings',
 		Tooltip = 'Miscellaneous options for the utility.'
 	})
@@ -1902,7 +1902,7 @@ function mainapi:CreateCategory(categorysettings)
 end
 
 function mainapi:CreateCategoryList(categorysettings)
-	local module, list = self.Categories.Minigames:CreateModule({
+	local module, list = self.Categories['Lunar Vape']:CreateModule({
 		Name = categorysettings.Name,
 		Tooltip = categorysettings.Tooltip or 'Miscellaneous options for the category.'
 	})

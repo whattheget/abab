@@ -19,7 +19,7 @@ local mainapi = {
 	Scale = {Value = 1},
 	ThreadFix = setthreadidentity and true or false,
 	ToggleNotifications = {},
-	Version = 'preRelease 2',
+	Version = 'preRelease 2.1',
 	Windows = {}
 }
 
@@ -6024,10 +6024,9 @@ guipane:CreateButton({
 			RenderCategory = 4,
 			UtilityCategory = 5,
 			WorldCategory = 6,
-			InventoryCategory = 7,
-			MinigamesCategory = 8,
-			FriendsCategory = 9,
-			ProfilesCategory = 10
+			['Lunar VapeCategory'] = 7,
+			FriendsCategory = 8,
+			ProfilesCategory = 9
 		}
 		local categories = {}
 		for _, v in mainapi.Categories do
