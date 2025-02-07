@@ -14,7 +14,6 @@
 ## Contacts
 - [Lunar Vape Discord](https://discord/dEKX9XnZwS)
 - [AtTheZenith's Youtube](https://youtube.com/@AtTheZenith)
-<br/>
 
 ## Usage
 1. Download one of the supported executors below:
