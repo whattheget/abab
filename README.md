@@ -1,6 +1,3 @@
-> [!WARNING]
-> Vape is discontinued, this page will now be held as an archive of my work more then anything.
-
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="./README/Lunar Vape Logo Dark.png">
@@ -53,3 +50,8 @@ If its not the supposed utility at fault, please try some troubleshooting steps.
 [Egor Skriptunoff, boatbomber, and howmanysmall](https://devforum.roblox.com/t/open-source-hashlib/416732/1) - HashLibrary for Luau
 <br/>
 [Vernumerator](https://devforum.roblox.com/t/predict-projectile-ballistics-including-gravity-and-motion/1842434) - Projectile prediction for Roblox
+
+> [!WARNING]
+> The parent repo 7GrandDadPGN/VapeV4ForRoblox is archived and discontinued.
+> This Repo will be maintained only by me (@AtTheZenith repo owner) and contributors.
+> Spread the word, I will be consistently updating it for as much as I can, and I hope that.
