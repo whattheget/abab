@@ -10,6 +10,7 @@
   <br/>
   Be stylish while crushing those against you without trying.
 </h2>
+
 ## Contacts
 - [Lunar Vape Discord](https://discord/dEKX9XnZwS)
 - [AtTheZenith's Youtube](https://youtube.com/@AtTheZenith)
