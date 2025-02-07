@@ -13,9 +13,7 @@
 
 ## Contacts
 - [Lunar Vape Discord](https://discord/dEKX9XnZwS)
-- [Vape Discord](https://discord.gg/ZqS836yx9k)
 - [AtTheZenith's Youtube](https://youtube.com/@AtTheZenith)
-- [7GrandDad (xylex)'s Youtube](https://youtube.com/@7GrandDadVape)
 <br/>
 
 ## Usage
