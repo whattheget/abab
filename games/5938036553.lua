@@ -44,7 +44,7 @@ local debrisService = cloneref(game:GetService('Debris'))
 local gameCamera = workspace.CurrentCamera
 local lplr = playersService.LocalPlayer
 
-local vape = shared.vape
+local vape = _G.vape
 local entitylib = vape.Libraries.entity
 local whitelist = vape.Libraries.whitelist
 local prediction = vape.Libraries.prediction
@@ -58,7 +58,7 @@ end
 
 if not select(1, ...) then
 	if run_on_actor and getactors then 
-		local oldreload = shared.vapereload
+		local oldreload = _G.vapereload
 		vape.Load = function()
 			task.delay(0.1, function()
 				vape:Uninject()
@@ -66,17 +66,17 @@ if not select(1, ...) then
 		end
 
 		task.spawn(function()
-			repeat task.wait() until not shared.vape
+			repeat task.wait() until not _G.vape
 			local executionString = "loadfile('newvape/main.lua')("..drawingactor..")"
-			for i, v in shared do
+			for i, v in _G do
 				if type(v) == 'string' then
-					executionString = string.format("shared.%s = '%s'", i, v)..'\n'..executionString
+					executionString = string.format("_G.%s = '%s'", i, v)..'\n'..executionString
 				elseif type(v) == 'boolean' then 
-					executionString = string.format("shared.%s = %s", i, tostring(v))..'\n'..executionString
+					executionString = string.format("_G.%s = %s", i, tostring(v))..'\n'..executionString
 				end
 			end
 			if oldreload then 
-				executionString = 'shared.vapereload = true\n'..executionString 
+				executionString = '_G.vapereload = true\n'..executionString 
 			end
 
 			for i, v in getactors() do 

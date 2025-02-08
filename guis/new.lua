@@ -1,3 +1,5 @@
+print('running new.lua')
+
 local mainapi = {
 	Categories = {},
 	GUIColor = {
@@ -11,15 +13,15 @@ local mainapi = {
 	Libraries = {},
 	Modules = {},
 	Place = game.PlaceId,
-	Profile = 'Moon Profile PC',
-	Profiles = {'Moon Profile PC','Moon Profile Mobile'},
+	Profile = 'default',
+	Profiles = {'default'},
 	RainbowSpeed = {Value = 1},
 	RainbowUpdateSpeed = {Value = 60},
 	RainbowTable = {},
 	Scale = {Value = 1},
 	ThreadFix = setthreadidentity and true or false,
 	ToggleNotifications = {},
-	Version = 'preRelease 2.1',
+	Version = 'preRelease 3.0',
 	Windows = {}
 }
 
@@ -5595,9 +5597,9 @@ function mainapi:Uninject()
 	mainapi.gui:Destroy()
 	table.clear(mainapi.Libraries)
 	loopClean(mainapi)
-	shared.vape = nil
-	shared.vapereload = nil
-	shared.VapeIndependent = nil
+	_G.vape = nil
+	_G.vapereload = nil
+	_G.VapeIndependent = nil
 end
 
 gui = Instance.new('ScreenGui')
@@ -5847,8 +5849,8 @@ general:CreateButton({
 		if isfile('newvape/profiles/'..mainapi.Profile..mainapi.Place..'.txt') and delfile then
 			delfile('newvape/profiles/'..mainapi.Profile..mainapi.Place..'.txt')
 		end
-		shared.vapereload = true
-		if shared.VapeDeveloper then
+		_G.vapereload = true
+		if _G.VapeDeveloper then
 			loadstring(readfile('newvape/loader.lua'), 'loader')()
 		else
 			loadstring(game:HttpGet('https://raw.githubusercontent.com/AtTheZenith/LunarVape/'..readfile('newvape/profiles/commit.txt')..'/loader.lua', true))()
@@ -5866,8 +5868,8 @@ general:CreateButton({
 general:CreateButton({
 	Name = 'Reinject',
 	Function = function()
-		shared.vapereload = true
-		if shared.VapeDeveloper then
+		_G.vapereload = true
+		if _G.VapeDeveloper then
 			loadstring(readfile('newvape/loader.lua'), 'loader')()
 		else
 			loadstring(game:HttpGet('https://raw.githubusercontent.com/AtTheZenith/LunarVape/'..readfile('newvape/profiles/commit.txt')..'/loader.lua', true))()
@@ -5974,8 +5976,8 @@ guipane:CreateDropdown({
 	Function = function(val, mouse)
 		if mouse then
 			writefile('newvape/profiles/gui.txt', val)
-			shared.vapereload = true
-			if shared.VapeDeveloper then
+			_G.vapereload = true
+			if _G.VapeDeveloper then
 				loadstring(readfile('newvape/loader.lua'), 'loader')()
 			else
 				loadstring(game:HttpGet('https://raw.githubusercontent.com/AtTheZenith/LunarVape/'..readfile('newvape/profiles/commit.txt')..'/loader.lua', true))()

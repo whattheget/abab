@@ -1,3 +1,5 @@
+print('running universal.lua')
+
 local loadstring = function(...)
 	local res, err = loadstring(...)
 	if err and vape then
@@ -58,7 +60,7 @@ local gameCamera = workspace.CurrentCamera or workspace:FindFirstChildWhichIsA('
 local lplr = playersService.LocalPlayer
 local assetfunction = getcustomasset
 
-local vape = shared.vape
+local vape = _G.vape
 local tween = vape.Libraries.tween
 local targetinfo = vape.Libraries.targetinfo
 local getfontsize = vape.Libraries.getfontsize
@@ -149,7 +151,7 @@ end
 local visited, attempted, tpSwitch = {}, {}, false
 local cacheExpire, cache = tick()
 local function serverHop(pointer, filter)
-	visited = shared.vapeserverhoplist and shared.vapeserverhoplist:split('/') or {}
+	visited = _G.vapeserverhoplist and _G.vapeserverhoplist:split('/') or {}
 	if not table.find(visited, game.JobId) then
 		table.insert(visited, game.JobId)
 	end
@@ -186,7 +188,7 @@ end
 vape:Clean(lplr.OnTeleport:Connect(function()
 	if not tpSwitch then
 		tpSwitch = true
-		queue_on_teleport("shared.vapeserverhoplist = '"..table.concat(visited, '/').."'\nshared.vapeserverhopprevious = '"..game.JobId.."'")
+		queue_on_teleport("_G.vapeserverhoplist = '"..table.concat(visited, '/').."'\n_G.vapeserverhopprevious = '"..game.JobId.."'")
 	end
 end))
 
@@ -349,14 +351,14 @@ run(function()
 		end
 		if ent.NPC then return true end
 		if isFriend(ent.Player) then return false end
-		if not select(2, whitelist:get(ent.Player)) then return false end
+		-- if not select(2, whitelist:get(ent.Player)) then return false end
 		if vape.Categories.Main.Options['Teams by server'].Enabled then
 			if not lplr.Team then return true end
 			if not ent.Player.Team then return true end
 			if ent.Player.Team ~= lplr.Team then return true end
 			return #ent.Player.Team:GetPlayers() == #playersService:GetPlayers()
 		end
-		return true
+		return false
 	end
 
 	entitylib.getEntityColor = function(ent)
@@ -4982,12 +4984,12 @@ run(function()
 				SessionInfo:Clean(playersService.LocalPlayer.OnTeleport:Connect(function()
 					if not teleportedServers then
 						teleportedServers = true
-						queue_on_teleport("shared.vapesessioninfo = '"..httpService:JSONEncode(vape.Libraries.sessioninfo.Objects).."'")
+						queue_on_teleport("_G.vapesessioninfo = '"..httpService:JSONEncode(vape.Libraries.sessioninfo.Objects).."'")
 					end
 				end))
 	
-				if shared.vapesessioninfo then
-					for i, v in httpService:JSONDecode(shared.vapesessioninfo) do
+				if _G.vapesessioninfo then
+					for i, v in httpService:JSONDecode(_G.vapesessioninfo) do
 						if vape.Libraries.sessioninfo.Objects[i] and v.Saved then
 							vape.Libraries.sessioninfo.Objects[i].Value = v.Value
 						end
@@ -5802,9 +5804,9 @@ run({'Solara'}, function()
 	ServerHop:CreateButton({
 		Name = 'Rejoin Previous Server',
 		Function = function()
-			notif('ServerHop', shared.vapeserverhopprevious and 'Rejoining previous server...' or 'Cannot find previous server', 5)
-			if shared.vapeserverhopprevious then
-				teleportService:TeleportToPlaceInstance(game.PlaceId, shared.vapeserverhopprevious)
+			notif('ServerHop', _G.vapeserverhopprevious and 'Rejoining previous server...' or 'Cannot find previous server', 5)
+			if _G.vapeserverhopprevious then
+				teleportService:TeleportToPlaceInstance(game.PlaceId, _G.vapeserverhopprevious)
 			end
 		end
 	})

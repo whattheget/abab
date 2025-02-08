@@ -10,7 +10,7 @@ local replicatedStorage = cloneref(game:GetService('ReplicatedStorage'))
 local inputService = cloneref(game:GetService('UserInputService'))
 
 local lplr = playersService.LocalPlayer
-local vape = shared.vape
+local vape = _G.vape
 local entitylib = vape.Libraries.entity
 local sessioninfo = vape.Libraries.sessioninfo
 local bedwars = {}

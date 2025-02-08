@@ -3363,9 +3363,9 @@ function mainapi:Uninject()
 	mainapi.gui:Destroy()
 	table.clear(mainapi.Libraries)
 	loopClean(mainapi)
-	shared.vape = nil
-	shared.vapereload = nil
-	shared.VapeIndependent = nil
+	_G.vape = nil
+	_G.vapereload = nil
+	_G.VapeIndependent = nil
 end
 
 gui = Instance.new('ScreenGui')
@@ -3722,8 +3722,8 @@ topbar:CreateDropdown({
 	Function = function(val, mouse)
 		if mouse then
 			writefile('newvape/profiles/gui.txt', val)
-			shared.vapereload = true
-			if shared.VapeDeveloper then
+			_G.vapereload = true
+			if _G.VapeDeveloper then
 				loadstring(readfile('newvape/loader.lua'), 'loader')()
 			else
 				loadstring(game:HttpGet('https://raw.githubusercontent.com/AtTheZenith/LunarVape/'..readfile('newvape/profiles/commit.txt')..'/loader.lua', true))()
@@ -3760,8 +3760,8 @@ topbar:CreateButton({
 		if isfile('newvape/profiles/'..mainapi.Profile..mainapi.Place..'.txt') and delfile then
 			delfile('newvape/profiles/'..mainapi.Profile..mainapi.Place..'.txt')
 		end
-		shared.vapereload = true
-		if shared.VapeDeveloper then
+		_G.vapereload = true
+		if _G.VapeDeveloper then
 			loadstring(readfile('newvape/loader.lua'), 'loader')()
 		else
 			loadstring(game:HttpGet('https://raw.githubusercontent.com/AtTheZenith/LunarVape/'..readfile('newvape/profiles/commit.txt')..'/loader.lua', true))()
@@ -3823,8 +3823,8 @@ topbar:CreateButton({
 topbar:CreateButton({
 	Name = 'REINEJCT',
 	Function = function()
-		shared.vapereload = true
-		if shared.VapeDeveloper then
+		_G.vapereload = true
+		if _G.VapeDeveloper then
 			loadstring(readfile('newvape/loader.lua'), 'loader')()
 		else
 			loadstring(game:HttpGet('https://raw.githubusercontent.com/AtTheZenith/LunarVape/'..readfile('newvape/profiles/commit.txt')..'/loader.lua', true))()

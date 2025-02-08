@@ -1,4 +1,4 @@
-local vape = shared.vape
+local vape = _G.vape
 local loadstring = function(...)
 	local res, err = loadstring(...)
 	if err and vape then 
@@ -32,7 +32,7 @@ vape.Place = 11630038968
 if isfile('newvape/games/'..vape.Place..'.lua') then
 	loadstring(readfile('newvape/games/'..vape.Place..'.lua'), 'bridge duel')()
 else
-	if not shared.VapeDeveloper then
+	if not _G.VapeDeveloper then
 		local suc, res = pcall(function() 
 			return game:HttpGet('https://raw.githubusercontent.com/AtTheZenith/LunarVape/'..readfile('newvape/profiles/commit.txt')..'/games/'..vape.Place..'.lua', true) 
 		end)

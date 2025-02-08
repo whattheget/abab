@@ -36,7 +36,7 @@ local contextService = cloneref(game:GetService('ContextActionService'))
 local gameCamera = workspace.CurrentCamera
 local lplr = playersService.LocalPlayer
 
-local vape = shared.vape
+local vape = _G.vape
 local entitylib = vape.Libraries.entity
 local whitelist = vape.Libraries.whitelist
 local prediction = vape.Libraries.prediction

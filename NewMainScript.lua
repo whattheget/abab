@@ -40,7 +40,7 @@ for _, folder in {'newvape', 'newvape/games', 'newvape/profiles', 'newvape/asset
 	end
 end
 
-if not shared.VapeDeveloper then
+if not _G.VapeDeveloper then
 	local _, subbed = pcall(function()
 		return game:HttpGet('https://github.com/AtTheZenith/LunarVape')
 	end)
