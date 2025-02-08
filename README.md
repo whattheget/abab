@@ -13,10 +13,7 @@
 
 ## Contacts
 - [Lunar Vape Discord](https://discord/dEKX9XnZwS)
-- [Vape Discord](https://discord.gg/ZqS836yx9k)
 - [AtTheZenith's Youtube](https://youtube.com/@AtTheZenith)
-- [7GrandDad (xylex)'s Youtube](https://youtube.com/@7GrandDadVape)
-<br/>
 
 ## Usage
 1. Download one of the supported executors below:
@@ -50,3 +47,8 @@ If its not the supposed utility at fault, please try some troubleshooting steps.
 [Egor Skriptunoff, boatbomber, and howmanysmall](https://devforum.roblox.com/t/open-source-hashlib/416732/1) - HashLibrary for Luau
 <br/>
 [Vernumerator](https://devforum.roblox.com/t/predict-projectile-ballistics-including-gravity-and-motion/1842434) - Projectile prediction for Roblox
+
+> [!WARNING]
+> The parent repo 7GrandDadPGN/VapeV4ForRoblox is archived and discontinued.
+> This Repo will be maintained only by me (@AtTheZenith repo owner) and contributors.
+> Spread the word, I will be consistently updating it for as much as I can, and I hope that.
