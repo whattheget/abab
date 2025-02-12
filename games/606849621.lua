@@ -38,7 +38,6 @@ local lplr = playersService.LocalPlayer
 
 local vape = _G.vape
 local entitylib = vape.Libraries.entity
-local whitelist = vape.Libraries.whitelist
 local prediction = vape.Libraries.prediction
 local targetinfo = vape.Libraries.targetinfo
 local sessioninfo = vape.Libraries.sessioninfo
@@ -137,7 +136,6 @@ run(function()
 		if ent.TeamCheck then return ent:TeamCheck() end
 		if ent.NPC then return true end
 		if isFriend(ent.Player) then return false end
-		if not select(2, whitelist:get(ent.Player)) then return false end
 		if lplr.Team == teamsService.Police then
 			return ent.Player.Team ~= teamsService.Police
 		else

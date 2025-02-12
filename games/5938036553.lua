@@ -46,7 +46,6 @@ local lplr = playersService.LocalPlayer
 
 local vape = _G.vape
 local entitylib = vape.Libraries.entity
-local whitelist = vape.Libraries.whitelist
 local prediction = vape.Libraries.prediction
 local targetinfo = vape.Libraries.targetinfo
 local sessioninfo = vape.Libraries.sessioninfo
@@ -226,22 +225,6 @@ run(function()
 		end
 	end)
 
-	hookEvent('UPDATE_CHAT_GUI', function(id, text)
-		text = string.unpack('z', text)
-		task.delay(0, function()
-			local name = frontlines.Main.globals.cli_names[id]
-			local plr = playersService:FindFirstChild(name)
-			if not plr then return end
-			for i, v in frontlines.Chat do
-				if v.TextLabel.TextTransparency > 0.5 and v.TextLabel.Text:find(name) then
-					v.TextLabel.Text = whitelist:tag(plr, true, true)..v.TextLabel.Text
-					whitelist:process(text, plr)
-					break
-				end
-			end
-		end)
-	end)
-
 	vape:Clean(Drawing.kill)
 	vape:Clean(function()
 		for i, v in frontlines.Functions do 
@@ -260,7 +243,6 @@ run(function()
 
 	entitylib.targetCheck = function(ent)
 		if isFriend(ent.Player) then return false end
-		if not select(2, whitelist:get(ent.Player)) then return false end
 		return getTeam(lplr) ~= getTeam(ent.Player)
 	end
 

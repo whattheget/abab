@@ -33,7 +33,6 @@ local sessioninfo = vape.Libraries.sessioninfo
 local uipallet = vape.Libraries.uipallet
 local tween = vape.Libraries.tween
 local color = vape.Libraries.color
-local whitelist = vape.Libraries.whitelist
 local prediction = vape.Libraries.prediction
 local getcustomasset = vape.Libraries.getcustomasset
 
@@ -259,7 +258,6 @@ run(function()
 	entitylib.targetCheck = function(ent)
 		if ent.NPC then return true end
 		if isFriend(ent.Player) then return false end
-		if not select(2, whitelist:get(ent.Player)) then return false end
 		return lplr:GetAttribute('TeamId') ~= ent.Player:GetAttribute('TeamId')
 	end
 
