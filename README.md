@@ -6,9 +6,8 @@
   </picture>
 </p>
 <h2 align="center">
-  A Fork of a powerful Roblox Script, made for ease of use.
-  <br/>
-  Be stylish while crushing those against you without trying.
+  THE Roblox Script, made for ease of use.
+  Crush your enemies with power and style.
 </h2>
 
 ## Contacts
@@ -22,7 +21,7 @@
 
 2. Execute the provided loadstring below.
 ```luau
-loadstring(game:HttpGet("https://raw.githubusercontent.com/AtTheZenith/LunarVape/main/NewMainScript.lua", true))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/AtTheZenith/LunarVape/main/loader.lua", true))()
 ```
 
 ## Possible Issues
@@ -40,7 +39,7 @@ If its not the supposed utility at fault, please try some troubleshooting steps.
 ## Developers & Credits
 [AtTheZenith](https://github.com/AtTheZenith) - Lead maintainer of the LunarVape fork - @atthezenith on Discord
 <br/>
-[7GrandDad](https://github.com/7GrandDadPGN) - Lead maintainer of the parent project, VapeV4ForRoblox - @vaperoblox on Discord
+[7GrandDad](https://github.com/7GrandDadPGN) - Former maintainer of the parent project VapeV4ForRoblox
 <br/>
 [rce-incorporated](https://github.com/rce-incorporated/Fiu) - Luau bytecode disassembly with modifications
 <br/>
