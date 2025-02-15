@@ -1,9 +1,6 @@
-print('running main.lua')
-
-repeat task.wait() until game:IsLoaded()
+prrepeat task.wait() until game:IsLoaded()
 if _G.vape then _G.vape:Uninject() end
 
--- why do exploits fail to implement anything correctly? Is it really that hard?
 if identifyexecutor then
   if table.find({'Argon', 'Wave', 'Swift'}, (identifyexecutor())) then
     getgenv().setthreadidentity = nil
