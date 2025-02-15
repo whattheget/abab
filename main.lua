@@ -5,14 +5,15 @@ if _G.vape then _G.vape:Uninject() end
 
 -- why do exploits fail to implement anything correctly? Is it really that hard?
 if identifyexecutor then
-  if table.find({ 'Argon', 'Wave' }, (identifyexecutor())) then
+  if table.find({'Argon', 'Wave', 'Swift'}, (identifyexecutor())) then
     getgenv().setthreadidentity = nil
   end
 end
 
 local vape
-local loadstring = function(...)
-  local res, err = loadstring(...)
+local loadstring = function(script, name)
+  print('running '.. (name and name..'.lua') or 'some file')
+  local res, err = loadstring(script, name)
   if err and vape then
     vape:CreateNotification('Lunar Vape', 'Failed to load : ' .. err, 30, 'alert')
   end
@@ -86,9 +87,7 @@ local function finishLoading()
   if not _G.vapereload then
     if not vape.Categories then return end
     if vape.Categories.Main.Options['GUI bind indicator'].Enabled then
-      vape:CreateNotification('Finished Loading',
-        vape.VapeButton and 'Press the button in the top right to open GUI' or
-        'Press ' .. table.concat(vape.Keybind, ' + '):upper() .. ' to open GUI', 5)
+      vape:CreateNotification('Lunar Vape', 'Lunar Vape has finished loading.', 6)
     end
   end
 end

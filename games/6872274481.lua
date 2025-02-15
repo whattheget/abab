@@ -7309,7 +7309,48 @@ run(function()
 		Tooltip = 'Only breaks when tools are held'
 	})
 end)
-	
+
+
+run(function()
+  local InfiniteJump = {Enabled = false}
+  local JumpConnection = nil
+  local LastLanded = os.clock()
+  vape:Clean(runService.PostSimulation:Connect(function()
+    if entitylib.character and entitylib.character.Humanoid and entitylib.character.Humanoid.FloorMaterial == Enum.Material.Air then return end
+    LastLanded = os.clock()
+  end))
+  local Debounce = {Enabled = false}
+  local DebounceTick = os.clock()
+
+  InfiniteJump = vape.Categories.Blatant:CreateModule({
+		Name = 'InfiniteJump',
+    Tooltip = 'Allows you to jump mid-air.',
+		Function = function(callback)
+			if callback then
+				JumpConnection = game:GetService('UserInputService').JumpRequest:Connect(function()
+          if entitylib.character and entitylib.character.Humanoid and entitylib.character.Humanoid.Health then
+            if os.clock() - LastLanded > 2.5 then return end
+            if Debounce.Enabled and (os.clock() - DebounceTick < 0.1) then
+              DebounceTick = os.clock(); return
+            end
+            DebounceTick = os.clock()
+            entitylib.character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)          
+          end
+        end)
+      else
+        if JumpConnection then JumpConnection:Disconnect() end
+      end
+    end
+  })
+  Debounce = InfiniteJump:CreateToggle({
+    Name = 'Debounce',
+    Tooltip = [[Doesn't spam jump when you hold space bar]],
+    Function = function(callback) Debounce.Enabled = callback end
+  })
+end)
+
+-- Legit Modules Here LGM
+
 run(function()
 	vape.Legit:CreateModule({
 		Name = 'Clean Kit',

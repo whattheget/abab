@@ -21,7 +21,7 @@ local mainapi = {
 	Scale = {Value = 1},
 	ThreadFix = setthreadidentity and true or false,
 	ToggleNotifications = {},
-	Version = 'preRelease 3.2',
+	Version = 'preRelease 4.0',
 	Windows = {}
 }
 
@@ -124,6 +124,12 @@ local getcustomassets = {
 	['newvape/assets/new/warning.png'] = 'rbxassetid://14368361552',
 	['newvape/assets/new/worldicon.png'] = 'rbxassetid://14368362492'
 }
+
+getcustomasset = not inputService.TouchEnabled and assetfunction and (not table.find({'NX'}, (identifyexecutor()))) and function(path)
+	return downloadFile(path, assetfunction)
+end or function(path)
+	return getcustomassets[path] or ''
+end
 
 local isfile = isfile or function(file)
 	local suc, res = pcall(function()
@@ -326,12 +332,6 @@ local function downloadFile(path, func)
 		writefile(path, res)
 	end
 	return (func or readfile)(path)
-end
-
-getcustomasset = not inputService.TouchEnabled and assetfunction and function(path)
-	return downloadFile(path, assetfunction)
-end or function(path)
-	return getcustomassets[path] or ''
 end
 
 local function getTableSize(tab)
@@ -3087,7 +3087,7 @@ function mainapi:CreateGUI()
 	function categoryapi:CreateGUISlider(optionsettings)
 		local optionapi = {
 			Type = 'GUISlider',
-			Notch = 4,
+			Notch = 3,
 			Hue = 0.82,
 			Sat = 0.56,
 			Value = 0.82,
@@ -3315,10 +3315,10 @@ function mainapi:CreateGUI()
 		local knob = Instance.new('ImageLabel')
 		knob.Name = 'Knob'
 		knob.Size = UDim2.fromOffset(26, 12)
-		knob.Position = UDim2.fromOffset(slidercolorpos[4] - 3, -5)
+		knob.Position = UDim2.fromOffset(slidercolorpos[3], -5)
 		knob.BackgroundTransparency = 1
 		knob.Image = getcustomasset('newvape/assets/new/guislider.png')
-		knob.ImageColor3 = slidercolors[4]
+		knob.ImageColor3 = slidercolors[3]
 		knob.Parent = holder
 		optionsettings.Function = optionsettings.Function or function() end
 		local rainbowTable = {}
@@ -3491,7 +3491,7 @@ function mainapi:CreateGUI()
 			then
 				local changed = inputService.InputChanged:Connect(function(input)
 					if input.UserInputType == (inputObj.UserInputType == Enum.UserInputType.MouseButton1 and Enum.UserInputType.MouseMovement or Enum.UserInputType.Touch) then
-						optionapi:SetValue(nil, nil, nil, math.clamp(math.round((input.Position.X - holder.AbsolutePosition.X) / scale.Scale / 27), 1, 7))
+						optionapi:SetValue(nil, nil, nil, math.clamp(math.round((input.Position.X - holder.AbsolutePosition.X + 11) / scale.Scale / 46), 1, 7))
 					end
 				end)
 
@@ -3506,7 +3506,7 @@ function mainapi:CreateGUI()
 						end
 					end
 				end)
-				optionapi:SetValue(nil, nil, nil, math.clamp(math.round((inputObj.Position.X - holder.AbsolutePosition.X) / scale.Scale / 27), 1, 7))
+				optionapi:SetValue(nil, nil, nil, math.clamp(math.round((inputObj.Position.X - holder.AbsolutePosition.X + 11) / scale.Scale / 46), 1, 7))
 			end
 		end)
 		rainbow.MouseButton1Click:Connect(function()
@@ -5444,40 +5444,47 @@ function mainapi:Load(skipgui, profile)
 	self.Loaded = savecheck
 	self.Categories.Main.Options.Bind:SetBind(self.Keybind)
 
-	if inputService.TouchEnabled and #self.Keybind == 1 and self.Keybind[1] == 'RightShift' then
-		local button = Instance.new('TextButton')
-		button.Size = UDim2.fromOffset(32, 32)
-		button.Position = UDim2.new(1, -90, 0, 4)
-		button.BackgroundColor3 = Color3.new()
-		button.BackgroundTransparency = 0.5
-		button.Text = ''
-		button.Parent = gui
-		local image = Instance.new('ImageLabel')
-		image.Size = UDim2.fromOffset(26, 26)
-		image.Position = UDim2.fromOffset(3, 3)
-		image.BackgroundTransparency = 1
-		image.Image = getcustomasset('newvape/assets/new/vape.png')
-		image.Parent = button
-		local buttoncorner = Instance.new('UICorner')
-		buttoncorner.Parent = button
-		self.VapeButton = button
-		button.MouseButton1Click:Connect(function()
-			if self.ThreadFix then
-				setthreadidentity(8)
+	local button = Instance.new('TextButton')
+	button.Size = UDim2.fromOffset(48, 48)
+	button.Position = UDim2.new(0.5, -24, 0, 12)
+	button.BackgroundColor3 = Color3.new()
+	button.BackgroundTransparency = 0
+  button.BackgroundColor3 = uipallet.Main
+	button.Text = ''
+	button.Parent = gui
+	local image = Instance.new('ImageLabel')
+	image.Size = UDim2.fromOffset(34, 34)
+	image.Position = UDim2.fromScale(0.5, 0.5)
+  image.AnchorPoint = Vector2.new(0.5, 0.5)
+	image.BackgroundTransparency = 1
+	image.Image = getcustomasset('newvape/assets/new/vape.png')
+	image.Parent = button
+	local buttoncorner = Instance.new('UICorner')
+	buttoncorner.Parent = button
+  buttoncorner.CornerRadius = UDim.new(1,0)
+  local uistroke = Instance.new('UIStroke')
+  uistroke.Parent = button
+  uistroke.Thickness = 2
+  uistroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+  uistroke.Color = Color3.fromHSV(0.82, 0.56, 0.82)
+	self.VapeButton = button
+	button.MouseButton1Click:Connect(function()
+		if self.ThreadFix then
+			setthreadidentity(8)
+		end
+		for _, v in self.Windows do
+			v.Visible = false
+		end
+		for _, mobileButton in self.Modules do
+			if mobileButton.Bind.Button then
+				mobileButton.Bind.Button.Visible = clickgui.Visible
 			end
-			for _, v in self.Windows do
-				v.Visible = false
-			end
-			for _, mobileButton in self.Modules do
-				if mobileButton.Bind.Button then
-					mobileButton.Bind.Button.Visible = clickgui.Visible
-				end
-			end
-			clickgui.Visible = not clickgui.Visible
-			tooltip.Visible = false
-			self:BlurCheck()
-		end)
-	end
+		end
+		clickgui.Visible = not clickgui.Visible
+		tooltip.Visible = false
+		self:BlurCheck()
+	end)
+  if _G.legit then button.Visible = false end
 end
 
 function mainapi:LoadOptions(object, savedoptions)
