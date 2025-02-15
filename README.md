@@ -7,6 +7,7 @@
 </p>
 <h2 align="center">
   THE Roblox Script, made for ease of use.
+  <br/>
   Crush your enemies with power and style.
 </h2>
 
