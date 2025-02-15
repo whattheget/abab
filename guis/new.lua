@@ -1,5 +1,3 @@
-print('running new.lua')
-
 local mainapi = {
 	Categories = {},
 	GUIColor = {
@@ -124,12 +122,6 @@ local getcustomassets = {
 	['newvape/assets/new/warning.png'] = 'rbxassetid://14368361552',
 	['newvape/assets/new/worldicon.png'] = 'rbxassetid://14368362492'
 }
-
-getcustomasset = not inputService.TouchEnabled and assetfunction and (not table.find({'NX'}, (identifyexecutor()))) and function(path)
-	return downloadFile(path, assetfunction)
-end or function(path)
-	return getcustomassets[path] or ''
-end
 
 local isfile = isfile or function(file)
 	local suc, res = pcall(function()
@@ -332,6 +324,12 @@ local function downloadFile(path, func)
 		writefile(path, res)
 	end
 	return (func or readfile)(path)
+end
+
+getcustomasset = not inputService.TouchEnabled and assetfunction and (not table.find({'NX'}, (identifyexecutor()))) and function(path)
+	return downloadFile(path, assetfunction)
+end or function(path)
+	return getcustomassets[path] or ''
 end
 
 local function getTableSize(tab)
