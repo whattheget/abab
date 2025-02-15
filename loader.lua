@@ -58,4 +58,5 @@ if not _G.VapeDeveloper then
 	writefile('newvape/profiles/commit.txt', commit)
 end
 
+print('running main.lua')
 return loadstring(downloadFile('newvape/main.lua'), 'main')()
