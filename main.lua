@@ -1,8 +1,9 @@
 repeat task.wait() until game:IsLoaded()
 if _G.vape then _G.vape:Uninject() end
 
+-- bro why does krnl android suck
 if identifyexecutor then
-  if table.find({'Argon', 'Wave', 'Swift'}, (identifyexecutor())) then
+  if table.find({'Argon', 'Wave', 'Swift', 'Krnl'}, (identifyexecutor())) then
     getgenv().setthreadidentity = nil
   end
 end
