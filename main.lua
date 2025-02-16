@@ -1,4 +1,4 @@
-prrepeat task.wait() until game:IsLoaded()
+repeat task.wait() until game:IsLoaded()
 if _G.vape then _G.vape:Uninject() end
 
 if identifyexecutor then
@@ -58,35 +58,33 @@ local function finishLoading()
     until not vape.Loaded
   end)
 
-  -- local teleportedServers
-  -- vape:Clean(playersService.LocalPlayer.OnTeleport:Connect(function()
-    -- if (not teleportedServers) and (not _G.VapeIndependent) then
-      -- teleportedServers = true
-      -- local teleportScript = [[
-      -- _G.vapereload = true
-      -- if _G.VapeDeveloper then
-        -- loadstring(readfile('newvape/loader.lua'), 'loader')()
-      -- else
-        -- loadstring(game:HttpGet('https://raw.githubusercontent.com/AtTheZenith/LunarVape/'..readfile('newvape/profiles/commit.txt')..'/loader.lua', true), 'loader')()
-      -- end
-      -- ]]
-      -- if _G.VapeDeveloper then
-        -- teleportScript = '_G.VapeDeveloper = true\n' .. teleportScript
-      -- end
-      -- if _G.VapeCustomProfile then
-        -- teleportScript = '_G.VapeCustomProfile = "' .. _G.VapeCustomProfile .. '"\n' .. teleportScript
-      -- end
-      -- vape:Save()
-      -- queue_on_teleport(teleportScript)
-    -- end
-  -- end))
-
-  -- if not _G.vapereload then
-    if not vape.Categories then return end
-    if vape.Categories.Main.Options['GUI bind indicator'].Enabled then
-      vape:CreateNotification('Lunar Vape', 'Lunar Vape has finished loading.', 6)
+  local teleportedServers
+  vape:Clean(playersService.LocalPlayer.OnTeleport:Connect(function()
+    if (not teleportedServers) and (not _G.VapeIndependent) then
+      teleportedServers = true
+      local teleportScript = [[
+      _G.vapereload = true
+      if _G.VapeDeveloper then
+        loadstring(readfile('newvape/loader.lua'), 'loader')()
+      else
+        loadstring(game:HttpGet('https://raw.githubusercontent.com/AtTheZenith/LunarVape/main/loader.lua', true), 'loader')()
+      end
+      ]]
+      if _G.VapeDeveloper then
+        teleportScript = '_G.VapeDeveloper = true\n' .. teleportScript
+      end
+      if _G.VapeCustomProfile then
+        teleportScript = '_G.VapeCustomProfile = "' .. _G.VapeCustomProfile .. '"\n' .. teleportScript
+      end
+      vape:Save()
+      queue_on_teleport(teleportScript)
     end
-  -- end
+  end))
+
+  if not vape.Categories then return end
+  if vape.Categories.Main.Options['GUI bind indicator'].Enabled then
+    vape:CreateNotification('Lunar Vape', 'Lunar Vape has finished loading.', 6)
+  end
 end
 
 if not isfile('newvape/profiles/gui.txt') then
