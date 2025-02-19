@@ -19,7 +19,7 @@ local mainapi = {
 	Scale = {Value = 1},
 	ThreadFix = setthreadidentity and true or false,
 	ToggleNotifications = {},
-	Version = 'preRelease 4.0',
+	Version = 'preRelease 4.1',
 	Windows = {}
 }
 
@@ -5234,7 +5234,8 @@ function mainapi:CreateNotification(title, text, duration, type)
 		notification.ZIndex = 5
 		notification.BackgroundTransparency = 1
 		notification.Image = getcustomasset('newvape/assets/new/notification.png')
-		notification.ScaleType = Enum.ScaleType.Slice
+		notification.ImageColor3 = Color3.new()
+    notification.ScaleType = Enum.ScaleType.Slice
 		notification.SliceCenter = Rect.new(7, 7, 9, 9)
 		notification.Parent = notifications
 		addBlur(notification, true)
