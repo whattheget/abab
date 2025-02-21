@@ -326,7 +326,7 @@ local function downloadFile(path, func)
 	return (func or readfile)(path)
 end
 
-getcustomasset = not inputService.TouchEnabled and assetfunction and (not table.find({'NX'}, (identifyexecutor()))) and function(path)
+getcustomasset = not inputService.TouchEnabled and assetfunction and (not table.find({[[place executor name in this table, luna fixed getcustomasset]]}, (identifyexecutor()))) and function(path)
 	return downloadFile(path, assetfunction)
 end or function(path)
 	return getcustomassets[path] or ''
