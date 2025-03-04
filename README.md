@@ -12,18 +12,20 @@
 </h2>
 
 ## Contacts
-- [Lunar Vape Discord](https://discord/dEKX9XnZwS)
+- [Moon Softworks Discord Server](https://discord/dEKX9XnZwS)
 - [AtTheZenith's Youtube](https://youtube.com/@AtTheZenith)
 
-## Usage
-1. Download one of the supported executors below:
-- PC: (AWP, Argon, Swift, Salad)
-- Mobile: Any 100% UNC executor with quality functions
+## How to Use
+
+1. Download a supported executor listed in the  [Discord server](https://discord/dEKX9XnZwS).
 
 2. Execute the provided loadstring below.
 ```luau
 loadstring(game:HttpGet("https://raw.githubusercontent.com/AtTheZenith/LunarVape/main/loader.lua", true))()
 ```
+
+3. Wait until a notification appears indicating Lunar Vale has loaded.
+-# The game may freeze due to a bad executor, wait 1-2 minutes as the script downloads all of the data and icons.
 
 ## Possible Issues
 Half of the time its usually the scripting utility at fault, please make sure the utility meets certain quality standards such as.
@@ -34,7 +36,7 @@ Half of the time its usually the scripting utility at fault, please make sure th
 ### User Issues
 If its not the supposed utility at fault, please try some troubleshooting steps.
 1. Deleting the newvape folder (WITH THE GAME CLOSED).
-2. Making sure you have connection to [the main loadstring](https://raw.githubusercontent.com/7GrandDadPGN/VapeV4ForRoblox/refs/heads/main/NewMainScript.lua).
+2. Making sure you have connection to [the main loadstring](https://raw.githubusercontent.com/AtTheZenith/LunarVape/main/loader.lua).
 3. Ensuring no external script is conflicting with vape.
 
 ## Developers & Credits
