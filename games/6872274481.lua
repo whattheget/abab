@@ -7329,7 +7329,7 @@ run(function()
 			if callback then
 				JumpConnection = game:GetService('UserInputService').JumpRequest:Connect(function()
           if entitylib.character and entitylib.character.Humanoid and entitylib.character.Humanoid.Health then
-            if os.clock() - LastLanded < 2.3 then return end
+            if os.clock() - LastLanded > 2.3 then return end
             if Debounce.Enabled and (os.clock() - DebounceTick < 0.1) then
               DebounceTick = os.clock(); return
             end
