@@ -42,6 +42,8 @@ If its not the supposed utility at fault, please try some troubleshooting steps.
 ## Developers & Credits
 [AtTheZenith](https://github.com/AtTheZenith) - Lead maintainer of the LunarVape fork - @atthezenith on Discord
 <br/>
+[null-wtf](https://github.com/null-wtf) - Maintainer of the LunarVape fork - @null.wtf on Discord
+<br/>
 [7GrandDad](https://github.com/7GrandDadPGN) - Former maintainer of the parent project VapeV4ForRoblox
 <br/>
 [rce-incorporated](https://github.com/rce-incorporated/Fiu) - Luau bytecode disassembly with modifications
