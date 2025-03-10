@@ -6,7 +6,7 @@ if identifyexecutor then
     getgenv().setthreadidentity = nil
   end
   if table.find({'Xeno'},(identifyexecutor())) then
-    game.Players.LocalPlayer:kick('don't use xeno, it's skidded 😘')
+    game.Players.LocalPlayer:kick([[don't use xeno, it's skidded 😘]])
     task.wait(0.4)
     while true do end
   end
