@@ -1,7 +1,8 @@
 local loadstring = function(...)
 	local res, err = loadstring(...)
-	if err and vape then 
-		vape:CreateNotification('Lunar Vape', 'Failed to load : '..err, 30, 'alert') 
+	if err and LunarVape then
+    warn(err)
+		LunarVape:CreateNotification('Lunar Vape', 'Failed to load : '..err, 30, 'Alert') 
 	end
 	return res
 end
@@ -12,15 +13,17 @@ local isfile = isfile or function(file)
 	return suc and res ~= nil and res ~= ''
 end
 local function downloadFile(path, func)
-	if not isfile(path) then
+	if not isfile(path) and not _G.LunarVapeDeveloper then
 		local suc, res = pcall(function() 
-			return game:HttpGet('https://raw.githubusercontent.com/AtTheZenith/LunarVape/'..readfile('newvape/profiles/commit.txt')..'/'..select(1, path:gsub('newvape/', '')), true) 
+			return game:HttpGet('https://raw.githubusercontent.com/AtTheZenith/LunarVape/'..readfile('Lunar Vape/Profiles/Commit.txt')..'/'..select(1, path:gsub('Lunar Vape/', '')), true) 
 		end)
-		if not suc or res == '404: Not Found' then 
-			error(res) 
+		if res == '404: Not Found' then
+			warn(string.format('Error while downloading file %s: %s', path, res)); return
+		elseif not suc then
+			error(string.format('Error while downloading file %s: %s', path, res)); return
 		end
 		if path:find('.lua') then 
-			res = '--This watermark is used to delete the file if its cached, remove it to make the file persist after vape updates.\n'..res 
+			res = '--This watermark is used to delete the file if its cached, remove it to make the file persist after LunarVape updates.\n'..res 
 		end
 		writefile(path, res)
 	end
@@ -44,29 +47,29 @@ local debrisService = cloneref(game:GetService('Debris'))
 local gameCamera = workspace.CurrentCamera
 local lplr = playersService.LocalPlayer
 
-local vape = _G.vape
-local entitylib = vape.Libraries.entity
-local prediction = vape.Libraries.prediction
-local targetinfo = vape.Libraries.targetinfo
-local sessioninfo = vape.Libraries.sessioninfo
-local getcustomasset = vape.Libraries.getcustomasset
-local drawingactor = loadstring(downloadFile('newvape/libraries/drawing.lua'), 'drawing')(...)
+local LunarVape = _G.LunarVape
+local entitylib = LunarVape.Libraries.entity
+local prediction = LunarVape.Libraries.prediction
+local targetinfo = LunarVape.Libraries.targetinfo
+local sessioninfo = LunarVape.Libraries.sessioninfo
+local getcustomasset = LunarVape.Libraries.getcustomasset
+local drawingactor = loadstring(downloadFile('Lunar Vape/Libraries/Drawing Library.lua'), 'Lunar Vape/Libraries/Drawing Library.lua')()
 local function notif(...) 
-	return vape:CreateNotification(...) 
+	return LunarVape:CreateNotification(...) 
 end
 
 if not select(1, ...) then
 	if run_on_actor and getactors then 
-		local oldreload = _G.vapereload
-		vape.Load = function()
+		local oldreload = _G.LunarVapereload
+		LunarVape.Load = function()
 			task.delay(0.1, function()
-				vape:Uninject()
+				LunarVape:Uninject()
 			end)
 		end
 
 		task.spawn(function()
-			repeat task.wait() until not _G.vape
-			local executionString = "loadfile('newvape/main.lua')("..drawingactor..")"
+			repeat task.wait() until not _G.LunarVape
+			local executionString = "loadfile('Lunar Vape/main.lua')("..drawingactor..")"
 			for i, v in _G do
 				if type(v) == 'string' then
 					executionString = string.format("_G.%s = '%s'", i, v)..'\n'..executionString
@@ -75,7 +78,7 @@ if not select(1, ...) then
 				end
 			end
 			if oldreload then 
-				executionString = '_G.vapereload = true\n'..executionString 
+				executionString = '_G.LunarVapereload = true\n'..executionString 
 			end
 
 			for i, v in getactors() do 
@@ -84,11 +87,11 @@ if not select(1, ...) then
 					return
 				end
 			end
-			notif('Lunar Vape', 'Failed to find actor', 10, 'alert')
+			notif('Lunar Vape', 'Failed to find actor', 10, 'Alert')
 		end)
 	else
-		vape.Load = function()
-			notif('Lunar Vape', 'Missing actor functions.', 10, 'alert')
+		LunarVape.Load = function()
+			notif('Lunar Vape', 'Missing actor functions.', 10, 'Alert')
 		end
 	end
 
@@ -103,7 +106,7 @@ local function addBlur(parent)
 	blur.Size = UDim2.new(1, 89, 1, 52)
 	blur.Position = UDim2.fromOffset(-48, -31)
 	blur.BackgroundTransparency = 1
-	blur.Image = getcustomasset('newvape/assets/new/blur.png')
+	blur.Image = getcustomasset('Lunar Vape/Assets/Vape V4/Blur.png')
 	blur.ScaleType = Enum.ScaleType.Slice
 	blur.SliceCenter = Rect.new(52, 31, 261, 502)
 	blur.Parent = parent
@@ -140,17 +143,17 @@ local function hookEvent(id, rfunc)
 	end)
 
 	if not suc then 
-		notif('Lunar Vape', 'Failed to hook ('..id..')', 10, 'alert') 
+		notif('Lunar Vape', 'Failed to hook ('..id..')', 10, 'Alert') 
 	end
 
 	return type(res) == 'function' and res or function() end
 end
 
 local function isFriend(plr, recolor)
-	if vape.Categories.Friends.Options['Use friends'].Enabled then
-		local friend = table.find(vape.Categories.Friends.ListEnabled, plr.Name) and true
+	if LunarVape.Categories.Friends.Options['Use friends'].Enabled then
+		local friend = table.find(LunarVape.Categories.Friends.ListEnabled, plr.Name) and true
 		if recolor then 
-			friend = friend and vape.Categories.Friends.Options['Recolor visuals'].Enabled 
+			friend = friend and LunarVape.Categories.Friends.Options['Recolor visuals'].Enabled 
 		end
 		return friend
 	end
@@ -182,8 +185,8 @@ run(function()
 		if not frontlines.ShootFunction then 
 			task.wait(1)
 		end
-	until frontlines.ShootFunction or vape.Loaded == nil
-	if vape.Loaded == nil then return end
+	until frontlines.ShootFunction or LunarVape.Loaded == nil
+	if LunarVape.Loaded == nil then return end
 	frontlines.Events = debug.getupvalue(frontlines.Main.append_exe_set, 1)
 	frontlines.PickupBit = debug.getupvalue(frontlines.Events[frontlines.Main.exe_func_t.INIT_FPV_SOL_AMMO_PICKUP], 5)
 	frontlines.Chat = debug.getupvalue(frontlines.Events[frontlines.Main.exe_func_t.UPDATE_CHAT_GUI], 1)
@@ -225,8 +228,8 @@ run(function()
 		end
 	end)
 
-	vape:Clean(Drawing.kill)
-	vape:Clean(function()
+	LunarVape:Clean(Drawing.kill)
+	LunarVape:Clean(function()
 		for i, v in frontlines.Functions do 
 			hookfunction(i, v) 
 		end
@@ -248,9 +251,9 @@ run(function()
 
 	entitylib.getEntityColor = function(ent)
 		ent = ent.Player
-		if not (ent and vape.Categories.Main.Options['Use team color'].Enabled) then return end
+		if not (ent and LunarVape.Categories.Main.Options['Use team color'].Enabled) then return end
 		if isFriend(ent, true) then
-			return Color3.fromHSV(vape.Categories.Friends.Options['Friends color'].Hue, vape.Categories.Friends.Options['Friends color'].Sat, vape.Categories.Friends.Options['Friends color'].Value)
+			return Color3.fromHSV(LunarVape.Categories.Friends.Options['Friends color'].Hue, LunarVape.Categories.Friends.Options['Friends color'].Sat, LunarVape.Categories.Friends.Options['Friends color'].Value)
 		end
 		return getTeam(lplr) == getTeam(ent) and Color3.fromRGB(67, 140, 229) or Color3.fromRGB(234, 50, 50)
 	end
@@ -349,7 +352,7 @@ end)
 entitylib.start()
 
 for i, v in {'Reach', 'Health', 'TriggerBot', 'AntiFall', 'AntiRagdoll', 'Invisible', 'Disabler', 'Freecam', 'Parkour', 'HitBoxes', 'SafeWalk', 'Spider', 'Swim', 'GamingChair', 'TargetStrafe', 'Timer', 'MurderMystery', 'Blink', 'AnimationPlayer'} do
-	vape:Remove(v)
+	LunarVape:Remove(v)
 end
 
 run(function()
@@ -363,7 +366,7 @@ run(function()
 	local rayCheck = RaycastParams.new()
 	rayCheck.RespectCanCollide = true
 	
-	AimAssist = vape.Categories.Combat:CreateModule({
+	AimAssist = LunarVape.Categories.Combat:CreateModule({
 		Name = 'AimAssist',
 		Function = function(callback)
 			if CircleObject then
@@ -434,7 +437,7 @@ run(function()
 				CircleObject = Drawing.new('Circle')
 				CircleObject.Filled = CircleFilled.Enabled
 				CircleObject.Color = Color3.fromHSV(CircleColor.Hue, CircleColor.Sat, CircleColor.Value)
-				CircleObject.Position = vape.gui.AbsoluteSize / 2
+				CircleObject.Position = LunarVape.gui.AbsoluteSize / 2
 				CircleObject.Radius = FOV.Value
 				CircleObject.NumSides = 100
 				CircleObject.Transparency = 1 - CircleTransparency.Value
@@ -451,7 +454,7 @@ run(function()
 		end
 	})
 	CircleColor = AimAssist:CreateColorSlider({
-		Name = 'Circle Color', 
+		Name = 'Circle Color',
 		Function = function(hue, sat, val)
 			if CircleObject then
 				CircleObject.Color = Color3.fromHSV(hue, sat, val)
@@ -521,7 +524,7 @@ run(function()
 		return ent, ent and ent[targetPart]
 	end
 	
-	SilentAim = vape.Categories.Combat:CreateModule({
+	SilentAim = LunarVape.Categories.Combat:CreateModule({
 		Name = 'SilentAim',
 		Function = function(callback)
 			if CircleObject then
@@ -624,7 +627,7 @@ run(function()
 				CircleObject = Drawing.new('Circle')
 				CircleObject.Filled = CircleFilled.Enabled
 				CircleObject.Color = Color3.fromHSV(CircleColor.Hue, CircleColor.Sat, CircleColor.Value)
-				CircleObject.Position = vape.gui.AbsoluteSize / 2
+				CircleObject.Position = LunarVape.gui.AbsoluteSize / 2
 				CircleObject.Radius = Range.Value
 				CircleObject.NumSides = 100
 				CircleObject.Transparency = 1 - CircleTransparency.Value
@@ -679,7 +682,7 @@ end)
 run(function()
 	local Sprint
 	
-	Sprint = vape.Categories.Combat:CreateModule({
+	Sprint = LunarVape.Categories.Combat:CreateModule({
 		Name = 'Sprint',
 		Function = function(callback)
 			if callback then
@@ -707,7 +710,7 @@ run(function()
 	local GrenadeTP
 	local Range
 	
-	GrenadeTP = vape.Categories.Blatant:CreateModule({
+	GrenadeTP = LunarVape.Categories.Blatant:CreateModule({
 		Name = 'GrenadeTP',
 		Function = function(callback)
 			if callback then 
@@ -757,7 +760,7 @@ run(function()
 	local FireRate
 	local Automatic
 	
-	GunModifications = vape.Categories.Blatant:CreateModule({
+	GunModifications = LunarVape.Categories.Blatant:CreateModule({
 		Name = 'GunModifications',
 		Function = function(callback)
 			if callback then
@@ -845,7 +848,7 @@ run(function()
 		return true, knifecheck
 	end
 	
-	Killaura = vape.Categories.Blatant:CreateModule({
+	Killaura = LunarVape.Categories.Blatant:CreateModule({
 		Name = 'Killaura',
 		Function = function(callback)
 			if callback then
@@ -893,7 +896,7 @@ run(function()
 											frontlines.Main.globals.ctrl_states.trigger = true
 											frontlines.Main.globals.ctrl_ts.trigger = time()
 											frontlines.Main.exe_set(frontlines.Main.exe_set_t.FPV_SOL_MELEE_SOL_HIT, gun, part, Vector3.zero)
-											if vape.ThreadFix then 
+											if LunarVape.ThreadFix then 
 												setthreadidentity(8) 
 											end
 										end
@@ -979,7 +982,7 @@ run(function()
 					box.Size = Vector3.new(3, 5, 3)
 					box.CFrame = CFrame.new(0, -0.5, 0)
 					box.ZIndex = 0
-					box.Parent = vape.gui
+					box.Parent = LunarVape.gui
 					Boxes[i] = box
 				end
 			else
@@ -1101,7 +1104,7 @@ end)
 run(function()
 	local Phase
 	
-	Phase = vape.Categories.Blatant:CreateModule({
+	Phase = LunarVape.Categories.Blatant:CreateModule({
 		Name = 'Phase',
 		Function = function(callback)
 			if callback then
@@ -1136,7 +1139,7 @@ run(function()
 		table.insert(aimtable, Vector3.zero)
 	end
 	
-	SpinBot = vape.Categories.Blatant:CreateModule({
+	SpinBot = LunarVape.Categories.Blatant:CreateModule({
 		Name = 'SpinBot',
 		Function = function(callback)
 			if callback then
@@ -1197,11 +1200,11 @@ run(function()
 	local Color = {}
 	local Reference = {}
 	local Folder = Instance.new('Folder')
-	Folder.Parent = vape.gui
+	Folder.Parent = LunarVape.gui
 	local old
 	
 	local function addESP(v)
-		if vape.ThreadFix then 
+		if LunarVape.ThreadFix then 
 			setthreadidentity(8) 
 		end
 		if not v.model or v.model.Name ~= 'frag' then return end
@@ -1226,7 +1229,7 @@ run(function()
 		uicorner.Parent = image
 		Reference[v.model] = billboard
 		v.model.Destroying:Connect(function()
-			if vape.ThreadFix then 
+			if LunarVape.ThreadFix then 
 				setthreadidentity(8) 
 			end
 			if Reference[v.model] then
@@ -1236,7 +1239,7 @@ run(function()
 		end)
 	end
 	
-	GrenadeESP = vape.Categories.Render:CreateModule({
+	GrenadeESP = LunarVape.Categories.Render:CreateModule({
 		Name = 'GrenadeESP',
 		Function = function(callback)
 			if callback then
@@ -1283,7 +1286,7 @@ end)
 run(function()
 	local NoHurtCam
 	
-	NoHurtCam = vape.Categories.Render:CreateModule({
+	NoHurtCam = LunarVape.Categories.Render:CreateModule({
 		Name = 'NoHurtCam',
 		Function = function(callback)
 			if callback then
@@ -1301,7 +1304,7 @@ run(function()
 	local Distance
 	local hook = false
 	
-	ThirdPerson = vape.Categories.Render:CreateModule({
+	ThirdPerson = LunarVape.Categories.Render:CreateModule({
 		Name = 'ThirdPerson',
 		Function = function(callback)
 			if callback then
@@ -1373,7 +1376,7 @@ end)
 run(function()
 	local AutoRespawn
 	
-	AutoRespawn = vape.Categories.Utility:CreateModule({
+	AutoRespawn = LunarVape.Categories.Utility:CreateModule({
 		Name = 'AutoRespawn',
 		Function = function(callback)
 			if callback then
@@ -1396,7 +1399,7 @@ run(function()
 	local Hide
 	local oldchat
 	
-	ChatSpammer = vape.Categories.Utility:CreateModule({
+	ChatSpammer = LunarVape.Categories.Utility:CreateModule({
 		Name = 'ChatSpammer',
 		Function = function(callback)
 			if callback then
@@ -1429,7 +1432,7 @@ run(function()
 	local Range
 	local pickupdelay = tick()
 	
-	PickupRange = vape.Categories.Utility:CreateModule({
+	PickupRange = LunarVape.Categories.Utility:CreateModule({
 		Name = 'PickupRange',
 		Function = function(callback)
 			if callback then 
@@ -1470,7 +1473,7 @@ run(function()
 	local DrawingToggle
 	local drawingobjs = {}
 	
-	BulletTracers = vape.Legit:CreateModule({
+	BulletTracers = LunarVape.Legit:CreateModule({
 		Name = 'BulletTracers',
 		Function = function(callback)
 			if callback then 

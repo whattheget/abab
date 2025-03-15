@@ -1,7 +1,8 @@
 local loadstring = function(...)
 	local res, err = loadstring(...)
-	if err and vape then
-		vape:CreateNotification('Lunar Vape', 'Failed to load : '..err, 30, 'alert')
+	if err and LunarVape then
+    warn(err)
+		LunarVape:CreateNotification('Lunar Vape', 'Failed to load : '..err, 30, 'Alert')
 	end
 	return res
 end
@@ -12,15 +13,17 @@ local isfile = isfile or function(file)
 	return suc and res ~= nil and res ~= ''
 end
 local function downloadFile(path, func)
-	if not isfile(path) then
+	if not isfile(path) and not _G.LunarVapeDeveloper then
 		local suc, res = pcall(function()
-			return game:HttpGet('https://raw.githubusercontent.com/AtTheZenith/LunarVape/'..readfile('newvape/profiles/commit.txt')..'/'..select(1, path:gsub('newvape/', '')), true)
+			return game:HttpGet('https://raw.githubusercontent.com/AtTheZenith/LunarVape/'..readfile('Lunar Vape/Profiles/Commit.txt')..'/'..select(1, path:gsub('Lunar Vape/', '')), true)
 		end)
-		if not suc or res == '404: Not Found' then
-			error(res)
+		if res == '404: Not Found' then
+			warn(string.format('Error while downloading file %s: %s', path, res)); return
+		elseif not suc then
+			error(string.format('Error while downloading file %s: %s', path, res)); return
 		end
 		if path:find('.lua') then
-			res = '--This watermark is used to delete the file if its cached, remove it to make the file persist after vape updates.\n'..res
+			res = '--This watermark is used to delete the file if its cached, remove it to make the file persist after LunarVape updates.\n'..res
 		end
 		writefile(path, res)
 	end
@@ -58,11 +61,11 @@ local gameCamera = workspace.CurrentCamera or workspace:FindFirstChildWhichIsA('
 local lplr = playersService.LocalPlayer
 local assetfunction = getcustomasset
 
-local vape = _G.vape
-local tween = vape.Libraries.tween
-local targetinfo = vape.Libraries.targetinfo
-local getfontsize = vape.Libraries.getfontsize
-local getcustomasset = vape.Libraries.getcustomasset
+local LunarVape = _G.LunarVape
+local tween = LunarVape.Libraries.tween
+local targetinfo = LunarVape.Libraries.targetinfo
+local getfontsize = LunarVape.Libraries.getfontsize
+local getcustomasset = LunarVape.Libraries.getcustomasset
 
 local TargetStrafeVector, SpiderShift, WaypointFolder
 local Spider = {Enabled = false}
@@ -74,7 +77,7 @@ local function addBlur(parent)
 	blur.Size = UDim2.new(1, 89, 1, 52)
 	blur.Position = UDim2.fromOffset(-48, -31)
 	blur.BackgroundTransparency = 1
-	blur.Image = getcustomasset('newvape/assets/new/blur.png')
+	blur.Image = getcustomasset('Lunar Vape/Assets/Vape V4/Blur.png')
 	blur.ScaleType = Enum.ScaleType.Slice
 	blur.SliceCenter = Rect.new(52, 31, 261, 502)
 	blur.Parent = parent
@@ -96,10 +99,10 @@ local function calculateMoveVector(vec)
 end
 
 local function isFriend(plr, recolor)
-	if vape.Categories.Friends.Options['Use friends'].Enabled then
-		local friend = table.find(vape.Categories.Friends.ListEnabled, plr.Name) and true
+	if LunarVape.Categories.Friends.Options['Use friends'].Enabled then
+		local friend = table.find(LunarVape.Categories.Friends.ListEnabled, plr.Name) and true
 		if recolor then
-			friend = friend and vape.Categories.Friends.Options['Recolor visuals'].Enabled
+			friend = friend and LunarVape.Categories.Friends.Options['Recolor visuals'].Enabled
 		end
 		return friend
 	end
@@ -107,7 +110,7 @@ local function isFriend(plr, recolor)
 end
 
 local function isTarget(plr)
-	return table.find(vape.Categories.Targets.ListEnabled, plr.Name) and true
+	return table.find(LunarVape.Categories.Targets.ListEnabled, plr.Name) and true
 end
 
 local function canClick()
@@ -124,7 +127,7 @@ local function canClick()
 			return false
 		end
 	end
-	return (not vape.gui.ScaledGui.ClickGui.Visible) and (not inputService:GetFocusedTextBox())
+	return (not LunarVape.gui.ScaledGui.ClickGui.Visible) and (not inputService:GetFocusedTextBox())
 end
 
 local function getTableSize(tab)
@@ -138,7 +141,7 @@ local function getTool()
 end
 
 local function notif(...)
-	return vape:CreateNotification(...)
+	return LunarVape:CreateNotification(...)
 end
 
 local function removeTags(str)
@@ -149,7 +152,7 @@ end
 local visited, attempted, tpSwitch = {}, {}, false
 local cacheExpire, cache = tick()
 local function serverHop(pointer, filter)
-	visited = _G.vapeserverhoplist and _G.vapeserverhoplist:split('/') or {}
+	visited = _G.LunarVapeserverhoplist and _G.LunarVapeserverhoplist:split('/') or {}
 	if not table.find(visited, game.JobId) then
 		table.insert(visited, game.JobId)
 	end
@@ -158,7 +161,7 @@ local function serverHop(pointer, filter)
 	end
 
 	local suc, httpdata = pcall(function()
-		return cacheExpire < tick() and game:HttpGet('https://games.roblox.com/v1/games/'..game.PlaceId..'/servers/Public?sortOrder='..(filter == 'Ascending' and 1 or 2)..'&excludeFullGames=true&limit=100'..(pointer and '&cursor='..pointer or '')) or cache
+		return cacheExpire < tick() and game:HttpGet('https://games.roblox.com/v1/Game modules/'..game.PlaceId..'/servers/Public?sortOrder='..(filter == 'Ascending' and 1 or 2)..'&excludeFullGames=true&limit=100'..(pointer and '&cursor='..pointer or '')) or cache
 	end)
 	local data = suc and httpService:JSONDecode(httpdata) or nil
 	if data and data.data then
@@ -176,17 +179,17 @@ local function serverHop(pointer, filter)
 		if data.nextPageCursor then
 			serverHop(data.nextPageCursor, filter)
 		else
-			notif('Lunar Vape', 'Failed to find an available server.', 5, 'warning')
+			notif('Lunar Vape', 'Failed to find an available server.', 5, 'Warning')
 		end
 	else
-		notif('Lunar Vape', 'Failed to grab servers. ('..(data and data.errors[1].message or 'no data')..')', 5, 'warning')
+		notif('Lunar Vape', 'Failed to grab servers. ('..(data and data.errors[1].message or 'no data')..')', 5, 'Warning')
 	end
 end
 
-vape:Clean(lplr.OnTeleport:Connect(function()
+LunarVape:Clean(lplr.OnTeleport:Connect(function()
 	if not tpSwitch then
 		tpSwitch = true
-		queue_on_teleport("_G.vapeserverhoplist = '"..table.concat(visited, '/').."'\n_G.vapeserverhopprevious = '"..game.JobId.."'")
+		queue_on_teleport("_G.LunarVapeserverhoplist = '"..table.concat(visited, '/').."'\n_G.LunarVapeserverhopprevious = '"..game.JobId.."'")
 	end
 end))
 
@@ -221,13 +224,13 @@ local function motorMove(target, cf)
 	task.delay(0, part.Destroy, part)
 end
 
-local hash = loadstring(downloadFile('newvape/libraries/hash.lua'), 'hash')()
-local prediction = loadstring(downloadFile('newvape/libraries/prediction.lua'), 'prediction')()
-entitylib = loadstring(downloadFile('newvape/libraries/entity.lua'), 'entitylibrary')()
-vape.Libraries.entity = entitylib
-vape.Libraries.prediction = prediction
-vape.Libraries.hash = hash
-vape.Libraries.auraanims = {
+local hash = loadstring(downloadFile('Lunar Vape/Libraries/Hash Library.lua'), 'Lunar Vape/Libraries/Hash Library.lua')()
+local prediction = loadstring(downloadFile('Lunar Vape/Libraries/Prediction Library.lua'), 'Lunar Vape/Libraries/Prediction Library.lua')()
+entitylib = loadstring(downloadFile('Lunar Vape/Libraries/Entity Library.lua'), 'Lunar Vape/Libraries/Entity Library.lua')()
+LunarVape.Libraries.entity = entitylib
+LunarVape.Libraries.prediction = prediction
+LunarVape.Libraries.hash = hash
+LunarVape.Libraries.auraanims = {
 	Normal = {
 		{CFrame = CFrame.new(-0.17, -0.14, -0.12) * CFrame.Angles(math.rad(-53), math.rad(50), math.rad(-64)), Time = 0.1},
 		{CFrame = CFrame.new(-0.55, -0.59, -0.1) * CFrame.Angles(math.rad(-161), math.rad(54), math.rad(-6)), Time = 0.08},
@@ -334,7 +337,7 @@ run(function()
 		end
 		if ent.NPC then return true end
 		if isFriend(ent.Player) then return false end
-		if vape.Categories.Main.Options['Teams by server'].Enabled then
+		if LunarVape.Categories.Main.Options['Teams by server'].Enabled then
 			if not lplr.Team then return true end
 			if not ent.Player.Team then return true end
 			if ent.Player.Team ~= lplr.Team then return true end
@@ -345,21 +348,21 @@ run(function()
 
 	entitylib.getEntityColor = function(ent)
 		ent = ent.Player
-		if not (ent and vape.Categories.Main.Options['Use team color'].Enabled) then return end
+		if not (ent and LunarVape.Categories.Main.Options['Use team color'].Enabled) then return end
 		if isFriend(ent, true) then
-			return Color3.fromHSV(vape.Categories.Friends.Options['Friends color'].Hue, vape.Categories.Friends.Options['Friends color'].Sat, vape.Categories.Friends.Options['Friends color'].Value)
+			return Color3.fromHSV(LunarVape.Categories.Friends.Options['Friends color'].Hue, LunarVape.Categories.Friends.Options['Friends color'].Sat, LunarVape.Categories.Friends.Options['Friends color'].Value)
 		end
 		return tostring(ent.TeamColor) ~= 'White' and ent.TeamColor.Color or nil
 	end
 
-	vape:Clean(function()
+	LunarVape:Clean(function()
 		entitylib.kill()
 		entitylib = nil
 	end)
-	vape:Clean(vape.Categories.Friends.Update.Event:Connect(function() entitylib.refresh() end))
-	vape:Clean(vape.Categories.Targets.Update.Event:Connect(function() entitylib.refresh() end))
-	vape:Clean(entitylib.Events.LocalAdded:Connect(updateVelocity))
-	vape:Clean(workspace:GetPropertyChangedSignal('CurrentCamera'):Connect(function()
+	LunarVape:Clean(LunarVape.Categories.Friends.Update.Event:Connect(function() entitylib.refresh() end))
+	LunarVape:Clean(LunarVape.Categories.Targets.Update.Event:Connect(function() entitylib.refresh() end))
+	LunarVape:Clean(entitylib.Events.LocalAdded:Connect(updateVelocity))
+	LunarVape:Clean(workspace:GetPropertyChangedSignal('CurrentCamera'):Connect(function()
 		gameCamera = workspace.CurrentCamera or workspace:FindFirstChildWhichIsA('Camera')
 	end))
 end)
@@ -386,7 +389,7 @@ run(function()
 		return num
 	end
 	
-	AimAssist = vape.Categories.Combat:CreateModule({
+	AimAssist = LunarVape.Categories.Combat:CreateModule({
 		Name = 'AimAssist',
 		Function = function(callback)
 			if CircleObject then
@@ -400,7 +403,7 @@ run(function()
 						CircleObject.Position = inputService:GetMouseLocation()
 					end
 	
-					if rightClicked and not vape.gui.ScaledGui.ClickGui.Visible then
+					if rightClicked and not LunarVape.gui.ScaledGui.ClickGui.Visible then
 						ent = entitylib.EntityMouse({
 							Range = FOV.Value,
 							Part = Part.Value,
@@ -478,7 +481,7 @@ run(function()
 				CircleObject = Drawing.new('Circle')
 				CircleObject.Filled = CircleFilled.Enabled
 				CircleObject.Color = Color3.fromHSV(CircleColor.Hue, CircleColor.Sat, CircleColor.Value)
-				CircleObject.Position = vape.gui.AbsoluteSize / 2
+				CircleObject.Position = LunarVape.gui.AbsoluteSize / 2
 				CircleObject.Radius = FOV.Value
 				CircleObject.NumSides = 100
 				CircleObject.Transparency = 1 - CircleTransparency.Value
@@ -547,7 +550,7 @@ run(function()
 	local Mode
 	local CPS
 	
-	AutoClicker = vape.Categories.Combat:CreateModule({
+	AutoClicker = LunarVape.Categories.Combat:CreateModule({
 		Name = 'AutoClicker',
 		Function = function(callback)
 			if callback then
@@ -559,7 +562,7 @@ run(function()
 						end
 					else
 						if mouse1click and (isrbxactive or iswindowactive)() then
-							if not vape.gui.ScaledGui.ClickGui.Visible then
+							if not LunarVape.gui.ScaledGui.ClickGui.Visible then
 								(Mode.Value == 'Click' and mouse1click or mouse2click)()
 							end
 						end
@@ -595,7 +598,7 @@ run(function()
 	Overlay.FilterType = Enum.RaycastFilterType.Include
 	local modified = {}
 	
-	Reach = vape.Categories.Combat:CreateModule({
+	Reach = LunarVape.Categories.Combat:CreateModule({
 		Name = 'Reach',
 		Function = function(callback)
 			if callback then
@@ -772,7 +775,7 @@ run({'Solara', 'NX'}, function()
 	Hooks.FindPartOnRay = Hooks.FindPartOnRayWithIgnoreList
 	Hooks.ViewportPointToRay = Hooks.ScreenPointToRay
 
-	SilentAim = vape.Categories.Combat:CreateModule({
+	SilentAim = LunarVape.Categories.Combat:CreateModule({
 		Name = 'SilentAim',
 		Function = function(callback)
 			if CircleObject then
@@ -978,7 +981,7 @@ run({'Solara', 'NX'}, function()
 				CircleObject = Drawing.new('Circle')
 				CircleObject.Filled = CircleFilled.Enabled
 				CircleObject.Color = Color3.fromHSV(CircleColor.Hue, CircleColor.Sat, CircleColor.Value)
-				CircleObject.Position = vape.gui.AbsoluteSize / 2
+				CircleObject.Position = LunarVape.gui.AbsoluteSize / 2
 				CircleObject.Radius = Range.Value
 				CircleObject.NumSides = 100
 				CircleObject.Transparency = 1 - CircleTransparency.Value
@@ -1078,7 +1081,7 @@ run(function()
 		end
 	end
 	
-	TriggerBot = vape.Categories.Combat:CreateModule({
+	TriggerBot = LunarVape.Categories.Combat:CreateModule({
 		Name = 'TriggerBot',
 		Function = function(callback)
 			if callback then
@@ -1149,7 +1152,7 @@ run(function()
 	rayCheck.RespectCanCollide = true
 	local part
 	
-	AntiFall = vape.Categories.Blatant:CreateModule({
+	AntiFall = LunarVape.Categories.Blatant:CreateModule({
 		Name = 'AntiFall',
 		Function = function(callback)
 			if callback then
@@ -1351,7 +1354,7 @@ run(function()
 		end
 	}
 
-	Fly = vape.Categories.Blatant:CreateModule({
+	Fly = LunarVape.Categories.Blatant:CreateModule({
 		Name = 'Fly',
 		Function = function(callback)
 			if Platform then
@@ -1637,7 +1640,7 @@ run(function()
 		end
 	end
 	
-	HighJump = vape.Categories.Blatant:CreateModule({
+	HighJump = LunarVape.Categories.Blatant:CreateModule({
 		Name = 'HighJump',
 		Function = function(callback)
 			if callback then
@@ -1685,7 +1688,7 @@ run(function()
 	local Expand
 	local modified = {}
 	
-	HitBoxes = vape.Categories.Blatant:CreateModule({
+	HitBoxes = LunarVape.Categories.Blatant:CreateModule({
 		Name = 'HitBoxes',
 		Function = function(callback)
 			if callback then
@@ -1828,12 +1831,12 @@ run({'Solara', 'NX'}, function()
 		end
 	end
 	
-	Invisible = vape.Categories.Blatant:CreateModule({
+	Invisible = LunarVape.Categories.Blatant:CreateModule({
 		Name = 'Invisible',
 		Function = function(callback)
 			if callback then
 				if not proper then
-					notif('Invisible', 'Broken state detected', 3, 'alert')
+					notif('Invisible', 'Broken state detected', 3, 'Alert')
 					Invisible:Toggle()
 					return
 				end
@@ -1918,7 +1921,7 @@ run(function()
 		return tool and tool:FindFirstChildWhichIsA('TouchTransmitter', true) or nil, tool
 	end
 	
-	Killaura = vape.Categories.Blatant:CreateModule({
+	Killaura = LunarVape.Categories.Blatant:CreateModule({
 		Name = 'Killaura',
 		Function = function(callback)
 			if callback then
@@ -2051,7 +2054,7 @@ run(function()
 					box.Size = Vector3.new(3, 5, 3)
 					box.CFrame = CFrame.new(0, -0.5, 0)
 					box.ZIndex = 0
-					box.Parent = vape.gui
+					box.Parent = LunarVape.gui
 					Boxes[i] = box
 				end
 			else
@@ -2176,7 +2179,7 @@ run(function()
 	local Value
 	local AutoDisable
 	
-	LongJump = vape.Categories.Blatant:CreateModule({
+	LongJump = LunarVape.Categories.Blatant:CreateModule({
 		Name = 'LongJump',
 		Function = function(callback)
 			if callback then
@@ -2256,7 +2259,7 @@ run(function()
 		return returned
 	end
 	
-	MouseTP = vape.Categories.Blatant:CreateModule({
+	MouseTP = LunarVape.Categories.Blatant:CreateModule({
 		Name = 'MouseTP',
 		Function = function(callback)
 			if callback then
@@ -2309,7 +2312,7 @@ run(function()
 							end
 						elseif MouseTP.Enabled then
 							MouseTP:Toggle()
-							notif('MouseTP', 'Character missing', 5, 'warning')
+							notif('MouseTP', 'Character missing', 5, 'Warning')
 						end
 	
 						task.wait(Delay.Value)
@@ -2439,7 +2442,7 @@ run(function()
 	}
 	Functions.Motor = Functions.CFrame
 	
-	Phase = vape.Categories.Blatant:CreateModule({
+	Phase = LunarVape.Categories.Blatant:CreateModule({
 		Name = 'Phase',
 		Function = function(callback)
 			if callback then
@@ -2506,7 +2509,7 @@ run(function()
 	local AutoJumpValue
 	local w, s, a, d = 0, 0, 0, 0
 	
-	Speed = vape.Categories.Blatant:CreateModule({
+	Speed = LunarVape.Categories.Blatant:CreateModule({
 		Name = 'Speed',
 		Function = function(callback)
 			frictionTable.Speed = callback and CustomProperties.Enabled or nil
@@ -2674,7 +2677,7 @@ run(function()
 	rayCheck.RespectCanCollide = true
 	local Active, Truss
 	
-	Spider = vape.Categories.Blatant:CreateModule({
+	Spider = LunarVape.Categories.Blatant:CreateModule({
 		Name = 'Spider',
 		Function = function(callback)
 			if callback then
@@ -2778,7 +2781,7 @@ run(function()
 	local Value
 	local AngularVelocity
 	
-	SpinBot = vape.Categories.Blatant:CreateModule({
+	SpinBot = LunarVape.Categories.Blatant:CreateModule({
 		Name = 'SpinBot',
 		Function = function(callback)
 			if callback then
@@ -2840,7 +2843,7 @@ run({'NX'}, function()
 	local terrain = cloneref(workspace:FindFirstChildWhichIsA('Terrain'))
 	local lastpos = Region3.new(Vector3.zero, Vector3.zero)
 	
-	Swim = vape.Categories.Blatant:CreateModule({
+	Swim = LunarVape.Categories.Blatant:CreateModule({
 		Name = 'Swim',
 		Function = function(callback)
 			if callback then
@@ -2881,7 +2884,7 @@ run(function()
 	rayCheck.RespectCanCollide = true
 	local module, old
 	
-	TargetStrafe = vape.Categories.Blatant:CreateModule({
+	TargetStrafe = LunarVape.Categories.Blatant:CreateModule({
 		Name = 'TargetStrafe',
 		Function = function(callback)
 			if callback then
@@ -2893,7 +2896,7 @@ run(function()
 				end
 				
 				old = module.moveFunction
-				local flymod, ang, oldent = vape.Modules.Fly or {Enabled = false}
+				local flymod, ang, oldent = LunarVape.Modules.Fly or {Enabled = false}
 				module.moveFunction = function(self, vec, face)
 					local wallcheck = Targets.Walls.Enabled
 					local ent = not inputService:IsKeyDown(Enum.KeyCode.S) and entitylib.EntityPosition({
@@ -2994,7 +2997,7 @@ run({'Solara', 'NX'}, function()
 	local Timer
 	local Value
 	
-	Timer = vape.Categories.Blatant:CreateModule({
+	Timer = LunarVape.Categories.Blatant:CreateModule({
 		Name = 'Timer',
 		Function = function(callback)
 			if callback then
@@ -3028,13 +3031,13 @@ run(function()
 	local DistanceLimit
 	local Reference = {}
 	local Folder = Instance.new('Folder')
-	Folder.Parent = vape.gui
+	Folder.Parent = LunarVape.gui
 	
 	local function Added(ent)
 		if not Targets.Players.Enabled and ent.Player then return end
 		if not Targets.NPCs.Enabled and ent.NPC then return end
 		if Teammates.Enabled and (not ent.Targetable) and (not ent.Friend) and (not ent.Friend) then return end
-		if vape.ThreadFix then
+		if LunarVape.ThreadFix then
 			setthreadidentity(8)
 		end
 		local EntityArrow = Instance.new('ImageLabel')
@@ -3044,7 +3047,7 @@ run(function()
 		EntityArrow.BackgroundTransparency = 1
 		EntityArrow.BorderSizePixel = 0
 		EntityArrow.Visible = false
-		EntityArrow.Image = getcustomasset('newvape/assets/new/arrowmodule.png')
+		EntityArrow.Image = getcustomasset('Lunar Vape/Assets/Vape V4/Module Arrow.png')
 		EntityArrow.ImageColor3 = entitylib.getEntityColor(ent) or Color3.fromHSV(Color.Hue, Color.Sat, Color.Value)
 		EntityArrow.Parent = Folder
 		Reference[ent] = EntityArrow
@@ -3053,7 +3056,7 @@ run(function()
 	local function Removed(ent)
 		local v = Reference[ent]
 		if v then
-			if vape.ThreadFix then
+			if LunarVape.ThreadFix then
 				setthreadidentity(8)
 			end
 			Reference[ent] = nil
@@ -3087,7 +3090,7 @@ run(function()
 		end
 	end
 	
-	Arrows = vape.Categories.Render:CreateModule({
+	Arrows = LunarVape.Categories.Render:CreateModule({
 		Name = 'Arrows',
 		Function = function(callback)
 			if callback then
@@ -3100,7 +3103,7 @@ run(function()
 					if Reference[ent] then Removed(ent) end
 					Added(ent)
 				end))
-				Arrows:Clean(vape.Categories.Friends.ColorUpdate.Event:Connect(function()
+				Arrows:Clean(LunarVape.Categories.Friends.ColorUpdate.Event:Connect(function()
 					ColorFunc(Color.Hue, Color.Sat, Color.Value)
 				end))
 				Arrows:Clean(runService.RenderStepped:Connect(Loop))
@@ -3169,13 +3172,13 @@ run(function()
 	local Walls
 	local Reference = {}
 	local Folder = Instance.new('Folder')
-	Folder.Parent = vape.gui
+	Folder.Parent = LunarVape.gui
 	
 	local function Added(ent)
 		if not Targets.Players.Enabled and ent.Player then return end
 		if not Targets.NPCs.Enabled and ent.NPC then return end
 		if Teammates.Enabled and (not ent.Targetable) and (not ent.Friend) then return end
-		if vape.ThreadFix then
+		if LunarVape.ThreadFix then
 			setthreadidentity(8)
 		end
 		if Mode.Value == 'Highlight' then
@@ -3213,7 +3216,7 @@ run(function()
 	
 	local function Removed(ent)
 		if Reference[ent] then
-			if vape.ThreadFix then
+			if LunarVape.ThreadFix then
 				setthreadidentity(8)
 			end
 			if type(Reference[ent]) == 'table' then
@@ -3228,7 +3231,7 @@ run(function()
 		end
 	end
 	
-	Chams = vape.Categories.Render:CreateModule({
+	Chams = LunarVape.Categories.Render:CreateModule({
 		Name = 'Chams',
 		Function = function(callback)
 			if callback then
@@ -3239,7 +3242,7 @@ run(function()
 					end
 					Added(ent)
 				end))
-				Chams:Clean(vape.Categories.Friends.ColorUpdate.Event:Connect(function()
+				Chams:Clean(LunarVape.Categories.Friends.ColorUpdate.Event:Connect(function()
 					for i, v in Reference do
 						local color = entitylib.getEntityColor(i) or Color3.fromHSV(FillColor.Hue, FillColor.Sat, FillColor.Value)
 						if type(v) == 'table' then
@@ -3395,7 +3398,7 @@ run(function()
 			if not Targets.Players.Enabled and ent.Player then return end
 			if not Targets.NPCs.Enabled and ent.NPC then return end
 			if Teammates.Enabled and (not ent.Targetable) and (not ent.Friend) then return end
-			if vape.ThreadFix then
+			if LunarVape.ThreadFix then
 				setthreadidentity(8)
 			end
 			local EntityESP = {}
@@ -3461,7 +3464,7 @@ run(function()
 			if not Targets.Players.Enabled and ent.Player then return end
 			if not Targets.NPCs.Enabled and ent.NPC then return end
 			if Teammates.Enabled and (not ent.Targetable) and (not ent.Friend) then return end
-			if vape.ThreadFix then
+			if LunarVape.ThreadFix then
 				setthreadidentity(8)
 			end
 			local EntityESP = {}
@@ -3490,7 +3493,7 @@ run(function()
 			if not Targets.Players.Enabled and ent.Player then return end
 			if not Targets.NPCs.Enabled and ent.NPC then return end
 			if Teammates.Enabled and (not ent.Targetable) and (not ent.Friend) then return end
-			if vape.ThreadFix then
+			if LunarVape.ThreadFix then
 				setthreadidentity(8)
 			end
 			local EntityESP = {}
@@ -3518,7 +3521,7 @@ run(function()
 		Drawing2D = function(ent)
 			local EntityESP = Reference[ent]
 			if EntityESP then
-				if vape.ThreadFix then
+				if LunarVape.ThreadFix then
 					setthreadidentity(8)
 				end
 				Reference[ent] = nil
@@ -3538,7 +3541,7 @@ run(function()
 		Drawing2D = function(ent)
 			local EntityESP = Reference[ent]
 			if EntityESP then
-				if vape.ThreadFix then
+				if LunarVape.ThreadFix then
 					setthreadidentity(8)
 				end
 				
@@ -3735,7 +3738,7 @@ run(function()
 		end
 	}
 	
-	ESP = vape.Categories.Render:CreateModule({
+	ESP = LunarVape.Categories.Render:CreateModule({
 		Name = 'ESP',
 		Function = function(callback)
 			if callback then
@@ -3764,7 +3767,7 @@ run(function()
 					end
 				end
 				if ColorFunc[methodused] then
-					ESP:Clean(vape.Categories.Friends.ColorUpdate.Event:Connect(function()
+					ESP:Clean(LunarVape.Categories.Friends.ColorUpdate.Event:Connect(function()
 						ColorFunc[methodused](Color.Hue, Color.Sat, Color.Value)
 					end))
 				end
@@ -3921,11 +3924,11 @@ run(function()
 	local chairanim
 	local chair
 	
-	GamingChair = vape.Categories.Render:CreateModule({
+	GamingChair = LunarVape.Categories.Render:CreateModule({
 		Name = 'GamingChair',
 		Function = function(callback)
 			if callback then
-				if vape.ThreadFix then
+				if LunarVape.ThreadFix then
 					setthreadidentity(8)
 				end
 				chair = Instance.new('MeshPart')
@@ -4030,7 +4033,7 @@ run(function()
 						chairfan.Velocity = Vector3.zero
 						chairfan.CFrame = chair.CFrame * CFrame.new(0.047, -1.873, 0) * CFrame.Angles(0, math.rad(tick() * 180 % 360), math.rad(180))
 						local moving = entitylib.character.Humanoid:GetState() == Enum.HumanoidStateType.Running and entitylib.character.Humanoid.MoveDirection ~= Vector3.zero
-						local flying = vape.Modules.Fly and vape.Modules.Fly.Enabled or vape.Modules.LongJump and vape.Modules.LongJump.Enabled
+						local flying = LunarVape.Modules.Fly and LunarVape.Modules.Fly.Enabled or LunarVape.Modules.LongJump and LunarVape.Modules.LongJump.Enabled
 						if movingsound.TimePosition > 1.9 then
 							movingsound.TimePosition = 0.2
 						end
@@ -4134,7 +4137,7 @@ end)
 run(function()
 	local Health
 	
-	Health = vape.Categories.Render:CreateModule({
+	Health = LunarVape.Categories.Render:CreateModule({
 		Name = 'Health',
 		Function = function(callback)
 			if callback then
@@ -4146,7 +4149,7 @@ run(function()
 				label.Text = '100 ❤️'
 				label.TextSize = 18
 				label.Font = Enum.Font.Arial
-				label.Parent = vape.gui
+				label.Parent = LunarVape.gui
 				Health:Clean(label)
 				
 				repeat
@@ -4176,7 +4179,7 @@ run(function()
 	local DistanceLimit
 	local Strings, Sizes, Reference = {}, {}, {}
 	local Folder = Instance.new('Folder')
-	Folder.Parent = vape.gui
+	Folder.Parent = LunarVape.gui
 	local methodused
 	
 	local Added = {
@@ -4184,7 +4187,7 @@ run(function()
 			if not Targets.Players.Enabled and ent.Player then return end
 			if not Targets.NPCs.Enabled and ent.NPC then return end
 			if Teammates.Enabled and (not ent.Targetable) and (not ent.Friend) then return end
-			if vape.ThreadFix then
+			if LunarVape.ThreadFix then
 				setthreadidentity(8)
 			end
 	
@@ -4220,7 +4223,7 @@ run(function()
 			if not Targets.Players.Enabled and ent.Player then return end
 			if not Targets.NPCs.Enabled and ent.NPC then return end
 			if Teammates.Enabled and (not ent.Targetable) and (not ent.Friend) then return end
-			if vape.ThreadFix then
+			if LunarVape.ThreadFix then
 				setthreadidentity(8)
 			end
 	
@@ -4255,7 +4258,7 @@ run(function()
 		Normal = function(ent)
 			local v = Reference[ent]
 			if v then
-				if vape.ThreadFix then
+				if LunarVape.ThreadFix then
 					setthreadidentity(8)
 				end
 				Reference[ent] = nil
@@ -4267,7 +4270,7 @@ run(function()
 		Drawing = function(ent)
 			local v = Reference[ent]
 			if v then
-				if vape.ThreadFix then
+				if LunarVape.ThreadFix then
 					setthreadidentity(8)
 				end
 				Reference[ent] = nil
@@ -4287,7 +4290,7 @@ run(function()
 		Normal = function(ent)
 			local nametag = Reference[ent]
 			if nametag then
-				if vape.ThreadFix then
+				if LunarVape.ThreadFix then
 					setthreadidentity(8)
 				end
 				Sizes[ent] = nil
@@ -4310,7 +4313,7 @@ run(function()
 		Drawing = function(ent)
 			local nametag = Reference[ent]
 			if nametag then
-				if vape.ThreadFix then
+				if LunarVape.ThreadFix then
 					setthreadidentity(8)
 				end
 				Sizes[ent] = nil
@@ -4409,7 +4412,7 @@ run(function()
 		end
 	}
 	
-	NameTags = vape.Categories.Render:CreateModule({
+	NameTags = LunarVape.Categories.Render:CreateModule({
 		Name = 'NameTags',
 		Function = function(callback)
 			if callback then
@@ -4438,7 +4441,7 @@ run(function()
 					end
 				end
 				if ColorFunc[methodused] then
-					NameTags:Clean(vape.Categories.Friends.ColorUpdate.Event:Connect(function()
+					NameTags:Clean(LunarVape.Categories.Friends.ColorUpdate.Event:Connect(function()
 						ColorFunc[methodused](Color.Hue, Color.Sat, Color.Value)
 					end))
 				end
@@ -4583,7 +4586,7 @@ run(function()
 	local models = {}
 	
 	local function addMesh(ent)
-		if vape.ThreadFix then 
+		if LunarVape.ThreadFix then 
 			setthreadidentity(8)
 		end
 		local root = ent.RootPart
@@ -4613,7 +4616,7 @@ run(function()
 		end
 	end
 	
-	PlayerModel = vape.Categories.Render:CreateModule({
+	PlayerModel = LunarVape.Categories.Render:CreateModule({
 		Name = 'PlayerModel',
 		Function = function(callback)
 			if callback then 
@@ -4707,7 +4710,7 @@ run(function()
 		if not Targets.Players.Enabled and ent.Player then return end
 		if not Targets.NPCs.Enabled and ent.NPC then return end
 		if (not ent.Targetable) and (not ent.Friend) then return end
-		if vape.ThreadFix then
+		if LunarVape.ThreadFix then
 			setthreadidentity(8)
 		end
 	
@@ -4730,7 +4733,7 @@ run(function()
 	local function Removed(ent)
 		local v = Reference[ent]
 		if v then
-			if vape.ThreadFix then
+			if LunarVape.ThreadFix then
 				setthreadidentity(8)
 			end
 			Reference[ent] = nil
@@ -4738,9 +4741,9 @@ run(function()
 		end
 	end
 	
-	Radar = vape:CreateOverlay({
+	Radar = LunarVape:CreateOverlay({
 		Name = 'Radar',
-		Icon = getcustomasset('newvape/assets/new/radaricon.png'),
+		Icon = getcustomasset('Lunar Vape/Assets/Vape V4/Radar Icon.png'),
 		Size = UDim2.fromOffset(14, 14),
 		Position = UDim2.fromOffset(12, 13),
 		Function = function(callback)
@@ -4758,7 +4761,7 @@ run(function()
 					end
 					Added(ent)
 				end))
-				Radar:Clean(vape.Categories.Friends.ColorUpdate.Event:Connect(function()
+				Radar:Clean(LunarVape.Categories.Friends.ColorUpdate.Event:Connect(function()
 					for ent, EntityDot in Reference do
 						EntityDot.BackgroundColor3 = entitylib.getEntityColor(ent) or Color3.fromHSV(PlayerColor.Hue, PlayerColor.Sat, PlayerColor.Value)
 					end
@@ -4875,7 +4878,7 @@ run(function()
 	local FillTransparency
 	local Reference = {}
 	local Folder = Instance.new('Folder')
-	Folder.Parent = vape.gui
+	Folder.Parent = LunarVape.gui
 	
 	local function Add(v)
 		if not table.find(List.ListEnabled, v.Name) then return end
@@ -4892,7 +4895,7 @@ run(function()
 		end
 	end
 	
-	Search = vape.Categories.Render:CreateModule({
+	Search = LunarVape.Categories.Render:CreateModule({
 		Name = 'Search',
 		Function = function(callback)
 			if callback then
@@ -4955,10 +4958,10 @@ run(function()
 	local infolabel
 	local infostroke
 	
-	SessionInfo = vape:CreateOverlay({
+	SessionInfo = LunarVape:CreateOverlay({
 		Name = 'Session Info',
-		Icon = getcustomasset('newvape/assets/new/textguiicon.png'),
-		Size = UDim2.fromOffset(16, 12),
+		Icon = getcustomasset('Lunar Vape/Assets/Vape V4/Overlays Tab.png'),
+		Size = UDim2.fromOffset(13, 10),
 		Position = UDim2.fromOffset(12, 14),
 		Function = function(callback)
 			if callback then
@@ -4966,25 +4969,25 @@ run(function()
 				SessionInfo:Clean(playersService.LocalPlayer.OnTeleport:Connect(function()
 					if not teleportedServers then
 						teleportedServers = true
-						queue_on_teleport("_G.vapesessioninfo = '"..httpService:JSONEncode(vape.Libraries.sessioninfo.Objects).."'")
+						queue_on_teleport("_G.LunarVapesessioninfo = '"..httpService:JSONEncode(LunarVape.Libraries.sessioninfo.Objects).."'")
 					end
 				end))
 	
-				if _G.vapesessioninfo then
-					for i, v in httpService:JSONDecode(_G.vapesessioninfo) do
-						if vape.Libraries.sessioninfo.Objects[i] and v.Saved then
-							vape.Libraries.sessioninfo.Objects[i].Value = v.Value
+				if _G.LunarVapesessioninfo then
+					for i, v in httpService:JSONDecode(_G.LunarVapesessioninfo) do
+						if LunarVape.Libraries.sessioninfo.Objects[i] and v.Saved then
+							LunarVape.Libraries.sessioninfo.Objects[i].Value = v.Value
 						end
 					end
 				end
 	
 				repeat
-					if vape.Libraries.sessioninfo then
+					if LunarVape.Libraries.sessioninfo then
 						local stuff = {''}
 						if Title.Enabled then
 							stuff[1] = TitleOffset.Enabled and '<b>Session Info</b>\n<font size="4"> </font>' or '<b>Session Info</b>'
 						end
-						for i, v in vape.Libraries.sessioninfo.Objects do
+						for i, v in LunarVape.Libraries.sessioninfo.Objects do
 							stuff[v.Index] = i..': '..v.Function(v.Value)
 						end
 						if not Title.Enabled then
@@ -5054,11 +5057,11 @@ run(function()
 	infoholder.BackgroundColor3 = Color3.new()
 	infoholder.BackgroundTransparency = 0.5
 	infoholder.Parent = SessionInfo.Children
-	vape:Clean(SessionInfo.Children:GetPropertyChangedSignal('AbsolutePosition'):Connect(function()
-		if vape.ThreadFix then
+	LunarVape:Clean(SessionInfo.Children:GetPropertyChangedSignal('AbsolutePosition'):Connect(function()
+		if LunarVape.ThreadFix then
 			setthreadidentity(8)
 		end
-		local newside = SessionInfo.Children.AbsolutePosition.X > (vape.gui.AbsoluteSize.X / 2)
+		local newside = SessionInfo.Children.AbsolutePosition.X > (LunarVape.gui.AbsoluteSize.X / 2)
 		infoholder.Position = UDim2.fromScale(newside and 1 or 0, 0)
 		infoholder.AnchorPoint = Vector2.new(newside and 1 or 0, 0)
 	end))
@@ -5083,7 +5086,7 @@ run(function()
 	infostroke.Color = Color3.fromHSV(0.44, 1, 1)
 	infostroke.Parent = infoholder
 	addBlur(infoholder)
-	vape.Libraries.sessioninfo = {
+	LunarVape.Libraries.sessioninfo = {
 		Objects = {},
 		AddItem = function(self, name, startvalue, func, saved)
 			func, saved = func or function(val) return val end, saved == nil or saved
@@ -5098,7 +5101,7 @@ run(function()
 			}
 		end
 	}
-	vape.Libraries.sessioninfo:AddItem('Time Played', os.clock(), function(value)
+	LunarVape.Libraries.sessioninfo:AddItem('Time Played', os.clock(), function(value)
 		return os.date('!%X', math.floor(os.clock() - value))
 	end)
 end)
@@ -5121,7 +5124,7 @@ run(function()
 		if not Targets.Players.Enabled and ent.Player then return end
 		if not Targets.NPCs.Enabled and ent.NPC then return end
 		if Teammates.Enabled and (not ent.Targetable) and (not ent.Friend) then return end
-		if vape.ThreadFix then
+		if LunarVape.ThreadFix then
 			setthreadidentity(8)
 		end
 	
@@ -5135,7 +5138,7 @@ run(function()
 	local function Removed(ent)
 		local v = Reference[ent]
 		if v then
-			if vape.ThreadFix then
+			if LunarVape.ThreadFix then
 				setthreadidentity(8)
 			end
 			Reference[ent] = nil
@@ -5155,7 +5158,7 @@ run(function()
 	end
 	
 	local function Loop()
-		local screenSize = vape.gui.AbsoluteSize
+		local screenSize = LunarVape.gui.AbsoluteSize
 		local startVector = StartPosition.Value == 'Mouse' and inputService:GetMouseLocation() or Vector2.new(screenSize.X / 2, (StartPosition.Value == 'Middle' and screenSize.Y / 2 or screenSize.Y))
 	
 		for ent, EntityTracer in Reference do
@@ -5186,7 +5189,7 @@ run(function()
 		end
 	end
 	
-	Tracers = vape.Categories.Render:CreateModule({
+	Tracers = LunarVape.Categories.Render:CreateModule({
 		Name = 'Tracers',
 		Function = function(callback)
 			if callback then
@@ -5203,7 +5206,7 @@ run(function()
 					end
 					Added(ent)
 				end))
-				Tracers:Clean(vape.Categories.Friends.ColorUpdate.Event:Connect(function()
+				Tracers:Clean(LunarVape.Categories.Friends.ColorUpdate.Event:Connect(function()
 					ColorFunc(Color.Hue, Color.Sat, Color.Value)
 				end))
 				Tracers:Clean(runService.RenderStepped:Connect(Loop))
@@ -5312,9 +5315,9 @@ run(function()
 	local Scale
 	local Background
 	WaypointFolder = Instance.new('Folder')
-	WaypointFolder.Parent = vape.gui
+	WaypointFolder.Parent = LunarVape.gui
 	
-	Waypoints = vape.Categories.Render:CreateModule({
+	Waypoints = LunarVape.Categories.Render:CreateModule({
 		Name = 'Waypoints',
 		Function = function(callback)
 			if callback then
@@ -5440,11 +5443,11 @@ run({'Solara', 'NX'}, function()
 				end
 			end))
 		else
-			notif('AnimationPlayer', 'failed to load anim : '..(res or 'invalid animation id'), 5, 'warning')
+			notif('AnimationPlayer', 'failed to load anim : '..(res or 'invalid animation id'), 5, 'Warning')
 		end
 	end
 	
-	AnimationPlayer = vape.Categories.Utility:CreateModule({
+	AnimationPlayer = LunarVape.Categories.Utility:CreateModule({
 		Name = 'AnimationPlayer',
 		Function = function(callback)
 			if callback then
@@ -5508,7 +5511,7 @@ end)
 run(function()
 	local AntiRagdoll
 	
-	AntiRagdoll = vape.Categories.Utility:CreateModule({
+	AntiRagdoll = LunarVape.Categories.Utility:CreateModule({
 		Name = 'AntiRagdoll',
 		Function = function(callback)
 			if entitylib.isAlive then
@@ -5529,7 +5532,7 @@ run(function()
 	local AutoRejoin
 	local Sort
 	
-	AutoRejoin = vape.Categories.Utility:CreateModule({
+	AutoRejoin = LunarVape.Categories.Utility:CreateModule({
 		Name = 'AutoRejoin',
 		Function = function(callback)
 			if callback then
@@ -5558,7 +5561,7 @@ run(function()
 	local AutoSendLength
 	local oldphys, oldsend
 	
-	Blink = vape.Categories.Utility:CreateModule({
+	Blink = LunarVape.Categories.Utility:CreateModule({
 		Name = 'Blink',
 		Function = function(callback)
 			if callback then
@@ -5626,7 +5629,7 @@ run(function()
 	local Hide
 	local oldchat
 	
-	ChatSpammer = vape.Categories.Utility:CreateModule({
+	ChatSpammer = LunarVape.Categories.Utility:CreateModule({
 		Name = 'ChatSpammer',
 		Function = function(callback)
 			if callback then
@@ -5646,7 +5649,7 @@ run(function()
 						end)
 					end
 				else
-					notif('ChatSpammer', 'unsupported chat', 5, 'warning')
+					notif('ChatSpammer', 'unsupported chat', 5, 'Warning')
 					ChatSpammer:Toggle()
 					return
 				end
@@ -5714,7 +5717,7 @@ run({'Solara', 'NX'}, function()
 		end
 	end
 	
-	Disabler = vape.Categories.Utility:CreateModule({
+	Disabler = LunarVape.Categories.Utility:CreateModule({
 		Name = 'Disabler',
 		Function = function(callback)
 			if callback then
@@ -5729,11 +5732,11 @@ run({'Solara', 'NX'}, function()
 end)
 	
 run(function()
-	vape.Categories.Utility:CreateModule({
+	LunarVape.Categories.Utility:CreateModule({
 		Name = 'Panic',
 		Function = function(callback)
 			if callback then
-				for _, v in vape.Modules do
+				for _, v in LunarVape.Modules do
 					if v.Enabled then
 						v:Toggle()
 					end
@@ -5747,7 +5750,7 @@ end)
 run(function()
 	local Rejoin
 	
-	Rejoin = vape.Categories.Utility:CreateModule({
+	Rejoin = LunarVape.Categories.Utility:CreateModule({
 		Name = 'Rejoin',
 		Function = function(callback)
 			if callback then
@@ -5768,7 +5771,7 @@ run({'Solara'}, function()
 	local ServerHop
 	local Sort
 	
-	ServerHop = vape.Categories.Utility:CreateModule({
+	ServerHop = LunarVape.Categories.Utility:CreateModule({
 		Name = 'ServerHop',
 		Function = function(callback)
 			if callback then
@@ -5786,9 +5789,9 @@ run({'Solara'}, function()
 	ServerHop:CreateButton({
 		Name = 'Rejoin Previous Server',
 		Function = function()
-			notif('ServerHop', _G.vapeserverhopprevious and 'Rejoining previous server...' or 'Cannot find previous server', 5)
-			if _G.vapeserverhopprevious then
-				teleportService:TeleportToPlaceInstance(game.PlaceId, _G.vapeserverhopprevious)
+			notif('ServerHop', _G.LunarVapeserverhopprevious and 'Rejoining previous server...' or 'Cannot find previous server', 5)
+			if _G.LunarVapeserverhopprevious then
+				teleportService:TeleportToPlaceInstance(game.PlaceId, _G.LunarVapeserverhopprevious)
 			end
 		end
 	})
@@ -5825,17 +5828,17 @@ run(function()
 	end
 	
 	local function playerAdded(plr)
-		if not vape.Loaded then
-			repeat task.wait() until vape.Loaded
+		if not LunarVape.Loaded then
+			repeat task.wait() until LunarVape.Loaded
 		end
 	
 		local user = table.find(Users.ListEnabled, tostring(plr.UserId))
 		if user or getRole(plr, tonumber(Group.Value) or 0) >= (tonumber(Role.Value) or 1) then
-			notif('StaffDetector', 'Staff Detected ('..(user and 'blacklisted_user' or 'staff_role')..'): '..plr.Name, 60, 'alert')
+			notif('StaffDetector', 'Staff Detected ('..(user and 'blacklisted_user' or 'staff_role')..'): '..plr.Name, 60, 'Alert')
 	
 			if Mode.Value == 'Uninject' then
 				task.spawn(function()
-					vape:Uninject()
+					LunarVape:Uninject()
 				end)
 				game:GetService('StarterGui'):SetCore('SendNotification', {
 					Title = 'StaffDetector',
@@ -5845,14 +5848,14 @@ run(function()
 			elseif Mode.Value == 'ServerHop' then
 				serverHop()
 			elseif Mode.Value == 'Profile' then
-				vape.Save = function() end
-				if vape.Profile ~= Profile.Value then
-					vape.Profile = Profile.Value
-					vape:Load(true, Profile.Value)
+				LunarVape.Save = function() end
+				if LunarVape.Profile ~= Profile.Value then
+					LunarVape.Profile = Profile.Value
+					LunarVape:Load(true, Profile.Value)
 				end
 			elseif Mode.Value == 'AutoConfig' then
-				vape.Save = function() end
-				for _, v in vape.Modules do
+				LunarVape.Save = function() end
+				for _, v in LunarVape.Modules do
 					if v.Enabled then
 						v:Toggle()
 					end
@@ -5861,7 +5864,7 @@ run(function()
 		end
 	end
 	
-	StaffDetector = vape.Categories.Utility:CreateModule({
+	StaffDetector = LunarVape.Categories.Utility:CreateModule({
 		Name = 'StaffDetector',
 		Function = function(callback)
 			if callback then
@@ -5884,7 +5887,7 @@ run(function()
 						end
 	
 						if placeinfo.Creator.CreatorType ~= 'Group' then
-							notif('StaffDetector', 'Automatic Setup Failed (no group detected)', 60, 'warning')
+							notif('StaffDetector', 'Automatic Setup Failed (no group detected)', 60, 'Warning')
 							return
 						end
 					end
@@ -5917,7 +5920,7 @@ run(function()
 	})
 	Profile = StaffDetector:CreateTextBox({
 		Name = 'Profile',
-		Default = 'default',
+		Default = 'Default',
 		Darker = true,
 		Visible = false
 	})
@@ -5938,7 +5941,7 @@ end)
 run(function()
 	local connections = {}
 	
-	vape.Categories.World:CreateModule({
+	LunarVape.Categories.World:CreateModule({
 		Name = 'Anti-AFK',
 		Function = function(callback)
 			if callback then
@@ -5962,7 +5965,7 @@ run(function()
 	local Value
 	local randomkey, module, old = httpService:GenerateGUID(false)
 	
-	Freecam = vape.Categories.World:CreateModule({
+	Freecam = LunarVape.Categories.World:CreateModule({
 		Name = 'Freecam',
 		Function = function(callback)
 			if callback then
@@ -6035,7 +6038,7 @@ run(function()
 	local Value
 	local changed, old = false
 	
-	Gravity = vape.Categories.World:CreateModule({
+	Gravity = LunarVape.Categories.World:CreateModule({
 		Name = 'Gravity',
 		Function = function(callback)
 			if callback then
@@ -6093,7 +6096,7 @@ end)
 run(function()
 	local Parkour
 	
-	Parkour = vape.Categories.World:CreateModule({
+	Parkour = LunarVape.Categories.World:CreateModule({
 		Name = 'Parkour',
 		Function = function(callback)
 			if callback then 
@@ -6118,7 +6121,7 @@ run(function()
 	rayCheck.RespectCanCollide = true
 	local module, old
 	
-	vape.Categories.World:CreateModule({
+	LunarVape.Categories.World:CreateModule({
 		Name = 'SafeWalk',
 		Function = function(callback)
 			if callback then
@@ -6168,7 +6171,7 @@ run(function()
 		end
 	end
 	
-	Xray = vape.Categories.World:CreateModule({
+	Xray = LunarVape.Categories.World:CreateModule({
 		Name = 'Xray',
 		Function = function(callback)
 			if callback then
@@ -6235,16 +6238,16 @@ run(function()
 		end
 	end
 	
-	MurderMystery = vape.Categories.World:CreateModule({
+	MurderMystery = LunarVape.Categories.World:CreateModule({
 		Name = 'MurderMystery',
 		Function = function(callback)
 			if callback then
 				oldtargetable, oldgetcolor = entitylib.targetCheck, entitylib.getEntityColor
 				entitylib.getEntityColor = function(ent)
 					ent = ent.Player
-					if not (ent and vape.Categories.Main.Options['Use team color'].Enabled) then return end
+					if not (ent and LunarVape.Categories.Main.Options['Use team color'].Enabled) then return end
 					if isFriend(ent, true) then
-						return Color3.fromHSV(vape.Categories.Friends.Options['Friends color'].Hue, vape.Categories.Friends.Options['Friends color'].Sat, vape.Categories.Friends.Options['Friends color'].Value)
+						return Color3.fromHSV(LunarVape.Categories.Friends.Options['Friends color'].Hue, LunarVape.Categories.Friends.Options['Friends color'].Sat, LunarVape.Categories.Friends.Options['Friends color'].Value)
 					end
 					return murderer == ent and Color3.new(1, 0.3, 0.3) or sheriff == ent and Color3.new(0, 0.5, 1) or nil
 				end
@@ -6273,7 +6276,7 @@ run(function()
   local JumpConnection = nil
   local Debounce = {Enabled = false}
   local DebounceTick = os.clock()
-  InfiniteJump = vape.Categories.Blatant:CreateModule({
+  InfiniteJump = LunarVape.Categories.Blatant:CreateModule({
 		Name = 'InfiniteJump',
     Tooltip = 'Allows you to jump mid-air.',
 		Function = function(callback)
@@ -6582,12 +6585,12 @@ run(function()
 	AntarcticEveningDOF.FocusDistance = 20
 	AntarcticEveningDOF.NearIntensity = 0.3
 
-  vape:Clean(GameThemes)
+  LunarVape:Clean(GameThemes)
 
 	local timeConnection
 	local ThemesModule = {Enabled = false}
-	local ThemesDropdown = {Value = 'Lunar Vape New'}
-	ThemesModule = vape.Categories['Lunar Vape']:CreateModule({
+	local ThemesDropdown = {Value = 'Antarctic Evening'}
+	ThemesModule = LunarVape.Categories['Lunar Vape']:CreateModule({
 		Name = 'Themes',
 		Tooltip = 'Changes the theme',
 		ExtraText = function() return ThemesDropdown.Value end,
@@ -6629,8 +6632,9 @@ run(function()
 	})
 	ThemesDropdown = ThemesModule:CreateDropdown({
 		Name = 'Theme',
-		List = {'The Milky Way A', 'The Milky Way B', 'The Milky Way C', 'Lunar Vape Old','Lunar Vape New','Antarctic Evening'},
-		Function = function(val)
+		List = {'The Milky Way A', 'The Milky Way B', 'The Milky Way C', 'Lunar Vape Old','Lunar Vape New', 'Antarctic Evening'},
+    Default = 'Antarctic Evening',
+		Function = function()
 			if not ThemesModule.Enabled then return end
       ThemesModule:Toggle()
       ThemesModule:Toggle()
@@ -6701,7 +6705,7 @@ run(function()
 		end
 	end
 	
-	Atmosphere = vape.Legit:CreateModule({
+	Atmosphere = LunarVape.Legit:CreateModule({
 		Name = 'Atmosphere',
 		Function = function(callback)
 			if callback then
@@ -6794,7 +6798,7 @@ run(function()
 	local FadeOut
 	local trail, point, point2
 	
-	Breadcrumbs = vape.Legit:CreateModule({
+	Breadcrumbs = LunarVape.Legit:CreateModule({
 		Name = 'Breadcrumbs',
 		Function = function(callback)
 			if callback then
@@ -6911,7 +6915,7 @@ run(function()
 		motor.Parent = part
 	end
 	
-	Cape = vape.Legit:CreateModule({
+	Cape = LunarVape.Legit:CreateModule({
 		Name = 'Cape',
 		Function = function(callback)
 			if callback then
@@ -6978,11 +6982,11 @@ run(function()
 	local Color
 	local hat
 	
-	ChinaHat = vape.Legit:CreateModule({
+	ChinaHat = LunarVape.Legit:CreateModule({
 		Name = 'China Hat',
 		Function = function(callback)
 			if callback then
-				if vape.ThreadFix then
+				if LunarVape.ThreadFix then
 					setthreadidentity(8)
 				end
 				hat = Instance.new('MeshPart')
@@ -7057,7 +7061,7 @@ run(function()
 	local TwentyFourHour
 	local label
 	
-	Clock = vape.Legit:CreateModule({
+	Clock = LunarVape.Legit:CreateModule({
 		Name = 'Clock',
 		Function = function(callback)
 			if callback then
@@ -7235,12 +7239,12 @@ run(function()
 					end
 				end
 			else
-				notif('Disguise', 'that\'s not an animation pack', 5, 'warning')
+				notif('Disguise', 'that\'s not an animation pack', 5, 'Warning')
 			end
 		end
 	end
 	
-	Disguise = vape.Legit:CreateModule({
+	Disguise = LunarVape.Legit:CreateModule({
 		Name = 'Disguise',
 		Function = function(callback)
 			if callback then
@@ -7279,7 +7283,7 @@ run(function()
 	local Value
 	local oldfov
 	
-	FOV = vape.Legit:CreateModule({
+	FOV = LunarVape.Legit:CreateModule({
 		Name = 'FOV',
 		Function = function(callback)
 			if callback then
@@ -7309,7 +7313,7 @@ run(function()
 	local FPS
 	local label
 	
-	FPS = vape.Legit:CreateModule({
+	FPS = LunarVape.Legit:CreateModule({
 		Name = 'FPS',
 		Function = function(callback)
 			if callback then
@@ -7397,7 +7401,7 @@ run(function()
 		keys[keybutton] = {Key = key}
 	end
 	
-	Keystrokes = vape.Legit:CreateModule({
+	Keystrokes = LunarVape.Legit:CreateModule({
 		Name = 'Keystrokes',
 		Function = function(callback)
 			if callback then
@@ -7502,7 +7506,7 @@ run(function()
 	local Memory
 	local label
 	
-	Memory = vape.Legit:CreateModule({
+	Memory = LunarVape.Legit:CreateModule({
 		Name = 'Memory',
 		Function = function(callback)
 			if callback then
@@ -7549,7 +7553,7 @@ run(function()
 	local Ping
 	local label
 	
-	Ping = vape.Legit:CreateModule({
+	Ping = LunarVape.Legit:CreateModule({
 		Name = 'Ping',
 		Function = function(callback)
 			if callback then
@@ -7639,7 +7643,7 @@ run(function()
 		end
 	end
 	
-	SongBeats = vape.Legit:CreateModule({
+	SongBeats = LunarVape.Legit:CreateModule({
 		Name = 'Song Beats',
 		Function = function(callback)
 			if callback then
@@ -7719,7 +7723,7 @@ run(function()
 	local Speedmeter
 	local label
 	
-	Speedmeter = vape.Legit:CreateModule({
+	Speedmeter = LunarVape.Legit:CreateModule({
 		Name = 'Speedmeter',
 		Function = function(callback)
 			if callback then
@@ -7769,7 +7773,7 @@ run(function()
 	local Value
 	local old
 	
-	TimeChanger = vape.Legit:CreateModule({
+	TimeChanger = LunarVape.Legit:CreateModule({
 		Name = 'Time Changer',
 		Function = function(callback)
 			if callback then

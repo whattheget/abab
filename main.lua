@@ -1,10 +1,10 @@
 repeat task.wait() until game:IsLoaded()
-if _G.vape then _G.vape:Uninject() end
+if _G.LunarVape then _G.LunarVape:Uninject() end
 
 if identifyexecutor then
-  if table.find({'Argon', 'Wave', 'Swift'}, (identifyexecutor())) then
-    getgenv().setthreadidentity = nil
-  end
+--  if table.find({'Atlantis'}, (identifyexecutor())) then
+--    getgenv().setthreadidentity, getgenv().getthreadidentity = nil, nil
+--  end
   if table.find({'Xeno'},(identifyexecutor())) then
     game.Players.LocalPlayer:kick([[don't use xeno, it's skidded 😘]])
     task.wait(0.4)
@@ -12,12 +12,13 @@ if identifyexecutor then
   end
 end
 
-local vape
+local LunarVape
 local loadstring = function(script, name)
-  print('running '.. (name and name..'.lua') or 'some file')
+  print(name)
   local res, err = loadstring(script, name)
-  if err and vape then
-    vape:CreateNotification('Lunar Vape', 'Failed to load : ' .. err, 30, 'alert')
+  if err and LunarVape then
+    warn(err)
+    LunarVape:CreateNotification('Lunar Vape', 'Failed to load: ' .. err, 30, 'alert')
   end
   return res
 end
@@ -34,15 +35,17 @@ end
 local playersService = cloneref(game:GetService('Players'))
 
 local function downloadFile(path, func)
-  if not isfile(path) then
+  if not isfile(path) and not _G.LunarVapeDeveloper then
     local suc, res = pcall(function()
       return game:HttpGet(
       'https://raw.githubusercontent.com/AtTheZenith/LunarVape/' ..
-      readfile('newvape/profiles/commit.txt') .. '/' .. select(1, path:gsub('newvape/', '')), true)
+      readfile('Lunar Vape/Profiles/Commit.txt') .. '/' .. select(1, path:gsub('Lunar Vape/', '')), true)
     end)
-    if not suc or res == '404: Not Found' then
-      error(res)
-    end
+		if res == '404: Not Found' then
+			warn(string.format('Error while downloading file %s: %s', path, res)); return
+		elseif not suc then
+			error(string.format('Error while downloading file %s: %s', path, res)); return
+		end
     if path:find('.lua') then
       res =
       '--This watermark is used to delete the file if its cached, remove it to make the file persist after vape updates.\n' ..
@@ -54,73 +57,79 @@ local function downloadFile(path, func)
 end
 
 local function finishLoading()
-  vape.Init = nil
-  vape:Load()
+  LunarVape.Init = nil
+  LunarVape:Load()
   task.spawn(function()
     repeat
-      vape:Save()
+      LunarVape:Save()
       task.wait(10)
-    until not vape.Loaded
+    until not LunarVape.Loaded
   end)
 
   local teleportedServers
-  vape:Clean(playersService.LocalPlayer.OnTeleport:Connect(function()
-    if (not teleportedServers) and (not _G.VapeIndependent) then
-      teleportedServers = true
-      local teleportScript = [[
-      _G.vapereload = true
-      if _G.VapeDeveloper then
-        loadstring(readfile('newvape/loader.lua'), 'loader')()
-      else
-        loadstring(game:HttpGet('https://raw.githubusercontent.com/AtTheZenith/LunarVape/main/loader.lua', true), 'loader')()
+  if _G.LoadOnRejoin == true or isfile('Lunar Vape/LoadOnRejoin') or isfile('Lunar Vape/LoadOnRejoin.txt') then
+    LunarVape:Clean(playersService.LocalPlayer.OnTeleport:Connect(function()
+      if (not teleportedServers) and (not _G.LunarVapeIndependent) then
+        teleportedServers = true
+        local teleportScript = [[
+        _G.LunarVapeReload = true
+        if _G.LunarVapeDeveloper then
+          loadstring(readfile('Lunar Vape/Loader.lua'), 'Lunar Vape/Loader.lua')()
+        else
+          loadstring(game:HttpGet('https://raw.githubusercontent.com/AtTheZenith/LunarVape/main/Loader.lua', true), 'Lunar Vape/Loader.lua')()
+        end
+        ]]
+        if _G.LunarVapeDeveloper then
+          teleportScript = '_G.LunarVapeDeveloper = true\n' .. teleportScript
+        end
+        if _G.LunarVapeCustomProfile then
+          teleportScript = '_G.LunarVapeCustomProfile = "' .. _G.LunarVapeCustomProfile .. '"\n' .. teleportScript
+        end
+        LunarVape:Save()
+        queue_on_teleport(teleportScript)
       end
-      ]]
-      if _G.VapeDeveloper then
-        teleportScript = '_G.VapeDeveloper = true\n' .. teleportScript
-      end
-      if _G.VapeCustomProfile then
-        teleportScript = '_G.VapeCustomProfile = "' .. _G.VapeCustomProfile .. '"\n' .. teleportScript
-      end
-      vape:Save()
-      queue_on_teleport(teleportScript)
-    end
-  end))
+    end))
+  end
 
-  if not vape.Categories then return end
-  if vape.Categories.Main.Options['GUI bind indicator'].Enabled then
-    vape:CreateNotification('Lunar Vape', 'Lunar Vape has finished loading.', 6)
+  if not LunarVape.Categories then return end
+  if LunarVape.Categories.Main.Options['GUI bind indicator'].Enabled then
+    LunarVape:CreateNotification('Lunar Vape', 'Lunar Vape has finished loading.', 6)
   end
 end
 
-if not isfile('newvape/profiles/gui.txt') then
-  writefile('newvape/profiles/gui.txt', 'new')
+if not isfile('Lunar Vape/Profiles/GUI.txt') then
+  writefile('Lunar Vape/Profiles/GUI.txt', 'Vape V4')
 end
-local gui = readfile('newvape/profiles/gui.txt')
+local gui = readfile('Lunar Vape/Profiles/GUI.txt') or 'Vape V4'
 
-if not isfolder('newvape/assets/' .. gui) then
-  makefolder('newvape/assets/' .. gui)
+if not isfolder('Lunar Vape/Assets/' .. gui) then
+  makefolder('Lunar Vape/Assets/' .. gui)
 end
-vape = loadstring(downloadFile('newvape/guis/' .. gui .. '.lua'), 'gui')()
-_G.vape = vape
 
-if not _G.VapeIndependent then
-  loadstring(downloadFile('newvape/games/universal.lua'), 'universal')()
-  if isfile('newvape/games/' .. game.PlaceId .. '.lua') then
-    loadstring(readfile('newvape/games/' .. game.PlaceId .. '.lua'), tostring(game.PlaceId))(...)
+LunarVape = loadstring(downloadFile('Lunar Vape/GUI/' .. gui .. '.lua'), 'Lunar Vape/GUI/' .. gui .. '.lua')()
+_G.LunarVape = LunarVape
+
+local GAME_REGISTRY = loadstring(downloadFile('Lunar Vape/Game Modules/Registry.lua'), 'Lunar Vape/Game Modules/Registry.lua')()
+local GAME_NAME = GAME_REGISTRY[tostring(LunarVape.Place)] and ' ' .. GAME_REGISTRY[tostring(LunarVape.Place)] or ''
+
+if not _G.LunarVapeIndependent then
+  loadstring(downloadFile('Lunar Vape/Game Modules/Universal.lua'), 'Lunar Vape/Game Modules/Universal.lua')()
+  if isfile('Lunar Vape/Game Modules/' .. game.PlaceId .. GAME_NAME .. '.lua') then
+    loadstring(readfile('Lunar Vape/Game Modules/' .. game.PlaceId .. GAME_NAME .. '.lua'), tostring('Lunar Vape/Game Modules/' .. game.PlaceId .. GAME_NAME .. '.lua'))(...)
   else
-    if not _G.VapeDeveloper then
+    if not _G.LunarVapeDeveloper then
       local suc, res = pcall(function()
         return game:HttpGet(
         'https://raw.githubusercontent.com/AtTheZenith/LunarVape/' ..
-        readfile('newvape/profiles/commit.txt') .. '/games/' .. game.PlaceId .. '.lua', true)
+        readfile('Lunar Vape/Profiles/Commit.txt') .. '/Game Modules/' .. game.PlaceId .. GAME_NAME .. '.lua', true)
       end)
       if suc and res ~= '404: Not Found' then
-        loadstring(downloadFile('newvape/games/' .. game.PlaceId .. '.lua'), tostring(game.PlaceId))(...)
+        loadstring(downloadFile('Lunar Vape/Game Modules/' .. game.PlaceId .. GAME_NAME .. '.lua'), tostring('Lunar Vape/Game Modules/' .. game.PlaceId .. GAME_NAME .. '.lua'))(...)
       end
     end
   end
   finishLoading()
 else
-  vape.Init = finishLoading
-  return vape
+  LunarVape.Init = finishLoading
+  return LunarVape
 end

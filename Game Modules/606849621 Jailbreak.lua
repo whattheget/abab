@@ -1,6 +1,9 @@
 local loadstring = function(...)
 	local res, err = loadstring(...)
-	if err and vape then vape:CreateNotification('Lunar Vape', 'Failed to load : '..err, 30, 'alert') end
+	if err and LunarVape then
+    warn(err)
+    LunarVape:CreateNotification('Lunar Vape', 'Failed to load : '..err, 30, 'Alert')
+  end
 	return res
 end
 local isfile = isfile or function(file)
@@ -8,10 +11,14 @@ local isfile = isfile or function(file)
 	return suc and res ~= nil and res ~= ''
 end
 local function downloadFile(path, func)
-	if not isfile(path) then
-		local suc, res = pcall(function() return game:HttpGet('https://raw.githubusercontent.com/AtTheZenith/LunarVape/'..readfile('newvape/profiles/commit.txt')..'/'..select(1, path:gsub('newvape/', '')), true) end)
-		if not suc or res == '404: Not Found' then error(res) end
-		if path:find('.lua') then res = '--This watermark is used to delete the file if its cached, remove it to make the file persist after vape updates.\n'..res end
+	if not isfile(path) and not _G.LunarVapeDeveloper then
+		local suc, res = pcall(function() return game:HttpGet('https://raw.githubusercontent.com/AtTheZenith/LunarVape/'..readfile('Lunar Vape/Profiles/Commit.txt')..'/'..select(1, path:gsub('Lunar Vape/', '')), true) end)
+		if res == '404: Not Found' then
+			warn(string.format('Error while downloading file %s: %s', path, res)); return
+		elseif not suc then
+			error(string.format('Error while downloading file %s: %s', path, res)); return
+		end
+		if path:find('.lua') then res = '--This watermark is used to delete the file if its cached, remove it to make the file persist after LunarVape updates.\n'..res end
 		writefile(path, res)
 	end
 	return (func or readfile)(path)
@@ -36,12 +43,12 @@ local contextService = cloneref(game:GetService('ContextActionService'))
 local gameCamera = workspace.CurrentCamera
 local lplr = playersService.LocalPlayer
 
-local vape = _G.vape
-local entitylib = vape.Libraries.entity
-local prediction = vape.Libraries.prediction
-local targetinfo = vape.Libraries.targetinfo
-local sessioninfo = vape.Libraries.sessioninfo
-local vm = loadstring(downloadFile('newvape/libraries/vm.lua'), 'vm')()
+local LunarVape = _G.LunarVape
+local entitylib = LunarVape.Libraries.entity
+local prediction = LunarVape.Libraries.prediction
+local targetinfo = LunarVape.Libraries.targetinfo
+local sessioninfo = LunarVape.Libraries.sessioninfo
+local vm = loadstring(downloadFile('Lunar Vape/Libraries/VM.lua'), 'Lunar Vape/Libraries/VM.lua')()
 
 local jb = {}
 local InfNitro = {Enabled = false}
@@ -72,10 +79,10 @@ local function isArrested(name)
 end
 
 local function isFriend(plr, recolor)
-	if vape.Categories.Friends.Options['Use friends'].Enabled then
-		local friend = table.find(vape.Categories.Friends.ListEnabled, plr.Name) and true
+	if LunarVape.Categories.Friends.Options['Use friends'].Enabled then
+		local friend = table.find(LunarVape.Categories.Friends.ListEnabled, plr.Name) and true
 		if recolor then
-			friend = friend and vape.Categories.Friends.Options['Recolor visuals'].Enabled
+			friend = friend and LunarVape.Categories.Friends.Options['Recolor visuals'].Enabled
 		end
 		return friend
 	end
@@ -100,11 +107,11 @@ local function isIllegal(ent)
 end
 
 local function isTarget(plr)
-	return table.find(vape.Categories.Targets.ListEnabled, plr.Name) and true
+	return table.find(LunarVape.Categories.Targets.ListEnabled, plr.Name) and true
 end
 
 local function notif(...)
-	return vape:CreateNotification(...)
+	return LunarVape:CreateNotification(...)
 end
 
 run(function()
@@ -259,8 +266,8 @@ run(function()
 	}
 
 	if not jb.VehicleController.toggleLocalLocked or not jb.VehicleController.NitroShopVisible then
-		repeat task.wait() until (jb.VehicleController.toggleLocalLocked and jb.VehicleController.NitroShopVisible) or vape.Loaded == nil
-		if vape.Loaded == nil then return end
+		repeat task.wait() until (jb.VehicleController.toggleLocalLocked and jb.VehicleController.NitroShopVisible) or LunarVape.Loaded == nil
+		if LunarVape.Loaded == nil then return end
 	end
 	local remotetable = debug.getupvalue(jb.VehicleController.toggleLocalLocked, 2)
 	local fireserver, hook = remotetable.FireServer
@@ -320,7 +327,7 @@ run(function()
 
 	function jb:FireServer(id, ...)
 		if not remotes[id] then
-			notif('Lunar Vape', 'Failed to find remote ('..id..')', 10, 'alert')
+			notif('Lunar Vape', 'Failed to find remote ('..id..')', 10, 'Alert')
 			return
 		end
 		return hook(remotetable, remotes[id], ...)
@@ -356,7 +363,7 @@ run(function()
 		end)
 	end
 
-	vape:Clean(function()
+	LunarVape:Clean(function()
 		table.clear(remotes)
 		table.clear(jb)
 		hookfunction(fireserver, hook)
@@ -367,7 +374,7 @@ run(function()
 end)
 
 for _, v in {'Reach', 'TriggerBot', 'Disabler', 'AntiFall', 'HitBoxes', 'Killaura', 'MurderMystery'} do
-	vape:Remove(v)
+	LunarVape:Remove(v)
 end
 run(function()
 	local SilentAim
@@ -385,7 +392,7 @@ run(function()
 	local ProjectileRaycast = RaycastParams.new()
 	ProjectileRaycast.RespectCanCollide = true
 	
-	SilentAim = vape.Categories.Combat:CreateModule({
+	SilentAim = LunarVape.Categories.Combat:CreateModule({
 		Name = 'SilentAim',
 		Function = function(callback)
 			if CircleObject then
@@ -470,7 +477,7 @@ run(function()
 				CircleObject = Drawing.new('Circle')
 				CircleObject.Filled = CircleFilled.Enabled
 				CircleObject.Color = Color3.fromHSV(CircleColor.Hue, CircleColor.Sat, CircleColor.Value)
-				CircleObject.Position = vape.gui.AbsoluteSize / 2
+				CircleObject.Position = LunarVape.gui.AbsoluteSize / 2
 				CircleObject.Radius = Range.Value
 				CircleObject.NumSides = 100
 				CircleObject.Transparency = 1 - CircleTransparency.Value
@@ -526,7 +533,7 @@ end)
 run(function()
 	local Wallbang = {Enabled = false}
 	
-	Wallbang = vape.Categories.Combat:CreateModule({
+	Wallbang = LunarVape.Categories.Combat:CreateModule({
 		Name = 'Wallbang',
 		Function = function(callback)
 			if callback then
@@ -556,7 +563,7 @@ end)
 run(function()
 	local AutoArrest = {Enabled = false}
 	
-	AutoArrest = vape.Categories.Blatant:CreateModule({
+	AutoArrest = LunarVape.Categories.Blatant:CreateModule({
 		Name = 'AutoArrest',
 		Function = function(callback)
 			if callback then
@@ -644,7 +651,7 @@ run(function()
 		return allowed
 	end
 	
-	AutoPop = vape.Categories.Blatant:CreateModule({
+	AutoPop = LunarVape.Categories.Blatant:CreateModule({
 		Name = 'AutoPop',
 		Function = function(callback)
 			if callback then
@@ -678,7 +685,7 @@ end)
 run(function()
 	local Punch = {Enabled = false}
 	
-	Punch = vape.Categories.Blatant:CreateModule({
+	Punch = LunarVape.Categories.Blatant:CreateModule({
 		Name = 'AutoPunch',
 		Function = function(callback)
 			if callback then
@@ -698,7 +705,7 @@ run(function()
 	local AutoTaze = {Enabled = false}
 	local AutoTazeHandCheck = {Enabled = false}
 	
-	AutoTaze = vape.Categories.Blatant:CreateModule({
+	AutoTaze = LunarVape.Categories.Blatant:CreateModule({
 		Name = 'AutoTaze',
 		Function = function(callback)
 			if callback then
@@ -730,11 +737,11 @@ run(function()
 end)
 	
 run(function()
-	LazerGodmode = vape.Categories.Blatant:CreateModule({Name = 'LazerGodmode'})
+	LazerGodmode = LunarVape.Categories.Blatant:CreateModule({Name = 'LazerGodmode'})
 end)
 	
 run(function()
-	vape.Categories.Blatant:CreateModule({
+	LunarVape.Categories.Blatant:CreateModule({
 		Name = 'NoFall',
 		Function = function(callback)
 			debug.setconstant(debug.getupvalue(jb.FallingController.Init, 19), 9, callback and 'Archivable' or 'Sit')
@@ -748,7 +755,7 @@ run(function()
 	local nitrotable = debug.getupvalue(jb.VehicleController.NitroShopVisible, 1)
 	local oldnitro
 	
-	InfiniteNitro = vape.Categories.Utility:CreateModule({
+	InfiniteNitro = LunarVape.Categories.Utility:CreateModule({
 		Name = 'InfiniteNitro',
 		Function = function(callback)
 			if callback then
@@ -768,7 +775,7 @@ run(function()
 end)
 	
 run(function()
-	vape.Categories.Utility:CreateModule({
+	LunarVape.Categories.Utility:CreateModule({
 		Name = 'InstantAction',
 		Function = function(callback)
 			debug.setconstant(jb.CircleAction.Press, 3, callback and 'Timeda' or 'Timed')
@@ -778,7 +785,7 @@ run(function()
 end)
 	
 run(function()
-	vape.Categories.Utility:CreateModule({
+	LunarVape.Categories.Utility:CreateModule({
 		Name = 'KeySpoofer',
 		Function = function(callback)
 			if callback then

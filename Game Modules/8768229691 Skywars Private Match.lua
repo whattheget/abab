@@ -26,15 +26,15 @@ local gameCamera = workspace.CurrentCamera
 local lplr = playersService.LocalPlayer
 local assetfunction = getcustomasset
 
-local vape = _G.vape
-local entitylib = vape.Libraries.entity
-local targetinfo = vape.Libraries.targetinfo
-local sessioninfo = vape.Libraries.sessioninfo
-local uipallet = vape.Libraries.uipallet
-local tween = vape.Libraries.tween
-local color = vape.Libraries.color
-local prediction = vape.Libraries.prediction
-local getcustomasset = vape.Libraries.getcustomasset
+local LunarVape = _G.LunarVape
+local entitylib = LunarVape.Libraries.entity
+local targetinfo = LunarVape.Libraries.targetinfo
+local sessioninfo = LunarVape.Libraries.sessioninfo
+local uipallet = LunarVape.Libraries.uipallet
+local tween = LunarVape.Libraries.tween
+local color = LunarVape.Libraries.color
+local prediction = LunarVape.Libraries.prediction
+local getcustomasset = LunarVape.Libraries.getcustomasset
 
 local skywars, remotes = {}, {}
 local store = {
@@ -126,10 +126,10 @@ local function getPickaxe()
 end
 
 local function isFriend(plr, recolor)
-	if vape.Categories.Friends.Options['Use friends'].Enabled then
-		local friend = table.find(vape.Categories.Friends.ListEnabled, plr.Name) and true
+	if LunarVape.Categories.Friends.Options['Use friends'].Enabled then
+		local friend = table.find(LunarVape.Categories.Friends.ListEnabled, plr.Name) and true
 		if recolor then
-			friend = friend and vape.Categories.Friends.Options['Recolor visuals'].Enabled
+			friend = friend and LunarVape.Categories.Friends.Options['Recolor visuals'].Enabled
 		end
 		return friend
 	end
@@ -137,11 +137,11 @@ local function isFriend(plr, recolor)
 end
 
 local function isTarget(plr)
-	return table.find(vape.Categories.Targets.ListEnabled, plr.Name) and true
+	return table.find(LunarVape.Categories.Targets.ListEnabled, plr.Name) and true
 end
 
 local function notif(...)
-	return vape:CreateNotification(...)
+	return LunarVape:CreateNotification(...)
 end
 
 local function parsePositions(v, func)
@@ -263,9 +263,9 @@ run(function()
 
 	entitylib.getEntityColor = function(ent)
 		ent = ent.Player
-		if not (ent and vape.Categories.Main.Options['Use team color'].Enabled) then return end
+		if not (ent and LunarVape.Categories.Main.Options['Use team color'].Enabled) then return end
 		if isFriend(ent, true) then
-			return Color3.fromHSV(vape.Categories.Friends.Options['Friends color'].Hue, vape.Categories.Friends.Options['Friends color'].Sat, vape.Categories.Friends.Options['Friends color'].Value)
+			return Color3.fromHSV(LunarVape.Categories.Friends.Options['Friends color'].Hue, LunarVape.Categories.Friends.Options['Friends color'].Sat, LunarVape.Categories.Friends.Options['Friends color'].Value)
 		end
 		return skywars.TeamController:getTeamColour(ent:GetAttribute('TeamId'))
 	end
@@ -367,15 +367,15 @@ run(function()
 				entitylib.character.GroundPosition = entitylib.character.Humanoid.FloorMaterial ~= Enum.Material.Air and entitylib.character.RootPart.Position or entitylib.character.GroundPosition
 			end
 			task.wait()
-		until vape.Loaded == nil
+		until LunarVape.Loaded == nil
 	end)
 
-	vape:Clean(workspace.BlockContainer.DescendantAdded:Connect(function(v)
+	LunarVape:Clean(workspace.BlockContainer.DescendantAdded:Connect(function(v)
 		parsePositions(v, function(pos)
 			store.blocks[pos] = v
 		end)
 	end))
-	vape:Clean(workspace.BlockContainer.DescendantRemoving:Connect(function(v)
+	LunarVape:Clean(workspace.BlockContainer.DescendantRemoving:Connect(function(v)
 		parsePositions(v, function(pos)
 			store.blocks[pos] = nil
 		end)
@@ -386,7 +386,7 @@ run(function()
 		end)
 	end
 
-	vape:Clean(function()
+	LunarVape:Clean(function()
 		for _, v in vapeEvents do
 			v:Destroy()
 		end
@@ -402,7 +402,7 @@ run(function()
 end)
 
 for _, v in {'Reach', 'TriggerBot', 'Disabler', 'SilentAim', 'AutoRejoin', 'Rejoin', 'ServerHop', 'MurderMystery'} do
-	vape:Remove(v)
+	LunarVape:Remove(v)
 end
 run(function()
 	local AutoClicker
@@ -433,7 +433,7 @@ run(function()
 		end)
 	end
 	
-	AutoClicker = vape.Categories.Combat:CreateModule({
+	AutoClicker = LunarVape.Categories.Combat:CreateModule({
 		Name = 'AutoClicker',
 		Function = function(callback)
 			if callback then
@@ -480,7 +480,7 @@ run(function()
 	local Sprint
 	local old
 	
-	Sprint = vape.Categories.Combat:CreateModule({
+	Sprint = LunarVape.Categories.Combat:CreateModule({
 		Name = 'Sprint',
 		Function = function(callback)
 			if callback then
@@ -538,7 +538,7 @@ run(function()
 		return old(velo, ...)
 	end
 	
-	Velocity = vape.Categories.Combat:CreateModule({
+	Velocity = LunarVape.Categories.Combat:CreateModule({
 		Name = 'Velocity',
 		Function = function(callback)
 			if callback then
@@ -597,7 +597,7 @@ run(function()
 		return mag
 	end
 	
-	AntiFall = vape.Categories.Blatant:CreateModule({
+	AntiFall = LunarVape.Categories.Blatant:CreateModule({
 		Name = 'AntiFall',
 		Function = function(callback)
 			if callback then
@@ -670,7 +670,7 @@ run(function()
 	local InvMove
 	local old
 	
-	InvMove = vape.Categories.Blatant:CreateModule({
+	InvMove = LunarVape.Categories.Blatant:CreateModule({
 		Name = 'InvMove',
 		Function = function(callback)
 			if callback then
@@ -709,7 +709,7 @@ run(function()
 	local AnimTween
 	local Attacking
 	local Particles, Boxes = {}, {}
-	local anims, armC0 = vape.Libraries.auraanims
+	local anims, armC0 = LunarVape.Libraries.auraanims
 	
 	local function getAttackData()
 		if Mouse.Enabled then
@@ -719,7 +719,7 @@ run(function()
 		return (not Limit.Enabled) and store.tools.sword or store.hand
 	end
 	
-	Killaura = vape.Categories.Blatant:CreateModule({
+	Killaura = LunarVape.Categories.Blatant:CreateModule({
 		Name = 'Killaura',
 		Function = function(callback)
 			if callback then
@@ -806,7 +806,7 @@ run(function()
 					end
 	
 					Attacking = #attacked > 0
-					if Attacking and vape.ThreadFix then
+					if Attacking and LunarVape.ThreadFix then
 						setthreadidentity(8)
 					end
 	
@@ -878,7 +878,7 @@ run(function()
 					box.Size = Vector3.new(3, 5, 3)
 					box.CFrame = CFrame.new(0, -0.5, 0)
 					box.ZIndex = 0
-					box.Parent = vape.gui
+					box.Parent = LunarVape.gui
 					Boxes[i] = box
 				end
 			else
@@ -1034,7 +1034,7 @@ run(function()
 	local NoFall
 	local rayCheck = RaycastParams.new()
 	
-	NoFall = vape.Categories.Blatant:CreateModule({
+	NoFall = LunarVape.Categories.Blatant:CreateModule({
 		Name = 'NoFall',
 		Function = function(callback)
 			if callback then
@@ -1064,7 +1064,7 @@ end)
 run(function()
 	local old, old2
 	
-	vape.Categories.Blatant:CreateModule({
+	LunarVape.Categories.Blatant:CreateModule({
 		Name = 'NoSlowdown',
 		Function = function(callback)
 			if callback then
@@ -1129,7 +1129,7 @@ run(function()
 		return old(...)
 	end
 	
-	local ProjectileAimbot = vape.Categories.Blatant:CreateModule({
+	local ProjectileAimbot = LunarVape.Categories.Blatant:CreateModule({
 		Name = 'ProjectileAimbot',
 		Function = function(callback)
 			if callback then 
@@ -1180,7 +1180,7 @@ run(function()
 		return items
 	end
 	
-	ProjectileAura = vape.Categories.Blatant:CreateModule({
+	ProjectileAura = LunarVape.Categories.Blatant:CreateModule({
 		Name = 'ProjectileAura',
 		Function = function(callback)
 			if callback then
@@ -1318,7 +1318,7 @@ run(function()
 		end
 	end
 	
-	Scaffold = vape.Categories.Utility:CreateModule({
+	Scaffold = LunarVape.Categories.Utility:CreateModule({
 		Name = 'Scaffold',
 		Function = function(callback)
 			if callback then
@@ -1386,7 +1386,7 @@ run(function()
 	local Open
 	local Delay = {}
 	
-	ChestSteal = vape.Categories.World:CreateModule({
+	ChestSteal = LunarVape.Categories.World:CreateModule({
 		Name = 'ChestSteal',
 		Function = function(callback)
 			if callback then
@@ -1472,7 +1472,7 @@ run(function()
 		end
 	end
 	
-	AutoBuy = vape.Categories.Utility:CreateModule({
+	AutoBuy = LunarVape.Categories.Utility:CreateModule({
 		Name = 'AutoBuy',
 		Function = function(callback)
 			if callback then
@@ -1550,7 +1550,7 @@ run(function()
 		end
 	end
 	
-	AutoConsume = vape.Categories.Utility:CreateModule({
+	AutoConsume = LunarVape.Categories.Utility:CreateModule({
 		Name = 'AutoConsume',
 		Function = function(callback)
 			if callback then
@@ -1612,7 +1612,7 @@ run(function()
 						Size = UDim2.new(1, 89, 1, 52),
 						Position = UDim2.fromOffset(-48, -31),
 						BackgroundTransparency = 1,
-						Image = getcustomasset('newvape/assets/new/blur.png'),
+						Image = getcustomasset('Lunar Vape/Assets/Vape V4/Blur.png'),
 						ScaleType = Enum.ScaleType.Slice,
 						SliceCenter = Rect.new(52, 31, 261, 502)
 					}),
@@ -1673,7 +1673,7 @@ run(function()
 		end)
 	end
 	
-	Breaker = vape.Categories.Utility:CreateModule({
+	Breaker = LunarVape.Categories.Utility:CreateModule({
 		Name = 'Breaker',
 		Function = function(callback)
 			if callback then
@@ -1754,20 +1754,20 @@ run(function()
 		end))
 	end
 	
-	Viewmodel = vape.Legit:CreateModule({
+	Viewmodel = LunarVape.Legit:CreateModule({
 		Name = 'Viewmodel',
 		Function = function(callback)
 			if callback then 
 				ViewmodelMotor = Instance.new('Motor6D')
-				vape:Clean(ViewmodelMotor)
-				vape:Clean(runService.RenderStepped:Connect(function()
+				LunarVape:Clean(ViewmodelMotor)
+				LunarVape:Clean(runService.RenderStepped:Connect(function()
 					if ViewmodelTool then 
 						local dcf = ((CFrame.new(2.06, -2.44, -2.24) * CFrame.new(0.6, -0.2, -0.6)) * CFrame.Angles(math.rad(99), math.rad(2), math.rad(-4))) * ViewmodelMotor.C0
 						local offsetcf = (CFrame.new(0, -0.15, -1.56) * CFrame.Angles(math.rad(-90), math.rad(-90), 0))
 						ViewmodelTool.CFrame = ((gameCamera.CFrame * dcf) * offsetcf)
 					end
 				end))
-				vape:Clean(entitylib.Events.LocalAdded:Connect(newCharacter))
+				LunarVape:Clean(entitylib.Events.LocalAdded:Connect(newCharacter))
 				if entitylib.isAlive then 
 					newCharacter(entitylib.character) 
 				end

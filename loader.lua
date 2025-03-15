@@ -1,4 +1,40 @@
-print('running loader.lua')
+_G.LunarVapeDeveloper = true
+
+pcall(function(c)
+  if _G.LunarVapeErrorLogger then _G.LunarVapeErrorLogger:Disconnect() end
+  if _G.NoLogs then return end
+
+  local function t(ymd)
+    local t = tick()
+    local ms = string.sub(t - math.floor(t), 2, 7)
+
+    local d = ymd and string.gsub(string.gsub(DateTime.now():ToIsoDate(), 'T', ' ', 1), 'Z', '', 1)
+    or string.gsub(string.split(DateTime.now():ToIsoDate(), 'T')[2], 'Z', '', 1)
+
+    return string.format('%s%s', d, ms)
+  end
+
+  if not isfolder('Lunar Vape') then makefolder('Lunar Vape') end
+  if not isfolder('Lunar Vape/Logs') then makefolder('Lunar Vape/Logs') end
+
+  local name = string.format('Lunar Vape/Logs/Log %04d.txt', #listfiles('Lunar Vape/Logs') + 1)
+  local header = string.format('Lunar Vape Diagnostics Logging\nRoblox Username: %s\nExecutor Name: %s\nTouchEnabled: %s\nHWID: %s\nTime: %s\n=========================================================================',
+    c(game:GetService('Players')).LocalPlayer.Name,
+    identifyexecutor and identifyexecutor() or 'Cheat Engine',
+    c(game:GetService('UserInputService')).TouchEnabled and 'Yes' or 'No',
+    gethwid and gethwid() or 'Samsung Fridge',
+    t(true)
+  )
+  writefile(name, header)
+
+  _G.LunarVapeErrorLogger = c(game:GetService('LogService')).MessageOut:Connect(function(m, v)
+    task.wait(1)
+    appendfile(name, string.format('\n%s [%s]: %s', t(), string.upper(string.sub(tostring(v), 25)), m))
+  end)
+end, cloneref or function(v) return v end)
+
+print('Lunar Vape error logging has started.')
+print('Lunar Vape/Loader.lua')
 
 local isfile = isfile or function(file)
 	local suc, res = pcall(function()
@@ -11,12 +47,14 @@ local delfile = delfile or function(file)
 end
 
 local function downloadFile(path, func)
-	if not isfile(path) then
+	if not isfile(path) and not _G.LunarVapeDeveloper then
 		local suc, res = pcall(function()
-			return game:HttpGet('https://raw.githubusercontent.com/AtTheZenith/LunarVape/'..readfile('newvape/profiles/commit.txt')..'/'..select(1, path:gsub('newvape/', '')), true)
+			return game:HttpGet('https://raw.githubusercontent.com/AtTheZenith/LunarVape/'..readfile('Lunar Vape/Profiles/commit.txt')..'/'..select(1, path:gsub('Lunar Vape/', '')), true)
 		end)
-		if not suc or res == '404: Not Found' then
-			error(res)
+		if res == '404: Not Found' then
+			warn(string.format('Error while downloading file %s: %s', path, res)); return
+		elseif not suc then
+			error(string.format('Error while downloading file %s: %s', path, res)); return
 		end
 		if path:find('.lua') then
 			res = '--This watermark is used to delete the file if its cached, remove it to make the file persist after vape updates.\n'..res
@@ -29,34 +67,34 @@ end
 local function wipeFolder(path)
 	if not isfolder(path) then return end
 	for _, file in listfiles(path) do
-		if file:find('loader') then continue end
+		if file:find('Loader.lua') then continue end
 		if isfile(file) and select(1, readfile(file):find('--This watermark is used to delete the file if its cached, remove it to make the file persist after vape updates.')) == 1 then
 			delfile(file)
 		end
 	end
 end
 
-for _, folder in {'newvape', 'newvape/games', 'newvape/profiles', 'newvape/assets', 'newvape/libraries', 'newvape/guis'} do
+for _, folder in {'Lunar Vape', 'Lunar Vape/Game Modules', 'Lunar Vape/Profiles', 'Lunar Vape/Assets', 'Lunar Vape/Libraries', 'Lunar Vape/GUI'} do
 	if not isfolder(folder) then
 		makefolder(folder)
 	end
 end
 
-if not _G.VapeDeveloper then
+if not _G.LunarVapeDeveloper then
 	local _, subbed = pcall(function()
 		return game:HttpGet('https://github.com/AtTheZenith/LunarVape')
 	end)
 	local commit = subbed:find('currentOid')
 	commit = commit and subbed:sub(commit + 13, commit + 52) or nil
 	commit = commit and #commit == 40 and commit or 'main'
-	if commit == 'main' or (isfile('newvape/profiles/commit.txt') and readfile('newvape/profiles/commit.txt') or '') ~= commit then
-		wipeFolder('newvape')
-		wipeFolder('newvape/games')
-		wipeFolder('newvape/guis')
-		wipeFolder('newvape/libraries')
+	if commit == 'main' or (isfile('Lunar Vape/Profiles/Commit.txt') and readfile('Lunar Vape/Profiles/Commit.txt') or '') ~= commit then
+		wipeFolder('Lunar Vape')
+		wipeFolder('Lunar Vape/Game Modules')
+		wipeFolder('Lunar Vape/GUI')
+		wipeFolder('Lunar Vape/Libraries')
 	end
-	writefile('newvape/profiles/commit.txt', commit)
+	writefile('Lunar Vape/Profiles/Commit.txt', commit)
 end
 
-print('running main.lua')
-return loadstring(downloadFile('newvape/main.lua'), 'main')()
+print('Lunar Vape/Main.lua')
+return loadstring(downloadFile('Lunar Vape/Main.lua'), 'Lunar Vape/Main.lua')()

@@ -12,7 +12,7 @@ local mainapi = {
 	Libraries = {},
 	Modules = {},
 	Place = game.PlaceId,
-	Profile = 'default',
+	Profile = 'Main Configuration',
 	Profiles = {},
 	RainbowSpeed = {Value = 1},
 	RainbowUpdateSpeed = {Value = 60},
@@ -59,26 +59,26 @@ local uipallet = {
 }
 
 local getcustomassets = {
-	['newvape/assets/old/barlogo.png'] = 'rbxasset://barlogo.png',
-	['newvape/assets/old/blatanticon.png'] = 'rbxasset://blatanticon.png',
-	['newvape/assets/old/combaticon.png'] = 'rbxasset://combaticon.png',
-	['newvape/assets/old/checkbox.png'] = 'rbxasset://checkbox.png',
-	['newvape/assets/old/friendsicon.png'] = 'rbxasset://friendsicon.png',
-	['newvape/assets/old/guiicon.png'] = 'rbxasset://guiicon.png',
-	['newvape/assets/old/info.png'] = 'rbxasset://info.png',
-	['newvape/assets/old/pin.png'] = 'rbxasset://pin.png',
-	['newvape/assets/old/profilesicon.png'] = 'rbxasset://profilesicon.png',
-	['newvape/assets/old/rendericon.png'] = 'rbxasset://rendericon.png',
-	['newvape/assets/old/search.png'] = 'rbxasset://search.png',
-	['newvape/assets/old/settingsicon.png'] = 'rbxasset://settingsicon.png',
-	['newvape/assets/old/targetinfoicon.png'] = 'rbxasset://targetinfoicon.png',
-	['newvape/assets/old/textguiicon.png'] = 'rbxasset://textguiicon.png',
-	['newvape/assets/old/textvape.png'] = 'rbxasset://textvape.png',
-	['newvape/assets/old/textv4.png'] = 'rbxasset://textv4.png',
-	['newvape/assets/old/utilityicon.png'] = 'rbxasset://utilityicon.png',
-	['newvape/assets/old/vape.png'] = 'rbxassetid://14373395239',
-	['newvape/assets/old/worldicon.png'] = 'rbxasset://worldicon.png',
-	['newvape/assets/old/lunar.png'] = 'rbxassetid://131166874245822',
+	['Lunar Vape/Assets/Vape V3/barlogo.png'] = 'rbxasset://barlogo.png',
+	['Lunar Vape/Assets/Vape V3/blatanticon.png'] = 'rbxasset://blatanticon.png',
+	['Lunar Vape/Assets/Vape V3/combaticon.png'] = 'rbxasset://combaticon.png',
+	['Lunar Vape/Assets/Vape V3/checkbox.png'] = 'rbxasset://checkbox.png',
+	['Lunar Vape/Assets/Vape V3/friendsicon.png'] = 'rbxasset://friendsicon.png',
+	['Lunar Vape/Assets/Vape V3/guiicon.png'] = 'rbxasset://guiicon.png',
+	['Lunar Vape/Assets/Vape V3/info.png'] = 'rbxasset://info.png',
+	['Lunar Vape/Assets/Vape V3/pin.png'] = 'rbxasset://pin.png',
+	['Lunar Vape/Assets/Vape V3/profilesicon.png'] = 'rbxasset://profilesicon.png',
+	['Lunar Vape/Assets/Vape V3/rendericon.png'] = 'rbxasset://rendericon.png',
+	['Lunar Vape/Assets/Vape V3/search.png'] = 'rbxasset://search.png',
+	['Lunar Vape/Assets/Vape V3/settingsicon.png'] = 'rbxasset://settingsicon.png',
+	['Lunar Vape/Assets/Vape V3/targetinfoicon.png'] = 'rbxasset://targetinfoicon.png',
+	['Lunar Vape/Assets/Vape V3/textguiicon.png'] = 'rbxasset://textguiicon.png',
+	['Lunar Vape/Assets/Vape V3/textLunarVape.png'] = 'rbxasset://textLunarVape.png',
+	['Lunar Vape/Assets/Vape V3/textv4.png'] = 'rbxasset://textv4.png',
+	['Lunar Vape/Assets/Vape V3/utilityicon.png'] = 'rbxasset://utilityicon.png',
+	['Lunar Vape/Assets/Vape V3/LunarVape.png'] = 'rbxassetid://14373395239',
+	['Lunar Vape/Assets/Vape V3/worldicon.png'] = 'rbxasset://worldicon.png',
+	['Lunar Vape/Assets/Vape V3/lunar.png'] = 'rbxassetid://131166874245822',
 }
 
 local isfile = isfile or function(file)
@@ -219,16 +219,18 @@ local function createMobileButton(buttonapi, position)
 end
 
 local function downloadFile(path, func)
-	if not isfile(path) then
+	if not isfile(path) and not _G.LunarVapeDeveloper then
 		createDownloader(path)
 		local suc, res = pcall(function()
-			return game:HttpGet('https://raw.githubusercontent.com/AtTheZenith/LunarVape/'..readfile('newvape/profiles/commit.txt')..'/'..select(1, path:gsub('newvape/', '')), true)
+			return game:HttpGet('https://raw.githubusercontent.com/AtTheZenith/LunarVape/'..readfile('Lunar Vape/Profiles/Commit.txt')..'/'..select(1, path:gsub('Lunar Vape/', '')), true)
 		end)
-		if not suc or res == '404: Not Found' then
-			error(res)
+		if res == '404: Not Found' then
+			warn(string.format('Error while downloading file %s: %s', path, res)); return
+		elseif not suc then
+			error(string.format('Error while downloading file %s: %s', path, res)); return
 		end
 		if path:find('.lua') then
-			res = '--This watermark is used to delete the file if its cached, remove it to make the file persist after vape updates.\n'..res
+			res = '--This watermark is used to delete the file if its cached, remove it to make the file persist after LunarVape updates.\n'..res
 		end
 		writefile(path, res)
 	end
@@ -311,7 +313,7 @@ local function removeTags(str)
 end
 
 do
-	local res = isfile('newvape/profiles/color.txt') and loadJson('newvape/profiles/color.txt')
+	local res = isfile('Lunar Vape/Profiles/Color.txt') and loadJson('Lunar Vape/Profiles/Color.txt')
 	if res then
 		uipallet.Main = res.Main and Color3.fromRGB(unpack(res.Main)) or uipallet.Main
 		uipallet.Text = res.Text and Color3.fromRGB(unpack(res.Text)) or uipallet.Text
@@ -578,7 +580,7 @@ components = {
 		expand.Size = UDim2.fromOffset(9, 5)
 		expand.Position = UDim2.fromOffset(4, 4)
 		expand.BackgroundTransparency = 1
-		expand.Image = getcustomasset('newvape/assets/new/expandicon.png')
+		expand.Image = getcustomasset('Lunar Vape/Assets/Lunar Vape/Expand Icon.png')
 		expand.ImageColor3 = color.Dark(uipallet.Text, 0.43)
 		expand.Parent = expandbutton
 		local rainbow = Instance.new('TextButton')
@@ -1345,7 +1347,7 @@ components = {
 				local objectdotin = Instance.new('ImageLabel')
 				objectdotin.Size = UDim2.fromScale(1, 1)
 				objectdotin.BackgroundTransparency = 1
-				objectdotin.Image = getcustomasset('newvape/assets/old/checkbox.png')
+				objectdotin.Image = getcustomasset('Lunar Vape/Assets/Vape V3/checkbox.png')
 				objectdotin.ImageColor3 = uipallet.Text
 				objectdotin.Parent = objectdot
 				local objecttitle = Instance.new('TextLabel')
@@ -1594,7 +1596,7 @@ components = {
 		arrow.Size = UDim2.fromOffset(12, 6)
 		arrow.Position = UDim2.new(1, -56, 0, 10)
 		arrow.BackgroundTransparency = 1
-		arrow.Image = getcustomasset('newvape/assets/new/rangearrow.png')
+		arrow.Image = getcustomasset('Lunar Vape/Assets/Vape V4/Range.png')
 		arrow.ImageColor3 = color.Light(uipallet.Main, 0.14)
 		arrow.Parent = slider
 		optionsettings.Function = optionsettings.Function or function() end
@@ -1785,7 +1787,7 @@ function mainapi:CreateBar()
 	logo.Size = UDim2.fromOffset(92, 25)
 	logo.Position = UDim2.fromOffset(11, 8)
 	logo.BackgroundTransparency = 1
-	logo.Image = getcustomasset('newvape/assets/old/barlogo.png')
+	logo.Image = getcustomasset('Lunar Vape/Assets/Vape V3/barlogo.png')
 	logo.ImageColor3 = uipallet.Text
 	logo.Parent = bar
 	local settingsbutton = Instance.new('TextButton')
@@ -1801,7 +1803,7 @@ function mainapi:CreateBar()
 	settingsicon.Size = UDim2.fromOffset(26, 26)
 	settingsicon.Position = UDim2.fromOffset(4, 4)
 	settingsicon.BackgroundTransparency = 1
-	settingsicon.Image = getcustomasset('newvape/assets/old/settingsicon.png')
+	settingsicon.Image = getcustomasset('Lunar Vape/Assets/Vape V3/settingsicon.png')
 	settingsicon.ImageColor3 = uipallet.Text
 	settingsicon.Parent = settingsbutton
 	local children = Instance.new('Frame')
@@ -1818,7 +1820,7 @@ function mainapi:CreateBar()
 	local searchbutton = settingsbutton:Clone()
 	searchbutton.Position = UDim2.fromOffset(144, 4)
 	searchbutton.Parent = bar
-	searchbutton.ImageLabel.Image = getcustomasset('newvape/assets/old/search.png')
+	searchbutton.ImageLabel.Image = getcustomasset('Lunar Vape/Assets/Vape V3/search.png')
 
 	function categoryapi:CreateBind()
 		local optionapi = {}
@@ -2558,7 +2560,7 @@ function mainapi:CreateOverlay(categorysettings)
 	pin.Position = UDim2.new(1, -23, 0, 11)
 	pin.BackgroundTransparency = 1
 	pin.AutoButtonColor = false
-	pin.Image = getcustomasset('newvape/assets/old/pin.png')
+	pin.Image = getcustomasset('Lunar Vape/Assets/Vape V3/pin.png')
 	pin.ImageColor3 = color.Dark(uipallet.Text, 0.43)
 	pin.Parent = window
 	local customchildren = Instance.new('Frame')
@@ -2748,10 +2750,10 @@ function mainapi:CreateCategoryList(categorysettings)
 			if categorysettings.Profiles then
 				local ind = self:GetValue(val)
 				if ind then
-					if val ~= 'default' then
+					if val ~= 'Main Configuration' then
 						table.remove(mainapi.Profiles, ind)
-						if isfile('newvape/profiles/'..val..mainapi.Place..'.txt') and delfile then
-							delfile('newvape/profiles/'..val..mainapi.Place..'.txt')
+						if isfile('Lunar Vape/Profiles/'..val..' '..mainapi.Place..'.txt') and delfile then
+							delfile('Lunar Vape/Profiles/'..val..' '..mainapi.Place..'.txt')
 						end
 					end
 				else
@@ -2877,7 +2879,7 @@ function mainapi:CreateCategoryList(categorysettings)
 				local objectdotin = Instance.new('ImageLabel')
 				objectdotin.Size = UDim2.fromScale(1, 1)
 				objectdotin.BackgroundTransparency = 1
-				objectdotin.Image = getcustomasset('newvape/assets/old/checkbox.png')
+				objectdotin.Image = getcustomasset('Lunar Vape/Assets/Vape V3/checkbox.png')
 				objectdotin.ImageColor3 = uipallet.Text
 				objectdotin.Parent = objectdot
 				local objecttitle = Instance.new('TextLabel')
@@ -3016,7 +3018,7 @@ function mainapi:CreateNotification(title, text, duration, type)
 		iconshadow.Position = UDim2.fromOffset(1, 3)
 		iconshadow.ZIndex = 5
 		iconshadow.BackgroundTransparency = 1
-		iconshadow.Image = getcustomasset('newvape/assets/old/info.png')
+		iconshadow.Image = getcustomasset('Lunar Vape/Assets/Vape V3/info.png')
 		iconshadow.ImageColor3 = Color3.new()
 		iconshadow.ImageTransparency = 0.5
 		iconshadow.Parent = notification
@@ -3060,7 +3062,7 @@ function mainapi:CreateNotification(title, text, duration, type)
 		progress.Size = UDim2.new(1, -13, 0, 2)
 		progress.Position = UDim2.new(0, 0, 1, -2)
 		progress.ZIndex = 5
-		progress.BackgroundColor3 = type == 'alert' and Color3.fromRGB(250, 50, 56) or type == 'warning' and Color3.fromRGB(236, 129, 43) or Color3.fromRGB(220, 220, 220)
+		progress.BackgroundColor3 = type == 'Alert' and Color3.fromRGB(250, 50, 56) or type == 'warning' and Color3.fromRGB(236, 129, 43) or Color3.fromRGB(220, 220, 220)
 		progress.BorderSizePixel = 0
 		progress.Parent = notification
 		if tween.Tween then
@@ -3091,11 +3093,11 @@ function mainapi:Load(skipgui, profile)
 	local guidata = {}
 	local savecheck = true
 
-	if isfile('newvape/profiles/'..game.GameId..'.gui.txt') then
-		guidata = loadJson('newvape/profiles/'..game.GameId..'.gui.txt')
+	if isfile('Lunar Vape/Profiles/'..game.GameId..'.GUI.txt') then
+		guidata = loadJson('Lunar Vape/Profiles/'..game.GameId..'.GUI.txt')
 		if not guidata then
 			guidata = {Categories = {}}
-			self:CreateNotification('Lunar Vape', 'Failed to load GUI settings.', 10, 'alert')
+			self:CreateNotification('Lunar Vape', 'Failed to load GUI settings.', 10, 'Alert')
 			savecheck = false
 		end
 
@@ -3128,22 +3130,22 @@ function mainapi:Load(skipgui, profile)
 		end
 	end
 
-	self.Profile = profile or guidata.Profile or 'default'
+	self.Profile = profile or guidata.Profile or 'Main Configuration'
 	self.Profiles = guidata.Profiles or {{
-		Name = 'default',
+		Name = 'Main Configuration',
 		Bind = {}
 	}}
 	self.Categories.Profiles:ChangeValue()
 
-	if isfile('newvape/profiles/'..self.Profile..self.Place..'.txt') then
-		local savedata = loadJson('newvape/profiles/'..self.Profile..self.Place..'.txt')
+	if isfile('Lunar Vape/Profiles/'..self.Profile..' '..self.Place..'.txt') then
+		local savedata = loadJson('Lunar Vape/Profiles/'..self.Profile..' '..self.Place..'.txt')
 		if not savedata then
 			savedata = {
 				Categories = {},
 				Modules = {},
 				Legit = {}
 			}
-			self:CreateNotification('Lunar Vape', 'Failed to load '..self.Profile..' profile.', 10, 'alert')
+			self:CreateNotification('Lunar Vape', 'Failed to load '..self.Profile..' profile.', 10, 'Alert')
 			savecheck = false
 		end
 
@@ -3222,7 +3224,7 @@ function mainapi:Load(skipgui, profile)
 		image.Size = UDim2.fromOffset(26, 26)
 		image.Position = UDim2.fromOffset(3, 3)
 		image.BackgroundTransparency = 1
-		image.Image = getcustomasset('newvape/assets/old/vape.png')
+		image.Image = getcustomasset('Lunar Vape/Assets/Vape V3/LunarVape.png')
 		image.Parent = button
 		self.VapeButton = button
 		button.MouseButton1Click:Connect(function()
@@ -3315,8 +3317,8 @@ function mainapi:Save(newprofile)
 		}
 	end
 
-	writefile('newvape/profiles/'..game.GameId..'.gui.txt', httpService:JSONEncode(guidata))
-	writefile('newvape/profiles/'..self.Profile..self.Place..'.txt', httpService:JSONEncode(savedata))
+	writefile('Lunar Vape/Profiles/'..game.GameId..'.GUI.txt', httpService:JSONEncode(guidata))
+	writefile('Lunar Vape/Profiles/'..self.Profile..' '..self.Place..'.txt', httpService:JSONEncode(savedata))
 end
 
 function mainapi:SaveOptions(object, savedoptions)
@@ -3363,9 +3365,9 @@ function mainapi:Uninject()
 	mainapi.gui:Destroy()
 	table.clear(mainapi.Libraries)
 	loopClean(mainapi)
-	_G.vape = nil
-	_G.vapereload = nil
-	_G.VapeIndependent = nil
+	_G.LunarVape = nil
+	_G.LunarVapereload = nil
+	_G.LunarVapeIndependent = nil
 end
 
 gui = Instance.new('ScreenGui')
@@ -3465,41 +3467,41 @@ end))
 
 mainapi:CreateCategory({
 	Name = 'GUI',
-	Icon = getcustomasset('newvape/assets/old/guiicon.png')
+	Icon = getcustomasset('Lunar Vape/Assets/Vape V3/guiicon.png')
 })
 local combat = mainapi:CreateCategory({
 	Name = 'Combat',
-	Icon = getcustomasset('newvape/assets/old/combaticon.png')
+	Icon = getcustomasset('Lunar Vape/Assets/Vape V3/combaticon.png')
 })
 mainapi:CreateCategory({
 	Name = 'Blatant',
-	Icon = getcustomasset('newvape/assets/old/blatanticon.png'),
+	Icon = getcustomasset('Lunar Vape/Assets/Vape V3/blatanticon.png'),
 	WindowSize = 164
 })
 mainapi:CreateCategory({
 	Name = 'Render',
-	Icon = getcustomasset('newvape/assets/old/rendericon.png'),
+	Icon = getcustomasset('Lunar Vape/Assets/Vape V3/rendericon.png'),
 	WindowSize = 196
 })
 mainapi:CreateCategory({
 	Name = 'Utility',
-	Icon = getcustomasset('newvape/assets/old/utilityicon.png'),
+	Icon = getcustomasset('Lunar Vape/Assets/Vape V3/utilityicon.png'),
 	WindowSize = 164
 })
 mainapi:CreateCategory({
 	Name = 'World',
-	Icon = getcustomasset('newvape/assets/old/worldicon.png')
+	Icon = getcustomasset('Lunar Vape/Assets/Vape V3/worldicon.png')
 })
 mainapi:CreateCategory({
 	Name = 'Lunar Vape',
-	Icon = getcustomasset('newvape/assets/old/guiv4.png')
+	Icon = getcustomasset('Lunar Vape/Assets/Vape V3/guiv4.png')
 })
 mainapi.Legit = mainapi:CreateLegit({
 	Name = 'Legit'
 })
 local settingspane = mainapi:CreateCategory({
 	Name = 'Settings',
-	Icon = getcustomasset('newvape/assets/old/settingsicon.png'),
+	Icon = getcustomasset('Lunar Vape/Assets/Vape V3/settingsicon.png'),
 	WindowSize = 166
 })
 
@@ -3515,7 +3517,7 @@ local friendscolor = {
 }
 local friendssettings = {
 	Name = 'Friends',
-	Icon = getcustomasset('newvape/assets/old/friendsicon.png'),
+	Icon = getcustomasset('Lunar Vape/Assets/Vape V3/friendsicon.png'),
 	Placeholder = 'Roblox username',
 	WindowSize = 250,
 	Function = function()
@@ -3560,7 +3562,7 @@ mainapi:Clean(friends.ColorUpdate)
 ]]
 mainapi:CreateCategoryList({
 	Name = 'Profiles',
-	Icon = getcustomasset('newvape/assets/old/profilesicon.png'),
+	Icon = getcustomasset('Lunar Vape/Assets/Vape V3/profilesicon.png'),
 	Placeholder = 'Type name',
 	WindowSize = 250,
 	Profiles = true
@@ -3572,7 +3574,7 @@ mainapi:CreateCategoryList({
 local targets
 targets = mainapi:CreateCategoryList({
 	Name = 'Targets',
-	Icon = getcustomasset('newvape/assets/old/friendsicon.png'),
+	Icon = getcustomasset('Lunar Vape/Assets/Vape V3/friendsicon.png'),
 	Placeholder = 'Roblox username',
 	WindowSize = 250,
 	Function = function()
@@ -3718,19 +3720,19 @@ scaleslider = topbar:CreateSlider({
 })
 topbar:CreateDropdown({
 	Name = 'GUI Theme',
-	List = inputService.TouchEnabled and {'new', 'old'} or {'new', 'old', 'rise'},
+	List = inputService.TouchEnabled and {'Vape V4', 'Vape V3'} or {'Vape V4', 'Vape V3', 'Rise'},
 	Function = function(val, mouse)
 		if mouse then
-			writefile('newvape/profiles/gui.txt', val)
-			_G.vapereload = true
-			if _G.VapeDeveloper then
-				loadstring(readfile('newvape/loader.lua'), 'loader')()
+			writefile('Lunar Vape/Profiles/GUI.txt', val)
+			_G.LunarVapereload = true
+			if _G.LunarVapeDeveloper then
+				loadstring(readfile('Lunar Vape/Loader.lua'), 'Lunar Vape/Loader.lua')()
 			else
-				loadstring(game:HttpGet('https://raw.githubusercontent.com/AtTheZenith/LunarVape/'..readfile('newvape/profiles/commit.txt')..'/loader.lua', true))()
+				loadstring(game:HttpGet('https://raw.githubusercontent.com/AtTheZenith/LunarVape/'..readfile('Lunar Vape/Profiles/Commit.txt')..'/Loader.lua', true))()
 			end
 		end
 	end,
-	Tooltip = 'new - The newest vape theme to since v4.05\nold - The vape theme pre v4.05\nrise - Rise 6.0'
+	Tooltip = 'new - The newest LunarVape theme to since v4.05\nold - The LunarVape theme pre v4.05\nrise - Rise 6.0'
 })
 mainapi.RainbowMode = topbar:CreateDropdown({
 	Name = 'Rainbow Mode',
@@ -3757,14 +3759,14 @@ topbar:CreateButton({
 	Name = 'Reset current profile',
 	Function = function()
 	mainapi.Save = function() end
-		if isfile('newvape/profiles/'..mainapi.Profile..mainapi.Place..'.txt') and delfile then
-			delfile('newvape/profiles/'..mainapi.Profile..mainapi.Place..'.txt')
+		if isfile('Lunar Vape/Profiles/'..mainapi.Profile..mainapi.Place..'.txt') and delfile then
+			delfile('Lunar Vape/Profiles/'..mainapi.Profile..mainapi.Place..'.txt')
 		end
-		_G.vapereload = true
-		if _G.VapeDeveloper then
-			loadstring(readfile('newvape/loader.lua'), 'loader')()
+		_G.LunarVapereload = true
+		if _G.LunarVapeDeveloper then
+			loadstring(readfile('Lunar Vape/Loader.lua'), 'Lunar Vape/Loader.lua')()
 		else
-			loadstring(game:HttpGet('https://raw.githubusercontent.com/AtTheZenith/LunarVape/'..readfile('newvape/profiles/commit.txt')..'/loader.lua', true))()
+			loadstring(game:HttpGet('https://raw.githubusercontent.com/AtTheZenith/LunarVape/'..readfile('Lunar Vape/Profiles/Commit.txt')..'Lunar Vape/Loader.lua', true))()
 		end
 	end,
 	Tooltip = 'This will set your profile to the default settings of Vape'
@@ -3818,19 +3820,19 @@ topbar:CreateButton({
 	Function = function()
 		mainapi:Uninject()
 	end,
-	Tooltip = 'Removes vape from the current game'
+	Tooltip = 'Removes LunarVape from the current game'
 })
 topbar:CreateButton({
 	Name = 'REINEJCT',
 	Function = function()
-		_G.vapereload = true
-		if _G.VapeDeveloper then
-			loadstring(readfile('newvape/loader.lua'), 'loader')()
+		_G.LunarVapereload = true
+		if _G.LunarVapeDeveloper then
+			loadstring(readfile('Lunar Vape/Loader.lua'), 'Lunar Vape/Loader.lua')()
 		else
-			loadstring(game:HttpGet('https://raw.githubusercontent.com/AtTheZenith/LunarVape/'..readfile('newvape/profiles/commit.txt')..'/loader.lua', true))()
+			loadstring(game:HttpGet('https://raw.githubusercontent.com/AtTheZenith/LunarVape/'..readfile('Lunar Vape/Profiles/Commit.txt')..'Lunar Vape/Loader.lua', true))()
 		end
 	end,
-	Tooltip = 'Reloads vape for debugging purposes'
+	Tooltip = 'Reloads LunarVape for debugging purposes'
 })
 topbar:CreateBind()
 
@@ -3843,7 +3845,7 @@ local targetinfoobj
 local targetinfobcolor
 targetinfoobj = mainapi:CreateOverlay({
 	Name = 'Target Info',
-	Icon = 'rbxasset://targetinfoicon.png',
+	Icon = getcustomasset('Lunar Vape/Assets/Vape V3/targetinfoicon.png'),
 	Function = function(callback)
 		if callback then
 			task.spawn(function()
@@ -4000,7 +4002,7 @@ mainapi.Libraries.targetinfo = targetinfo
 
 local textgui = mainapi:CreateOverlay({
 	Name = 'Text GUI',
-	Icon = getcustomasset('newvape/assets/old/textguiicon.png'),
+	Icon = getcustomasset('Lunar Vape/Assets/Vape V3/textguiicon.png'),
 	WindowSize = 178,
 	Function = function()
 		mainapi:UpdateTextGUI()
@@ -4035,7 +4037,7 @@ local textguishadow = textgui:CreateToggle({
 })
 local textguiwatermark = textgui:CreateToggle({
 	Name = 'Watermark',
-	Tooltip = 'Renders a vape watermark',
+	Tooltip = 'Renders a LunarVape watermark',
 	Function = function()
 		mainapi:UpdateTextGUI()
 	end
@@ -4055,11 +4057,11 @@ local textguimodules = textgui:CreateToggle({
 		mainapi:UpdateTextGUI()
 	end
 })
---[[textguimoduleslist = textgui:CreateTextList({
+textguimoduleslist = textgui:CreateTextList({
 	Name = 'Blacklist',
 	Tooltip = 'Name of module to hide.',
-	Icon = getcustomasset('new/blockedicon.png'),
-	Tab = getcustomasset('new/blockedtab.png'),
+	Icon = getcustomasset('Lunar Vape/Assets/Vape V4/Blocked Icon.png'),
+	Tab = getcustomasset('Lunar Vape/Assets/Vape V4/Blocked Tab.png'),
 	TabSize = UDim2.fromOffset(21, 16),
 	Color = Color3.fromRGB(250, 50, 56),
 	Function = function()
@@ -4067,7 +4069,7 @@ local textguimodules = textgui:CreateToggle({
 	end,
 	Visible = false,
 	Darker = true
-})]]
+})
 local textguirender = textgui:CreateToggle({
 	Name = 'Hide render',
 	Function = function(enabled)
@@ -4088,7 +4090,7 @@ VapeLogo.BackgroundTransparency = 1
 VapeLogo.BorderSizePixel = 0
 VapeLogo.Visible = true
 VapeLogo.BackgroundColor3 = Color3.new()
-VapeLogo.Image = getcustomasset('newvape/assets/old/textvape.png')
+VapeLogo.Image = getcustomasset('Lunar Vape/Assets/Vape V3/textLunarVape.png')
 VapeLogo.Parent = textgui.Children
 
 local lastside = textgui.Children.AbsolutePosition.X > (gui.AbsoluteSize.X / 2)
@@ -4110,7 +4112,7 @@ VapeLogoV4.Position = UDim2.new(1, 1, 0, -2)
 VapeLogoV4.BackgroundColor3 = Color3.new()
 VapeLogoV4.BackgroundTransparency = 1
 VapeLogoV4.BorderSizePixel = 0
-VapeLogoV4.Image = getcustomasset('newvape/assets/old/textv4.png')
+VapeLogoV4.Image = getcustomasset('Lunar Vape/Assets/Vape V3/textv4.png')
 VapeLogoV4.Parent = VapeLogo
 local VapeLogoShadow = VapeLogo:Clone()
 VapeLogoShadow.Position = UDim2.fromOffset(1, 1)

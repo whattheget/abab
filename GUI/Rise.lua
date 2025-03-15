@@ -13,7 +13,7 @@ local mainapi = {
 	Modules = {},
 	Notifications = {Enabled = true},
 	Place = game.PlaceId,
-	Profile = 'default',
+	Profile = 'Main Configuration',
 	Profiles = {},
 	RainbowSpeed = {Value = 1},
 	RainbowUpdateSpeed = {Value = 60},
@@ -120,9 +120,9 @@ local themecolors = {
 }
 
 local getcustomassets = {
-	['newvape/assets/rise/slice.png'] = 'rbxasset://risesix/slice.png',
-	['newvape/assets/rise/blur.png'] = 'rbxasset://risesix/blur.png',
-	['newvape/assets/new/blur.png'] = 'rbxassetid://14898786664',
+	['Lunar Vape/Assets/Rise/Slice.png'] = 'rbxasset://79307254401837',
+	['Lunar Vape/Assets/Rise/Blur.png'] = 'rbxasset://14898786664',
+	['Lunar Vape/Assets/Vape V4/Blur.png'] = 'rbxassetid://14898786664',
 }
 
 local isfile = isfile or function(file)
@@ -139,20 +139,6 @@ local getfontsize = function(text, size, font)
 		fontsize.Font = font
 	end
 	return textService:GetTextBoundsAsync(fontsize)
-end
-
-local function addBlur(parent)
-	local blur = Instance.new('ImageLabel')
-	blur.Name = 'Blur'
-	blur.Size = UDim2.new(1, 42, 1, 42)
-	blur.Position = UDim2.fromOffset(-24, -15)
-	blur.BackgroundTransparency = 1
-	blur.Image = getcustomasset('newvape/assets/new/blur.png')
-	blur.ScaleType = Enum.ScaleType.Slice
-	blur.SliceCenter = Rect.new(44, 38, 804, 595)
-	blur.Parent = parent
-
-	return blur
 end
 
 local function addCorner(parent, radius)
@@ -241,16 +227,18 @@ local function createHighlight(size, pos)
 end
 
 local function downloadFile(path, func)
-	if not isfile(path) then
+	if not isfile(path) and not _G.LunarVapeDeveloper then
 		createDownloader(path)
 		local suc, res = pcall(function()
-			return game:HttpGet('https://raw.githubusercontent.com/AtTheZenith/LunarVape/'..readfile('newvape/profiles/commit.txt')..'/'..select(1, path:gsub('newvape/', '')), true)
+			return game:HttpGet('https://raw.githubusercontent.com/AtTheZenith/LunarVape/'..readfile('Lunar Vape/Profiles/Commit.txt')..'/'..select(1, path:gsub('Lunar Vape/', '')), true)
 		end)
-		if not suc or res == '404: Not Found' then
-			error(res)
+		if res == '404: Not Found' then
+			warn(string.format('Error while downloading file %s: %s', path, res)); return
+		elseif not suc then
+			error(string.format('Error while downloading file %s: %s', path, res)); return
 		end
 		if path:find('.lua') then
-			res = '--This watermark is used to delete the file if its cached, remove it to make the file persist after vape updates.\n'..res
+			res = '--This watermark is used to delete the file if its cached, remove it to make the file persist after LunarVape updates.\n'..res
 		end
 		writefile(path, res)
 	end
@@ -329,21 +317,21 @@ end
 
 local function writeFont()
 	if not assetfunction then return 'rbxasset://fonts/productsans.json' end
-	writefile('newvape/assets/rise/risefont.json', httpService:JSONEncode({
+	writefile('Lunar Vape/Assets/Rise/risefont.json', httpService:JSONEncode({
 		name = 'ProductSans',
 		faces = {
-			{style = 'normal', assetId = getcustomasset('newvape/assets/rise/SF-Pro-Rounded-Light.otf'), name = 'Light', weight = 300},
-			{style = 'normal', assetId = getcustomasset('newvape/assets/rise/SF-Pro-Rounded-Regular.otf'), name = 'Regular', weight = 400},
-			{style = 'normal', assetId = getcustomasset('newvape/assets/rise/SF-Pro-Rounded-Medium.otf'), name = 'Medium', weight = 500},
-			{style = 'normal', assetId = getcustomasset('newvape/assets/rise/Icon-1.ttf'), name = 'Icon1', weight = 600},
-			{style = 'normal', assetId = getcustomasset('newvape/assets/rise/Icon-3.ttf'), name = 'Icon3', weight = 800}
+			{style = 'normal', assetId = getcustomasset('Lunar Vape/Assets/Rise/SF-Pro-Rounded-Light.otf'), name = 'Light', weight = 300},
+			{style = 'normal', assetId = getcustomasset('Lunar Vape/Assets/Rise/SF-Pro-Rounded-Regular.otf'), name = 'Regular', weight = 400},
+			{style = 'normal', assetId = getcustomasset('Lunar Vape/Assets/Rise/SF-Pro-Rounded-Medium.otf'), name = 'Medium', weight = 500},
+			{style = 'normal', assetId = getcustomasset('Lunar Vape/Assets/Rise/Icon-1.ttf'), name = 'Icon1', weight = 600},
+			{style = 'normal', assetId = getcustomasset('Lunar Vape/Assets/Rise/Icon-3.ttf'), name = 'Icon3', weight = 800}
 		}
 	}))
-	return getcustomasset('newvape/assets/rise/risefont.json')
+	return getcustomasset('Lunar Vape/Assets/Rise/risefont.json')
 end
 
 if inputService.TouchEnabled then
-	writefile('newvape/profiles/gui.txt', 'new')
+	writefile('Lunar Vape/Profiles/GUI.txt', 'Vape V4')
 	return
 end
 
@@ -355,7 +343,7 @@ do
 	uipallet.FontIcon1 = Font.new(risefont, Enum.FontWeight.SemiBold)
 	uipallet.FontIcon3 = Font.new(risefont, Enum.FontWeight.ExtraBold)
 
-	local res = isfile('newvape/profiles/color.txt') and loadJson('newvape/profiles/color.txt')
+	local res = isfile('Lunar Vape/Profiles/Color.txt') and loadJson('Lunar Vape/Profiles/Color.txt')
 	if res then
 		uipallet.Main = res.Main and Color3.fromRGB(unpack(res.Main)) or uipallet.Main
 		uipallet.Text = res.Text and Color3.fromRGB(unpack(res.Text)) or uipallet.Text
@@ -1196,10 +1184,10 @@ components = {
 				if optionsettings.Profiles then
 					local ind = self:GetValue(val)
 					if ind then
-						if val ~= 'default' then
+						if val ~= 'Main Configuration' then
 							table.remove(mainapi.Profiles, ind)
-							if isfile('newvape/profiles/'..val..mainapi.Place..'.txt') and delfile then
-								delfile('newvape/profiles/'..val..mainapi.Place..'.txt')
+							if isfile('Lunar Vape/Profiles/'..val..' '..mainapi.Place..'.txt') and delfile then
+								delfile('Lunar Vape/Profiles/'..val..' '..mainapi.Place..'.txt')
 							end
 						end
 					else
@@ -2298,8 +2286,8 @@ function mainapi:Load(skipgui, profile)
 	local guidata = {}
 	local savecheck = true
 
-	if isfile('newvape/profiles/'..game.GameId..'.gui.txt') then
-		guidata = loadJson('newvape/profiles/'..game.GameId..'.gui.txt')
+	if isfile('Lunar Vape/Profiles/'..game.GameId..'.GUI.txt') then
+		guidata = loadJson('Lunar Vape/Profiles/'..game.GameId..'.GUI.txt')
 		if not guidata then
 			guidata = {Categories = {}}
 			self:CreateNotification('Lunar Vape', 'Failed to load GUI settings.', 10, 'alert')
@@ -2321,15 +2309,15 @@ function mainapi:Load(skipgui, profile)
 		end
 	end
 
-	self.Profile = profile or guidata.Profile or 'default'
+	self.Profile = profile or guidata.Profile or 'Main Configuration'
 	self.Profiles = guidata.Profiles or {{
-		Name = 'default',
+		Name = 'Main Configuration',
 		Bind = {}
 	}}
 	--self.Categories.Profiles:ChangeValue()
 
-	if isfile('newvape/profiles/'..self.Profile..self.Place..'.txt') then
-		local savedata = loadJson('newvape/profiles/'..self.Profile..self.Place..'.txt')
+	if isfile('Lunar Vape/Profiles/'..self.Profile..' '..self.Place..'.txt') then
+		local savedata = loadJson('Lunar Vape/Profiles/'..self.Profile..' '..self.Place..'.txt')
 		if not savedata then
 			savedata = {
 				Categories = {},
@@ -2450,8 +2438,8 @@ function mainapi:Save(newprofile)
 		}
 	end
 
-	writefile('newvape/profiles/'..game.GameId..'.gui.txt', httpService:JSONEncode(guidata))
-	writefile('newvape/profiles/'..self.Profile..self.Place..'.txt', httpService:JSONEncode(savedata))
+	writefile('Lunar Vape/Profiles/'..game.GameId..'.GUI.txt', httpService:JSONEncode(guidata))
+	writefile('Lunar Vape/Profiles/'..self.Profile..' '..self.Place..'.txt', httpService:JSONEncode(savedata))
 end
 
 function mainapi:SaveOptions(object, savedoptions)
@@ -2497,9 +2485,9 @@ function mainapi:Uninject()
 	mainapi.gui:Destroy()
 	table.clear(mainapi.Libraries)
 	loopClean(mainapi)
-	_G.vape = nil
-	_G.vapereload = nil
-	_G.VapeIndependent = nil
+	_G.LunarVape = nil
+	_G.LunarVapereload = nil
+	_G.LunarVapeIndependent = nil
 end
 
 gui = Instance.new('ScreenGui')
@@ -2837,15 +2825,15 @@ scaleslider = mainapi.Categories.Main:CreateSlider({
 })
 mainapi.Categories.Main:CreateDropdown({
 	Name = 'GUI Theme',
-	List = {'rise', 'new', 'old'},
+	List = {'Rise', 'Vape V4', 'Vape V3'},
 	Function = function(val, mouse)
 		if mouse then
-			writefile('newvape/profiles/gui.txt', val)
-			_G.vapereload = true
-			if _G.VapeDeveloper then
-				loadstring(readfile('newvape/loader.lua'), 'loader')()
+			writefile('Lunar Vape/Profiles/GUI.txt', val)
+			_G.LunarVapereload = true
+			if _G.LunarVapeDeveloper then
+				loadstring(readfile('Lunar Vape/Loader.lua'), 'Lunar Vape/Loader.lua')()
 			else
-				loadstring(game:HttpGet('https://raw.githubusercontent.com/AtTheZenith/LunarVape/'..readfile('newvape/profiles/commit.txt')..'/loader.lua', true))()
+				loadstring(game:HttpGet('https://raw.githubusercontent.com/AtTheZenith/LunarVape/'..readfile('Lunar Vape/Profiles/Commit.txt')..'/Loader.lua', true), 'Lunar Vape/Loader.lua')()
 			end
 		end
 	end
@@ -2869,11 +2857,11 @@ mainapi.RainbowUpdateSpeed = mainapi.Categories.Main:CreateSlider({
 mainapi.Categories.Main:CreateButton({
 	Name = 'Reinject',
 	Function = function()
-		_G.vapereload = true
-		if _G.VapeDeveloper then
-			loadstring(readfile('newvape/loader.lua'), 'loader')()
+		_G.LunarVapereload = true
+		if _G.LunarVapeDeveloper then
+			loadstring(readfile('Lunar Vape/Loader.lua'), 'Lunar Vape/Loader.lua')()
 		else
-			loadstring(game:HttpGet('https://raw.githubusercontent.com/AtTheZenith/LunarVape/'..readfile('newvape/profiles/commit.txt')..'/loader.lua', true))()
+			loadstring(game:HttpGet('https://raw.githubusercontent.com/AtTheZenith/LunarVape/'..readfile('Lunar Vape/Profiles/Commit.txt')..'/Loader.lua', true), 'Lunar Vape/Loader.lua')()
 		end
 	end
 })
@@ -3229,7 +3217,7 @@ function mainapi:UpdateTextGUI(afterload)
 					holderline.Size = UDim2.fromOffset(2, 18)
 					holderline.Position = UDim2.new(1, 0, 0, 2)
 					holderline.BackgroundTransparency = 1
-					holderline.Image = getcustomasset('newvape/assets/rise/slice.png')
+					holderline.Image = getcustomasset('Lunar Vape/Assets/Rise/Slice.png')
 					holderline.ImageColor3 = uipallet.MainColor
 					holderline.ZIndex = -1
 					holderline.Parent = holderbackground

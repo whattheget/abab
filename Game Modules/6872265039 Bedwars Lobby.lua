@@ -10,13 +10,13 @@ local replicatedStorage = cloneref(game:GetService('ReplicatedStorage'))
 local inputService = cloneref(game:GetService('UserInputService'))
 
 local lplr = playersService.LocalPlayer
-local vape = _G.vape
-local entitylib = vape.Libraries.entity
-local sessioninfo = vape.Libraries.sessioninfo
+local LunarVape = _G.LunarVape
+local entitylib = LunarVape.Libraries.entity
+local sessioninfo = LunarVape.Libraries.sessioninfo
 local bedwars = {}
 
 local function notif(...)
-	return vape:CreateNotification(...)
+	return LunarVape:CreateNotification(...)
 end
 
 run(function()
@@ -53,14 +53,14 @@ run(function()
 	local wins = sessioninfo:AddItem('Wins')
 	local games = sessioninfo:AddItem('Games')
 
-	vape:Clean(function()
+	LunarVape:Clean(function()
 		table.clear(bedwars)
 	end)
 end)
 
-for _, v in vape.Modules do
+for _, v in LunarVape.Modules do
 	if v.Category == 'Combat' then
-		vape:Remove(i)
+		LunarVape:Remove(i)
 	end
 end
 
@@ -68,7 +68,7 @@ run(function()
 	local Sprint
 	local old
 	
-	Sprint = vape.Categories.Combat:CreateModule({
+	Sprint = LunarVape.Categories.Combat:CreateModule({
 		Name = 'Sprint',
 		Function = function(callback)
 			if callback then
@@ -94,7 +94,7 @@ end)
 run(function()
 	local AutoGamble
 	
-	AutoGamble = vape.Categories.Utility:CreateModule({
+	AutoGamble = LunarVape.Categories.Utility:CreateModule({
 		Name = 'AutoGamble',
 		Function = function(callback)
 			if callback then

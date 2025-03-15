@@ -1,14 +1,14 @@
 local mainapi = {
 	Connections = {},
 	Categories = {},
-	GUIColor = {Hue = 0.46, Sat = 0.96, Value = 0.52},
+	GUIColor = {Hue = 0.82, Sat = 0.56, Value = 0.82},
 	Keybind = Enum.KeyCode.RightShift,
 	Loaded = false,
 	Libraries = {},
 	Modules = {},
 	Notifications = {Enabled = true},
 	Place = game.PlaceId,
-	Profile = 'default',
+	Profile = 'Main Configuration',
 	Profiles = {},
 	RainbowSpeed = {Value = 1},
 	RainbowUpdateSpeed = {Value = 60},
@@ -52,7 +52,7 @@ local uipallet = {
 }
 
 local getcustomassets = {
-	['newvape/assets/wurst/triangle.png'] = 'rbxasset://wurst/triangle.png'
+	['Lunar Vape/Assets/Wurst/Triangle.png'] = 'rbxasset://103259226932804'
 }
 
 local isfile = isfile or function(file)
@@ -69,10 +69,14 @@ end
 
 
 local function downloadFile(path, func)
-	if not isfile(path) then
-		local suc, res = pcall(function() return game:HttpGet('https://raw.githubusercontent.com/AtTheZenith/LunarVape/'..readfile('newvape/profiles/commit.txt')..'/'..select(1, path:gsub('newvape/', '')), true) end)
-		if not suc or res == '404: Not Found' then error(res) end
-		if path:find('.lua') then res = '--This watermark is used to delete the file if its cached, remove it to make the file persist after vape updates.\n'..res end
+	if not isfile(path) and not _G.LunarVapeDeveloper then
+		local suc, res = pcall(function() return game:HttpGet('https://raw.githubusercontent.com/AtTheZenith/LunarVape/'..readfile('Lunar Vape/Profiles/Commit.txt')..'/'..select(1, path:gsub('Lunar Vape/', '')), true) end)
+		if res == '404: Not Found' then
+			warn(string.format('Error while downloading file %s: %s', path, res)); return
+		elseif not suc then
+			error(string.format('Error while downloading file %s: %s', path, res)); return
+		end
+		if path:find('.lua') then res = '--This watermark is used to delete the file if its cached, remove it to make the file persist after LunarVape updates.\n'..res end
 		writefile(path, res)
 	end
 	return (func or readfile)(path)
@@ -142,7 +146,7 @@ local function removeTags(str)
 end
 
 do
-	local res = isfile("newvape/profiles/color.txt") and loadJson("newvape/profiles/color.txt")
+	local res = isfile("Lunar Vape/Profiles/Color.txt") and loadJson("Lunar Vape/Profiles/Color.txt")
 	if res then
 		uipallet.Main = res.Main and Color3.fromRGB(unpack(res.Main)) or uipallet.Main
 		uipallet.Text = res.Text and Color3.fromRGB(unpack(res.Text)) or uipallet.Text
@@ -327,7 +331,7 @@ function mainapi:CreateCategory(categorysettings)
 		triangle.Size = UDim2.fromOffset(28, 16)
 		triangle.Position = UDim2.new(1, -38, 0, 16)
 		triangle.BackgroundTransparency = 1
-		triangle.Image = getcustomasset('newvape/assets/wurst/triangle.png')
+		triangle.Image = getcustomasset('Lunar Vape/Assets/Wurst/Triangle.png')
 		triangle.AutoButtonColor = false
 		triangle.Parent = modulebutton
 		local modulechildren = Instance.new('ScrollingFrame')

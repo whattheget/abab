@@ -1,0 +1,45 @@
+local LunarVape = _G.LunarVape
+local loadstring = function(...)
+	local res, err = loadstring(...)
+	if err and LunarVape then 
+		LunarVape:CreateNotification('Lunar Vape', 'Failed to load : '..err, 30, 'Alert') 
+	end
+	return res
+end
+local isfile = isfile or function(file)
+	local suc, res = pcall(function() 
+		return readfile(file) 
+	end)
+	return suc and res ~= nil and res ~= ''
+end
+local function downloadFile(path, func)
+	if not isfile(path) and not _G.LunarVapeDeveloper then
+		local suc, res = pcall(function() 
+			return game:HttpGet('https://raw.githubusercontent.com/AtTheZenith/LunarVape/'..readfile('Lunar Vape/Profiles/Commit.txt')..'/'..select(1, path:gsub('Lunar Vape/', '')), true) 
+		end)
+		if res == '404: Not Found' then
+			warn(string.format('Error while downloading file %s: %s', path, res)); return
+		elseif not suc then
+			error(string.format('Error while downloading file %s: %s', path, res)); return
+		end
+		if path:find('.lua') then 
+			res = '--This watermark is used to delete the file if its cached, remove it to make the file persist after LunarVape updates.\n'..res 
+		end
+		writefile(path, res)
+	end
+	return (func or readfile)(path)
+end
+
+LunarVape.Place = 6872274481
+if isfile('Lunar Vape/Game modules/'..LunarVape.Place..'.lua') then
+	loadstring(readfile('Lunar Vape/Game modules/'..LunarVape.Place..'.lua'), 'bedwars')()
+else
+	if not _G.LunarVapeDeveloper then
+		local suc, res = pcall(function() 
+			return game:HttpGet('https://raw.githubusercontent.com/AtTheZenith/LunarVape/'..readfile('Lunar Vape/Profiles/Commit.txt')..'/Game modules/'..LunarVape.Place..'.lua', true) 
+		end)
+		if suc and res ~= '404: Not Found' then
+			loadstring(downloadFile('Lunar Vape/Game modules/'..LunarVape.Place..'.lua'), 'bedwars')()
+		end
+	end
+end

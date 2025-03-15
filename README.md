@@ -1,7 +1,7 @@
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="./README/Lunar Vape Logo Dark.png">
-    <source media="(prefers-color-scheme: light)" srcset="./README/Lunar Vape Logo Light.png">
+    <source media="(prefers-color-scheme: dark)" srcset="./Assets/README/Lunar Vape Logo Dark.png">
+    <source media="(prefers-color-scheme: light)" srcset="./Assets/README/Lunar Vape Logo Light.png">
     <img alt="vape logo" src="./README/Lunar Vape Logo Dark.png">
   </picture>
 </p>
@@ -21,7 +21,7 @@
 
 2. Execute the provided loadstring below.
 ```luau
-loadstring(game:HttpGet("https://raw.githubusercontent.com/AtTheZenith/LunarVape/main/loader.lua", true))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/AtTheZenith/LunarVape/main/Loader.lua", true))()
 ```
 
 3. Wait until a notification appears indicating Lunar Vape has loaded.
@@ -35,8 +35,8 @@ Half of the time its usually the scripting utility at fault, please make sure th
 
 ### User Issues
 If its not the supposed utility at fault, please try some troubleshooting steps.
-1. Deleting the newvape folder (WITH THE GAME CLOSED).
-2. Making sure you have connection to [the main loadstring](https://raw.githubusercontent.com/AtTheZenith/LunarVape/main/loader.lua).
+1. Deleting the Lunar Vape folder in your executor's workspace (WITH THE GAME CLOSED).
+2. Making sure you have connection to [the main loadstring](https://raw.githubusercontent.com/AtTheZenith/LunarVape/main/Loader.lua).
 3. Ensuring no external script is conflicting with vape.
 
 ## Developers & Credits
