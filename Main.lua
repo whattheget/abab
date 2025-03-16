@@ -39,7 +39,7 @@ local function downloadFile(path, func)
     local suc, res = pcall(function()
       return game:HttpGet(
       'https://raw.githubusercontent.com/AtTheZenith/LunarVape/' ..
-      readfile('Lunar Vape/Profiles/Commit.txt') .. '/' .. select(1, path:gsub('Lunar Vape/', '')), true)
+      readfile('Lunar Vape/Profiles/Commit.txt') or 'main' .. '/' .. select(1, path:gsub('Lunar Vape/', '')), true)
     end)
 		if res == '404: Not Found' then
 			warn(string.format('Error while downloading file %s: %s', path, res)); return

@@ -49,7 +49,7 @@ end
 local function downloadFile(path, func)
 	if not isfile(path) and not _G.LunarVapeDeveloper then
 		local suc, res = pcall(function()
-			return game:HttpGet('https://raw.githubusercontent.com/AtTheZenith/LunarVape/'..readfile('Lunar Vape/Profiles/commit.txt')..'/'..select(1, path:gsub('Lunar Vape/', '')), true)
+			return game:HttpGet('https://raw.githubusercontent.com/AtTheZenith/LunarVape/'..readfile('Lunar Vape/Profiles/commit.txt') or 'main'..'/'..select(1, path:gsub('Lunar Vape/', '')), true)
 		end)
 		if res == '404: Not Found' then
 			warn(string.format('Error while downloading file %s: %s', path, res)); return
@@ -63,6 +63,8 @@ local function downloadFile(path, func)
 	end
 	return (func or readfile)(path)
 end
+
+downloadFile('Lunar Vape/Loader.lua')
 
 local function wipeFolder(path)
 	if not isfolder(path) then return end
