@@ -1,5 +1,3 @@
-_G.LunarVapeDeveloper = true
-
 pcall(function(c)
   if _G.LunarVapeErrorLogger then _G.LunarVapeErrorLogger:Disconnect() end
   if _G.NoLogs then return end
@@ -49,9 +47,9 @@ end
 local function downloadFile(path, func)
 	if not isfile(path) and not _G.LunarVapeDeveloper then
 		local suc, res = pcall(function()
-			return game:HttpGet('https://raw.githubusercontent.com/AtTheZenith/LunarVape/'..readfile('Lunar Vape/Profiles/commit.txt') or 'main'..'/'..select(1, path:gsub('Lunar Vape/', '')), true)
+			return game:HttpGet('https://raw.githubusercontent.com/AtTheZenith/LunarVape/'..isfile('Lunar Vape/Profiles/commit.txt') and readfile('Lunar Vape/Profiles/commit.txt') or 'main'..'/'..string.gsub(path, 'Lunar Vape/', ''), true)
 		end)
-		if res == '404: Not Found' then
+		if res == '404: Not Found' or res == '' then
 			warn(string.format('Error while downloading file %s: %s', path, res)); return
 		elseif not suc then
 			error(string.format('Error while downloading file %s: %s', path, res)); return
@@ -59,12 +57,15 @@ local function downloadFile(path, func)
 		if path:find('.lua') then
 			res = '--This watermark is used to delete the file if its cached, remove it to make the file persist after vape updates.\n'..res
 		end
+    print(path..'\n'..res)
 		writefile(path, res)
 	end
 	return (func or readfile)(path)
 end
 
-downloadFile('Lunar Vape/Loader.lua')
+if not isfile('Lunar Vape/Loader.lua') then
+  downloadFile('Lunar Vape/Loader.lua')
+end
 
 local function wipeFolder(path)
 	if not isfolder(path) then return end
