@@ -1127,10 +1127,6 @@ run(function()
 			store.shopLoaded = true
 		else
 			task.spawn(function()
-				repeat
-					task.wait(0.1)
-				until LunarVape.Loaded == nil or bedwars.AppController:isAppOpen('BedwarsItemShopApp')
-
 				bedwars.Shop = require(replicatedStorage.TS.games.bedwars.shop['bedwars-shop']).BedwarsShop
 				bedwars.ShopItems = debug.getupvalue(debug.getupvalue(bedwars.Shop.getShopItem, 1), 2)
 				store.shopLoaded = true
