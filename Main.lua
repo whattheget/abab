@@ -1,3 +1,4 @@
+--This watermark is used to delete the file if its cached, remove it to make the file persist after vape updates.
 repeat task.wait() until game:IsLoaded()
 if _G.LunarVape then _G.LunarVape:Uninject() end
 
@@ -106,22 +107,23 @@ end
 LunarVape = loadstring(downloadFile('Lunar Vape/GUI/' .. gui .. '.lua'), 'Lunar Vape/GUI/' .. gui .. '.lua')()
 _G.LunarVape = LunarVape
 
+LunarVape.Place = game.PlaceId
 local GAME_REGISTRY = loadstring(downloadFile('Lunar Vape/Game Modules/Registry.lua'), 'Lunar Vape/Game Modules/Registry.lua')()
 local GAME_NAME = GAME_REGISTRY[tostring(LunarVape.Place)] and ' ' .. GAME_REGISTRY[tostring(LunarVape.Place)] or ''
 
 if not _G.LunarVapeIndependent then
   loadstring(downloadFile('Lunar Vape/Game Modules/Universal.lua'), 'Lunar Vape/Game Modules/Universal.lua')()
-  if isfile('Lunar Vape/Game Modules/' .. game.PlaceId .. GAME_NAME .. '.lua') then
-    loadstring(readfile('Lunar Vape/Game Modules/' .. game.PlaceId .. GAME_NAME .. '.lua'), tostring('Lunar Vape/Game Modules/' .. game.PlaceId .. GAME_NAME .. '.lua'))(...)
+  if isfile('Lunar Vape/Game Modules/' .. LunarVape.Place .. GAME_NAME .. '.lua') then
+    loadstring(readfile('Lunar Vape/Game Modules/' .. LunarVape.Place .. GAME_NAME .. '.lua'), tostring('Lunar Vape/Game Modules/' .. LunarVape.Place .. GAME_NAME .. '.lua'))(...)
   else
     if not _G.LunarVapeDeveloper then
       local suc, res = pcall(function()
         return game:HttpGet(
         'https://raw.githubusercontent.com/AtTheZenith/LunarVape/' ..
-        readfile('Lunar Vape/Profiles/Commit.txt') .. '/Game Modules/' .. game.PlaceId .. GAME_NAME .. '.lua', true)
+        readfile('Lunar Vape/Profiles/Commit.txt') .. '/Game Modules/' .. LunarVape.Place .. GAME_NAME .. '.lua', true)
       end)
       if suc and res ~= '404: Not Found' then
-        loadstring(downloadFile('Lunar Vape/Game Modules/' .. game.PlaceId .. GAME_NAME .. '.lua'), tostring('Lunar Vape/Game Modules/' .. game.PlaceId .. GAME_NAME .. '.lua'))(...)
+        loadstring(downloadFile('Lunar Vape/Game Modules/' .. LunarVape.Place .. GAME_NAME .. '.lua'), tostring('Lunar Vape/Game Modules/' .. LunarVape.Place .. GAME_NAME .. '.lua'))(...)
       end
     end
   end
