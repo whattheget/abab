@@ -2,9 +2,6 @@ repeat task.wait() until game:IsLoaded()
 if _G.LunarVape then _G.LunarVape:Uninject() end
 
 if identifyexecutor then
---  if table.find({'Atlantis'}, (identifyexecutor())) then
---    getgenv().setthreadidentity, getgenv().getthreadidentity = nil, nil
---  end
   if table.find({'Xeno'},(identifyexecutor())) then
     game.Players.LocalPlayer:kick([[don't use xeno, it's skidded 😘]])
     task.wait(0.4)
