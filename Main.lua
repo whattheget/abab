@@ -109,7 +109,7 @@ _G.LunarVape = LunarVape
 
 LunarVape.Place = game.PlaceId
 local GAME_REGISTRY = loadstring(downloadFile('Lunar Vape/Game Modules/Registry.lua'), 'Lunar Vape/Game Modules/Registry.lua')()
-local GAME_NAME = GAME_REGISTRY[tostring(LunarVape.Place)] and ' ' .. GAME_REGISTRY[tostring(LunarVape.Place)] or ''
+local GAME_NAME = ''; pcall(function() GAME_NAME = GAME_REGISTRY[tostring(LunarVape.Place)] and ' ' .. GAME_REGISTRY[tostring(LunarVape.Place)] end)
 
 if not _G.LunarVapeIndependent then
   loadstring(downloadFile('Lunar Vape/Game Modules/Universal.lua'), 'Lunar Vape/Game Modules/Universal.lua')()
