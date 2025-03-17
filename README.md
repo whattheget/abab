@@ -2,7 +2,7 @@
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="./Assets/README/Lunar Vape Logo Dark.png">
     <source media="(prefers-color-scheme: light)" srcset="./Assets/README/Lunar Vape Logo Light.png">
-    <img alt="vape logo" src="./README/Lunar Vape Logo Dark.png">
+    <img alt="vape logo" src="./Assets/README/Lunar Vape Logo Dark.png">
   </picture>
 </p>
 <h2 align="center">
