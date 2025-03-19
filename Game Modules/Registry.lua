@@ -9,6 +9,7 @@ return {
   ['606849621'] = 'Jailbreak',
   ['6872265039'] = 'Bedwars Lobby',
   ['6872274481'] = 'Bedwars Match',
+  ['79695841807485'] = 'Adrenaline',
   ['8444591321'] = 'Bedwars Mega Match',
   ['8542259458'] = 'Skywars Lobby',
   ['8542275097'] = 'Skywars Solo',
@@ -16,5 +17,4 @@ return {
   ['8592115909'] = 'Skywars Duos',
   ['8768229691'] = 'Skywars Private Match',
   ['8951451142'] = 'Skywars Eggwars',
-  ['79695841807485'] = 'Adrenaline',
 }

@@ -1,4 +1,3 @@
---This watermark is used to delete the file if its cached, remove it to make the file persist after vape updates.
 repeat task.wait() until game:IsLoaded()
 if _G.LunarVape then _G.LunarVape:Uninject() end
 
@@ -40,9 +39,9 @@ local function downloadFile(path, func)
       readfile('Lunar Vape/Profiles/Commit.txt') .. '/' .. select(1, path:gsub('Lunar Vape/', '')), true)
     end)
 		if res == '404: Not Found' then
-			warn(string.format('Error while downloading file %s: %s', path, res)); return
+			warn(string.format('Error while downloading file %s: %s', path, res)); return false
 		elseif not suc then
-			error(string.format('Error while downloading file %s: %s', path, res)); return
+			error(string.format('Error while downloading file %s: %s', path, res)); return false
 		end
     if path:find('.lua') then
       res =
@@ -109,22 +108,15 @@ _G.LunarVape = LunarVape
 
 LunarVape.Place = game.PlaceId
 local GAME_REGISTRY = loadstring(downloadFile('Lunar Vape/Game Modules/Registry.lua'), 'Lunar Vape/Game Modules/Registry.lua')()
-local GAME_NAME = ''; pcall(function() GAME_NAME = GAME_REGISTRY[tostring(LunarVape.Place)] and ' ' .. GAME_REGISTRY[tostring(LunarVape.Place)] end)
+local GAME_NAME = GAME_REGISTRY[tostring(LunarVape.Place)] and ' ' .. GAME_REGISTRY[tostring(LunarVape.Place)] or ''
 
 if not _G.LunarVapeIndependent then
   loadstring(downloadFile('Lunar Vape/Game Modules/Universal.lua'), 'Lunar Vape/Game Modules/Universal.lua')()
   if isfile('Lunar Vape/Game Modules/' .. LunarVape.Place .. GAME_NAME .. '.lua') then
     loadstring(readfile('Lunar Vape/Game Modules/' .. LunarVape.Place .. GAME_NAME .. '.lua'), tostring('Lunar Vape/Game Modules/' .. LunarVape.Place .. GAME_NAME .. '.lua'))(...)
   else
-    if not _G.LunarVapeDeveloper then
-      local suc, res = pcall(function()
-        return game:HttpGet(
-        'https://raw.githubusercontent.com/AtTheZenith/LunarVape/' ..
-        readfile('Lunar Vape/Profiles/Commit.txt') .. '/Game Modules/' .. LunarVape.Place .. GAME_NAME .. '.lua', true)
-      end)
-      if suc and res ~= '404: Not Found' then
-        loadstring(downloadFile('Lunar Vape/Game Modules/' .. LunarVape.Place .. GAME_NAME .. '.lua'), tostring('Lunar Vape/Game Modules/' .. LunarVape.Place .. GAME_NAME .. '.lua'))(...)
-      end
+    if not _G.LunarVapeDeveloper and GAME_NAME ~= '' then
+      loadstring(downloadFile('Lunar Vape/Game Modules/' .. LunarVape.Place .. GAME_NAME .. '.lua') or 'return nil', tostring('Lunar Vape/Game Modules/' .. LunarVape.Place .. GAME_NAME .. '.lua'))(...)
     end
   end
   finishLoading()
