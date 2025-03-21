@@ -3,7 +3,7 @@ if _G.LunarVape then _G.LunarVape:Uninject() end
 
 if identifyexecutor then
   if table.find({'Xeno'},(identifyexecutor())) then
-    game.Players.LocalPlayer:kick([[don't use xeno, it's skidded 😘]])
+    game:GetService('Players').LocalPlayer:Kick([[don't use xeno, it's skidded 😘]])
     task.wait(0.4)
     while true do end
   end
@@ -35,8 +35,10 @@ local function downloadFile(path, func)
   if not isfile(path) and not _G.LunarVapeDeveloper then
     local suc, res = pcall(function()
       return game:HttpGet(
-      'https://raw.githubusercontent.com/AtTheZenith/LunarVape/' ..
-      readfile('Lunar Vape/Profiles/Commit.txt') .. '/' .. select(1, path:gsub('Lunar Vape/', '')), true)
+        'https://raw.githubusercontent.com/AtTheZenith/LunarVape/' ..
+        readfile('Lunar Vape/Profiles/Commit.txt') .. '/' ..
+        select(1, path:gsub('Lunar Vape/', '')), true
+      )
     end)
 		if res == '404: Not Found' then
 			warn(string.format('Error while downloading file %s: %s', path, res)); return false
@@ -44,9 +46,7 @@ local function downloadFile(path, func)
 			error(string.format('Error while downloading file %s: %s', path, res)); return false
 		end
     if path:find('.lua') then
-      res =
-      '--This watermark is used to delete the file if its cached, remove it to make the file persist after vape updates.\n' ..
-      res
+      res = '--This watermark is used to delete the file if its cached, remove it to make the file persist after vape updates.\n' .. res
     end
     writefile(path, res)
   end
