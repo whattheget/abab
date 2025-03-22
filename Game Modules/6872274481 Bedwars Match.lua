@@ -740,7 +740,7 @@ run(function()
     PickupItem = Knit.Controllers.ItemDropController.checkForPickup,
     PickupMetal = debug.getproto(debug.getproto(Knit.Controllers.MetalDetectorController.KnitStart, 1), 2),
     ReportPlayer = require(lplr.PlayerScripts.TS.controllers.global.report['report-controller']).default.reportPlayer,
-    ResetCharacter = debug.getproto(Knit.Controllers.ResetController.createBindable, 1),
+--  ResetCharacter = debug.getproto(Knit.Controllers.ResetController.createBindable, 1),
     SpawnRaven = Knit.Controllers.RavenController.spawnRaven,
     SummonerClawAttack = Knit.Controllers.SummonerClawController.attack,
     WarlockTarget = debug.getproto(Knit.Controllers.WarlockStaffController.KnitStart, 3)
