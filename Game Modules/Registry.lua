@@ -1,4 +1,4 @@
-return {
+local registry = {
   ['11156779721'] = 'The Survival Game',
   ['11630038968'] = 'Bridge Duel Lobby',
   ['12011959048'] = 'Bridge Duel Match',
@@ -18,3 +18,6 @@ return {
   ['8768229691'] = 'Skywars Private Match',
   ['8951451142'] = 'Skywars Eggwars',
 }
+
+registry.__index = function(...): boolean return false end
+return registry

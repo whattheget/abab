@@ -738,12 +738,12 @@ run(function()
     MageSelect = debug.getproto(Knit.Controllers.MageController.registerTomeInteraction, 1),
     MinerDig = debug.getproto(Knit.Controllers.MinerController.setupMinerPrompts, 1),
     PickupItem = Knit.Controllers.ItemDropController.checkForPickup,
-    PickupMetal = debug.getproto(debug.getproto(Knit.Controllers.MetalDetectorController.KnitStart, 1), 2),
-    ReportPlayer = require(lplr.PlayerScripts.TS.controllers.global.report['report-controller']).default.reportPlayer,
-    ResetCharacter = debug.getproto(Knit.Controllers.ResetController.createBindable, 1),
-    SpawnRaven = Knit.Controllers.RavenController.spawnRaven,
+--  PickupMetal = debug.getproto(debug.getproto(Knit.Controllers.MetalDetectorController.KnitStart, 1), 2),
+--  ReportPlayer = require(lplr.PlayerScripts.TS.controllers.global.report['report-controller']).default.reportPlayer,
+--  ResetCharacter = debug.getproto(Knit.Controllers.ResetController.createBindable, 1),
+--  SpawnRaven = Knit.Controllers.RavenController.spawnRaven,
     SummonerClawAttack = Knit.Controllers.SummonerClawController.attack,
-    WarlockTarget = debug.getproto(Knit.Controllers.WarlockStaffController.KnitStart, 3)
+--  WarlockTarget = debug.getproto(Knit.Controllers.WarlockStaffController.KnitStart, 3)
   }
 
   local function dumpRemote(tab)
@@ -3957,18 +3957,18 @@ run(function()
         bedwars.LaunchPadController.attemptLaunch = old
       end)
     end,
---	hannah = function()
---		kitCollection('HannahExecuteInteraction', function(v)
---			local billboard = bedwars.Client:Get(remotes.HannahKill):CallServer({
---				user = lplr,
---				victimEntity = v
---  		}) and v:FindFirstChild('Hannah Execution Icon')
-  
---			if billboard then
---  			billboard:Destroy()
---  		end
---		end, 30, true)
---	end,
+    -- hannah = function()
+    --   kitCollection('HannahExecuteInteraction', function(v)
+    --     local billboard = bedwars.Client:Get(remotes.HannahKill):CallServer({
+    --       user = lplr,
+    --       victimEntity = v
+    --   }) and v:FindFirstChild('Hannah Execution Icon')
+    
+    --     if billboard then
+    --     billboard:Destroy()
+    --   end
+    --   end, 30, true)
+    -- end,
     jailor = function()
       kitCollection('jailor_soul', function(v)
         bedwars.JailorController:collectEntity(lplr, v, 'JailorSoul')
@@ -4007,13 +4007,13 @@ run(function()
         task.wait(0.1)
       until not AutoKit.Enabled
     end,
-    metal_detector = function()
-      kitCollection('hidden-metal', function(v)
-        bedwars.Client:Get(remotes.PickupMetal):SendToServer({
-          id = v:GetAttribute('Id')
-        })
-      end, 20, false)
-    end,
+    -- metal_detector = function()
+    --   kitCollection('hidden-metal', function(v)
+    --     bedwars.Client:Get(remotes.PickupMetal):SendToServer({
+    --       id = v:GetAttribute('Id')
+    --     })
+    --   end, 20, false)
+    -- end,
     miner = function()
       kitCollection('petrified-player', function(v)
         bedwars.Client:Get(remotes.MinerDig):SendToServer({
@@ -4112,43 +4112,43 @@ run(function()
             Players = true
           })
   
---				if plr then
---					bedwars.Client:Get(remotes.DragonBreath):SendToServer({
---						player = lplr,
---						targetPoint = plr.RootPart.Position
---					})
---				end
+				-- if plr then
+				-- 	bedwars.Client:Get(remotes.DragonBreath):SendToServer({
+				-- 		player = lplr,
+				-- 		targetPoint = plr.RootPart.Position
+				-- 	})
+				-- end
         end
         task.wait(0.1)
       until not AutoKit.Enabled
     end,
-    warlock = function()
-      local lastTarget
-      repeat
-        if store.hand.tool and store.hand.tool.Name == 'warlock_staff' then
-          local plr = entitylib.EntityPosition({
-            Range = 30,
-            Part = 'RootPart',
-            Players = true,
-            NPCs = true
-          })
+    -- warlock = function()
+    --   local lastTarget
+    --   repeat
+    --     if store.hand.tool and store.hand.tool.Name == 'warlock_staff' then
+    --       local plr = entitylib.EntityPosition({
+    --         Range = 30,
+    --         Part = 'RootPart',
+    --         Players = true,
+    --         NPCs = true
+    --       })
   
-          if plr and plr.Character ~= lastTarget then
-            if not bedwars.Client:Get(remotes.WarlockTarget):CallServer({
-              target = plr.Character
-            }) then
-              plr = nil
-            end
-          end
+    --       if plr and plr.Character ~= lastTarget then
+    --         if not bedwars.Client:Get(remotes.WarlockTarget):CallServer({
+    --           target = plr.Character
+    --         }) then
+    --           plr = nil
+    --         end
+    --       end
   
-          lastTarget = plr and plr.Character
-        else
-          lastTarget = nil
-        end
+    --       lastTarget = plr and plr.Character
+    --     else
+    --       lastTarget = nil
+    --     end
   
-        task.wait(0.1)
-      until not AutoKit.Enabled
-    end,
+    --     task.wait(0.1)
+    --   until not AutoKit.Enabled
+    -- end,
     wizard = function()
       repeat
         local ability = lplr:GetAttribute('WizardAbility')
@@ -4379,10 +4379,10 @@ run(function()
       if callback then
         AutoToxic:Clean(vapeEvents.BedwarsBedBreak.Event:Connect(function(bedTable)
           if Toggles.BedDestroyed.Enabled and bedTable.brokenBedTeam.id == lplr:GetAttribute('Team') then
-            sendMessage('BedDestroyed', (bedTable.player.DisplayName or bedTable.player.Name), 'how dare you >:( | <obj>')
+            sendMessage('BedDestroyed', (bedTable.player.DisplayName or bedTable.player.Name), 'Break my bed? I\'ll break your back <obj> | Lunar Vxqe')
           elseif Toggles.Bed.Enabled and bedTable.player.UserId == lplr.UserId then
             local team = bedwars.QueueMeta[store.queueType].teams[tonumber(bedTable.brokenBedTeam.id)]
-            sendMessage('Bed', team and team.displayName:lower() or 'white', 'nice bed lul | <obj>')
+            sendMessage('Bed', team and team.displayName:lower() or 'white', 'Nice bed <obj>, too bad it\'s gone now.')
           end
         end))
         AutoToxic:Clean(vapeEvents.EntityDeathEvent.Event:Connect(function(deathTable)
@@ -4393,10 +4393,10 @@ run(function()
             if killed == lplr then
               if (not dead) and killer ~= lplr and Toggles.Death.Enabled then
                 dead = true
-                sendMessage('Death', (killer.DisplayName or killer.Name), 'my gaming chair subscription expired :( | <obj>')
+                sendMessage('Death', (killer.DisplayName or killer.Name), '')
               end
             elseif killer == lplr and Toggles.Kill.Enabled then
-              sendMessage('Kill', (killed.DisplayName or killed.Name), 'vxp on top | <obj>')
+              sendMessage('Kill', (killed.DisplayName or killed.Name), 'Yo <obj>, try Lunar Vxqe, trust me it\'s good.')
             end
           end
         end))
@@ -4412,7 +4412,7 @@ run(function()
           local myTeam = bedwars.Store:getState().Game.myTeam
           if myTeam and myTeam.id == winstuff.winningTeamId or lplr.Neutral then
             if Toggles.Win.Enabled then 
-              sendMessage('Win', nil, 'yall garbage') 
+              sendMessage('Win', nil, 'Here\'s some actually good advice everyone, don\'t play this lego game, or use Lunar Vxqe.') 
             end
           end
         end))
@@ -4599,7 +4599,7 @@ run(function()
   Lower = PickupRange:CreateToggle({Name = 'Feet Check'})
 end)
   
-run(function()
+run({identifyexecutor()}, function()
   local RavenTP
   
   RavenTP = LunarVape.Categories.Utility:CreateModule({

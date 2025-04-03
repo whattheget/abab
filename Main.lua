@@ -60,7 +60,7 @@ local function finishLoading()
     repeat
       LunarVape:Save()
       task.wait(10)
-    until not LunarVape.Loaded
+    until not LunarVape or not LunarVape.Loaded
   end)
 
   local teleportedServers
@@ -108,15 +108,16 @@ _G.LunarVape = LunarVape
 
 LunarVape.Place = game.PlaceId
 local GAME_REGISTRY = loadstring(downloadFile('Lunar Vape/Game Modules/Registry.lua'), 'Lunar Vape/Game Modules/Registry.lua')()
-local GAME_NAME = GAME_REGISTRY[tostring(LunarVape.Place)] and ' ' .. GAME_REGISTRY[tostring(LunarVape.Place)] or ''
+local GAME_NAME = if GAME_REGISTRY[tostring(LunarVape.Place)] then ' ' .. GAME_REGISTRY[tostring(LunarVape.Place)] else false
 
 if not _G.LunarVapeIndependent then
   loadstring(downloadFile('Lunar Vape/Game Modules/Universal.lua'), 'Lunar Vape/Game Modules/Universal.lua')()
-  if isfile('Lunar Vape/Game Modules/' .. LunarVape.Place .. GAME_NAME .. '.lua') then
-    loadstring(readfile('Lunar Vape/Game Modules/' .. LunarVape.Place .. GAME_NAME .. '.lua'), tostring('Lunar Vape/Game Modules/' .. LunarVape.Place .. GAME_NAME .. '.lua'))(...)
+  if GAME_NAME and isfile('Lunar Vape/Game Modules/' .. LunarVape.Place .. GAME_NAME .. '.lua') then
+    loadstring(readfile('Lunar Vape/Game Modules/' .. LunarVape.Place .. GAME_NAME .. '.lua'), tostring('Lunar Vape/Game Modules/' .. LunarVape.Place .. GAME_NAME .. '.lua'))()
   else
-    if not _G.LunarVapeDeveloper and GAME_NAME ~= '' then
-      loadstring(downloadFile('Lunar Vape/Game Modules/' .. LunarVape.Place .. GAME_NAME .. '.lua') or 'return nil', tostring('Lunar Vape/Game Modules/' .. LunarVape.Place .. GAME_NAME .. '.lua'))(...)
+    if not _G.LunarVapeDeveloper and GAME_NAME then
+      downloadFile('Lunar Vape/Game Modules/' .. LunarVape.Place .. GAME_NAME .. '.lua')
+      loadstring(readfile('Lunar Vape/Game Modules/' .. LunarVape.Place .. GAME_NAME .. '.lua'), tostring('Lunar Vape/Game Modules/' .. LunarVape.Place .. GAME_NAME .. '.lua'))()
     end
   end
   finishLoading()
