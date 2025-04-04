@@ -146,7 +146,7 @@ local function removeTags(str)
 end
 
 do
-	local res = isfile("Lunar Vape/Profiles/Color.txt") and loadJson("Lunar Vape/Profiles/Color.txt")
+	local res = isfile("Lunar Vape/Profiles/Color.json") and loadJson("Lunar Vape/Profiles/Color.json")
 	if res then
 		uipallet.Main = res.Main and Color3.fromRGB(unpack(res.Main)) or uipallet.Main
 		uipallet.Text = res.Text and Color3.fromRGB(unpack(res.Text)) or uipallet.Text

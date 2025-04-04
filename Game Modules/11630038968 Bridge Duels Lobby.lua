@@ -53,6 +53,7 @@ run(function()
 	end
 
 	bd = setmetatable({
+		AttackArgs = {'target_entity_id', 'is_crit', 'weapon_name'},
 		Blink = require(replicatedStorage.Blink.Client),
 		CombatService = Knit.GetService('CombatService'),
 		CombatConstants = require(replicatedStorage.Constants.Melee),
@@ -65,7 +66,8 @@ run(function()
 		end,
 		Knit = Knit,
 		Entity = require(replicatedStorage.Modules.Entity),
-		ServerData = require(replicatedStorage.Modules.ServerData)
+		ServerData = require(replicatedStorage.Modules.ServerData),
+		ToolService = Knit.GetService('ToolService')
 	}, {
 		__index = function(self, ind)
 			rawset(self, ind, ind:find('Service') and Knit.GetService(ind) or Knit.GetController(ind))
@@ -285,6 +287,8 @@ run(function()
 		return getTool()
 	end
 	
+	local attackfunc = clonefunction(bd.ToolService.AttackPlayerWithSword)
+
 	Killaura = LunarVape.Categories.Blatant:CreateModule({
 		Name = 'Killaura',
 		Function = function(callback)
@@ -331,13 +335,7 @@ run(function()
 									SwingDelay = tick() + 0.25
 									entitylib.character.Humanoid.Animator:LoadAnimation(tool.Animations.Swing):Play()
 	
-									if LunarVape.ThreadFix then
-										setthreadidentity(2)
-									end
 									bd.ViewmodelController:PlayAnimation(tool.Name)
-									if LunarVape.ThreadFix then
-										setthreadidentity(8)
-									end
 								end
 	
 								if delta.Magnitude > AttackRange.Value then continue end
@@ -345,28 +343,32 @@ run(function()
 									AttackDelay = tick() + (1 / CPS.GetRandomValue())
 									local bdent = bd.Entity.FindByCharacter(v.Character)
 									if bdent then
-										--[[bd.Call(bd.Blink.item_action.attack_entity.fire, {
-											target_entity_id = bdent.Id,
-											is_crit = entitylib.character.RootPart.AssemblyLinearVelocity.Y < 0,
+										bd.Call(bd.Blink.item_action.attack_entity.fire, {
+											target_entity_id = bdent.Id, -- Enemy Character
+											is_crit = if LunarVape.Modules.Criticals and LunarVape.Modules.Criticals.Enabled then true else entitylib.character.RootPart.AssemblyLinearVelocity.Y < 0,
 											weapon_name = tool.Name
-										}, bd.AttackArgs)]]
+										}, bd.AttackArgs)
 									end
 								end
 							end
 						end
 					end
+
+					if LunarVape.ThreadFix then
+						setthreadidentity(8)
 	
-					for i, v in Boxes do
-						v.Adornee = attacked[i] and attacked[i].Entity.RootPart or nil
-						if v.Adornee then
-							v.Color3 = Color3.fromHSV(attacked[i].Check.Hue, attacked[i].Check.Sat, attacked[i].Check.Value)
-							v.Transparency = 1 - attacked[i].Check.Opacity
+						for i, v in Boxes do
+							v.Adornee = attacked[i] and attacked[i].Entity.RootPart or nil
+							if v.Adornee then
+								v.Color3 = Color3.fromHSV(attacked[i].Check.Hue, attacked[i].Check.Sat, attacked[i].Check.Value)
+								v.Transparency = 1 - attacked[i].Check.Opacity
+							end
 						end
-					end
-	
-					for i, v in Particles do
-						v.Position = attacked[i] and attacked[i].Entity.RootPart.Position or Vector3.new(9e9, 9e9, 9e9)
-						v.Parent = attacked[i] and gameCamera or nil
+		
+						for i, v in Particles do
+							v.Position = attacked[i] and attacked[i].Entity.RootPart.Position or Vector3.new(9e9, 9e9, 9e9)
+							v.Parent = attacked[i] and gameCamera or nil
+						end
 					end
 	
 					task.wait()

@@ -313,7 +313,7 @@ local function removeTags(str)
 end
 
 do
-	local res = isfile('Lunar Vape/Profiles/Color.txt') and loadJson('Lunar Vape/Profiles/Color.txt')
+	local res = isfile('Lunar Vape/Profiles/Color.json') and loadJson('Lunar Vape/Profiles/Color.json')
 	if res then
 		uipallet.Main = res.Main and Color3.fromRGB(unpack(res.Main)) or uipallet.Main
 		uipallet.Text = res.Text and Color3.fromRGB(unpack(res.Text)) or uipallet.Text
@@ -2752,8 +2752,8 @@ function mainapi:CreateCategoryList(categorysettings)
 				if ind then
 					if val ~= 'Main Configuration' then
 						table.remove(mainapi.Profiles, ind)
-						if isfile('Lunar Vape/Profiles/'..val..' '..mainapi.Place..'.txt') and delfile then
-							delfile('Lunar Vape/Profiles/'..val..' '..mainapi.Place..'.txt')
+						if isfile('Lunar Vape/Profiles/'..val..' '..mainapi.Place..'.json') and delfile then
+							delfile('Lunar Vape/Profiles/'..val..' '..mainapi.Place..'.json')
 						end
 					end
 				else
@@ -3093,8 +3093,8 @@ function mainapi:Load(skipgui, profile)
 	local guidata = {}
 	local savecheck = true
 
-	if isfile('Lunar Vape/Profiles/'..game.GameId..'.GUI.txt') then
-		guidata = loadJson('Lunar Vape/Profiles/'..game.GameId..'.GUI.txt')
+	if isfile('Lunar Vape/Profiles/'..game.GameId..' GUI Settings.json') then
+		guidata = loadJson('Lunar Vape/Profiles/'..game.GameId..' GUI Settings.json')
 		if not guidata then
 			guidata = {Categories = {}}
 			self:CreateNotification('Lunar Vape', 'Failed to load GUI settings.', 10, 'Alert')
@@ -3137,8 +3137,8 @@ function mainapi:Load(skipgui, profile)
 	}}
 	self.Categories.Profiles:ChangeValue()
 
-	if isfile('Lunar Vape/Profiles/'..self.Profile..' '..self.Place..'.txt') then
-		local savedata = loadJson('Lunar Vape/Profiles/'..self.Profile..' '..self.Place..'.txt')
+	if isfile('Lunar Vape/Profiles/'..self.Profile..' '..self.Place..'.json') then
+		local savedata = loadJson('Lunar Vape/Profiles/'..self.Profile..' '..self.Place..'.json')
 		if not savedata then
 			savedata = {
 				Categories = {},
@@ -3317,8 +3317,8 @@ function mainapi:Save(newprofile)
 		}
 	end
 
-	writefile('Lunar Vape/Profiles/'..game.GameId..'.GUI.txt', httpService:JSONEncode(guidata))
-	writefile('Lunar Vape/Profiles/'..self.Profile..' '..self.Place..'.txt', httpService:JSONEncode(savedata))
+	writefile('Lunar Vape/Profiles/'..game.GameId..' GUI Settings.json', httpService:JSONEncode(guidata))
+	writefile('Lunar Vape/Profiles/'..self.Profile..' '..self.Place..'.json', httpService:JSONEncode(savedata))
 end
 
 function mainapi:SaveOptions(object, savedoptions)
@@ -3759,8 +3759,8 @@ topbar:CreateButton({
 	Name = 'Reset current profile',
 	Function = function()
 	mainapi.Save = function() end
-		if isfile('Lunar Vape/Profiles/'..mainapi.Profile..mainapi.Place..'.txt') and delfile then
-			delfile('Lunar Vape/Profiles/'..mainapi.Profile..mainapi.Place..'.txt')
+		if isfile('Lunar Vape/Profiles/'..mainapi.Profile..mainapi.Place..'.json') and delfile then
+			delfile('Lunar Vape/Profiles/'..mainapi.Profile..mainapi.Place..'.json')
 		end
 		_G.LunarVapereload = true
 		if _G.LunarVapeDeveloper then
