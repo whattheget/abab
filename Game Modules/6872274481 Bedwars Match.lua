@@ -4379,7 +4379,7 @@ run(function()
       if callback then
         AutoToxic:Clean(vapeEvents.BedwarsBedBreak.Event:Connect(function(bedTable)
           if Toggles.BedDestroyed.Enabled and bedTable.brokenBedTeam.id == lplr:GetAttribute('Team') then
-            sendMessage('BedDestroyed', (bedTable.player.DisplayName or bedTable.player.Name), 'Break my bed? I\'ll break your back <obj> | Lunar Vxqe')
+            sendMessage('BedDestroyed', (bedTable.player.DisplayName or bedTable.player.Name), 'Break my bed? I\'ll break your back <obj>. | Lunar Vxqe')
           elseif Toggles.Bed.Enabled and bedTable.player.UserId == lplr.UserId then
             local team = bedwars.QueueMeta[store.queueType].teams[tonumber(bedTable.brokenBedTeam.id)]
             sendMessage('Bed', team and team.displayName:lower() or 'white', 'Nice bed <obj>, too bad it\'s gone now.')
@@ -4396,7 +4396,7 @@ run(function()
                 sendMessage('Death', (killer.DisplayName or killer.Name), '')
               end
             elseif killer == lplr and Toggles.Kill.Enabled then
-              sendMessage('Kill', (killed.DisplayName or killed.Name), 'Yo <obj>, try Lunar Vxqe, trust me it\'s good.')
+              sendMessage('Kill', (killed.DisplayName or killed.Name), 'Yo <obj>, just use Lunar Vxqe, I beat you with it.')
             end
           end
         end))
@@ -4412,7 +4412,7 @@ run(function()
           local myTeam = bedwars.Store:getState().Game.myTeam
           if myTeam and myTeam.id == winstuff.winningTeamId or lplr.Neutral then
             if Toggles.Win.Enabled then 
-              sendMessage('Win', nil, 'Here\'s some actually good advice everyone, don\'t play this lego game, or use Lunar Vxqe.') 
+              sendMessage('Win', nil, 'Here\'s some actually good advice everyone, don\'t play this lego game, or just use Lunar Vxqe.') 
             end
           end
         end))
@@ -6932,7 +6932,6 @@ run(function()
     for _, v in tab do
       if (v.Position - localPosition).Magnitude < Range.Value and bedwars.BlockController:isBlockBreakable({blockPosition = v.Position / 3}, lplr) then
         if not SelfBreak.Enabled and v:GetAttribute('PlacedByUserId') == lplr.UserId then continue end
-        if (v:GetAttribute('BedShieldEndTime') or 0) > workspace:GetServerTimeNow() then continue end
         if LimitItem.Enabled and not (store.hand.tool and bedwars.ItemMeta[store.hand.tool.Name].breakBlock) then continue end
   
         hit += 1
@@ -6948,7 +6947,7 @@ run(function()
           end
         end
   
-        task.wait(InstantBreak.Enabled and (store.damageBlockFail > tick() and 4.5 or 0) or 0.25)
+        task.wait(InstantBreak.Enabled and (store.damageBlockFail > tick() and 0.4 or 0) or 0.25)
   
         return true
       end

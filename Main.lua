@@ -46,7 +46,7 @@ local function downloadFile(path, func)
 			error(string.format('Error while downloading file %s: %s', path, res)); return false
 		end
     if path:find('.lua') then
-      res = '--This watermark is used to delete the file if its cached, remove it to make the file persist after vape updates.\n' .. res
+      res = '--This watermark is used to delete the file if its cached, remove it to make the file persist after Lunar Vape updates.\n' .. res
     end
     writefile(path, res)
   end
@@ -64,12 +64,12 @@ local function finishLoading()
   end)
 
   local teleportedServers
-  if _G.LoadOnRejoin == true or isfile('Lunar Vape/LoadOnRejoin') or isfile('Lunar Vape/LoadOnRejoin.txt') then
+  if _G.ReloadOnJoin == true or isfile('Lunar Vape/LoadOnRejoin') or isfile('Lunar Vape/LoadOnRejoin.txt') then
     LunarVape:Clean(playersService.LocalPlayer.OnTeleport:Connect(function()
       if (not teleportedServers) and (not _G.LunarVapeIndependent) then
         teleportedServers = true
         local teleportScript = [[
-        _G.LunarVapeReload = true
+        _G.ReloadOnJoin = true
         if _G.LunarVapeDeveloper then
           loadstring(readfile('Lunar Vape/Loader.lua'), 'Lunar Vape/Loader.lua')()
         else
@@ -120,6 +120,7 @@ if not _G.LunarVapeIndependent then
       loadstring(readfile('Lunar Vape/Game Modules/' .. LunarVape.Place .. GAME_NAME .. '.lua'), tostring('Lunar Vape/Game Modules/' .. LunarVape.Place .. GAME_NAME .. '.lua'))()
     end
   end
+  loadstring(downloadFile('Lunar Vape/Extra/Profiles/Installer.lua'), 'Lunar Vape/Extra/Profiles/Installer.lua')()
   finishLoading()
 else
   LunarVape.Init = finishLoading

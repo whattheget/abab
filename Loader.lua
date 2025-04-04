@@ -55,7 +55,7 @@ local function downloadFile(path, func)
 			error(string.format('Error while downloading file %s: %s', path, res)); return
 		end
 		if path:find('.lua') then
-			res = '--This watermark is used to delete the file if its cached, remove it to make the file persist after vape updates.\n'..res
+			res = '--This watermark is used to delete the file if its cached, remove it to make the file persist after Lunar Vape updates.\n'..res
 		end
 		writefile(path, res)
 	end
@@ -66,17 +66,27 @@ if not isfile('Lunar Vape/Loader.lua') then
   downloadFile('Lunar Vape/Loader.lua')
 end
 
-local function wipeFolder(path)
+local function wipeFolder(path): ()
 	if not isfolder(path) then return end
 	for _, file in listfiles(path) do
-		if file:find('Loader.lua') then continue end
-		if isfile(file) and select(1, readfile(file):find('--This watermark is used to delete the file if its cached, remove it to make the file persist after vape updates.')) == 1 then
+		if isfolder(file) then wipeFolder(file) end
+		if isfile(file) and select(1, readfile(file):find('--This watermark is used to delete the file if its cached, remove it to make the file persist after Lunar Vape updates.')) == 1 or file:find('json') then
 			delfile(file)
 		end
 	end
 end
 
-for _, folder in {'Lunar Vape', 'Lunar Vape/Game Modules', 'Lunar Vape/Profiles', 'Lunar Vape/Assets', 'Lunar Vape/Libraries', 'Lunar Vape/GUI'} do
+local folders = {
+	'Lunar Vape',
+	'Lunar Vape/Game Modules',
+	'Lunar Vape/Profiles',
+	'Lunar Vape/Assets',
+	'Lunar Vape/Libraries',
+	'Lunar Vape/GUI',
+	'Lunar Vape/Extra',
+	'Lunar Vape/Extra/Profiles'
+}
+for _, folder in folders do
 	if not isfolder(folder) then
 		makefolder(folder)
 	end
@@ -94,9 +104,10 @@ if not _G.LunarVapeDeveloper then
 		wipeFolder('Lunar Vape/Game Modules')
 		wipeFolder('Lunar Vape/GUI')
 		wipeFolder('Lunar Vape/Libraries')
+		wipeFolder('Lunar Vape/Extra')
 	end
 	writefile('Lunar Vape/Profiles/Commit.txt', commit)
 end
 
 print('Lunar Vape/Main.lua')
-return loadstring(downloadFile('Lunar Vape/Main.lua'), 'Lunar Vape/Main.lua')()
+loadstring(downloadFile('Lunar Vape/Main.lua'), 'Lunar Vape/Main.lua')()
