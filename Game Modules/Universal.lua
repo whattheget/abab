@@ -161,7 +161,7 @@ local function serverHop(pointer, filter)
   end
 
   local suc, httpdata = pcall(function()
-    return cacheExpire < tick() and game:HttpGet('https://games.roblox.com/v1/Game modules/'..game.PlaceId..'/servers/Public?sortOrder='..(filter == 'Ascending' and 1 or 2)..'&excludeFullGames=true&limit=100'..(pointer and '&cursor='..pointer or '')) or cache
+    return cacheExpire < tick() and game:HttpGet('https://games.roblox.com/v1/games/'..game.PlaceId..'/servers/Public?sortOrder='..(filter == 'Ascending' and 1 or 2)..'&excludeFullGames=true&limit=100'..(pointer and '&cursor='..pointer or '')) or cache
   end)
   local data = suc and httpService:JSONDecode(httpdata) or nil
   if data and data.data then

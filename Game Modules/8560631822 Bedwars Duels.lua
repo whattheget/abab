@@ -35,15 +35,15 @@ LunarVape.Place = 6872274481
 local GAME_REGISTRY = loadstring(downloadFile('Lunar Vape/Game Modules/Registry.lua'))()
 local GAME_NAME = GAME_REGISTRY[tostring(LunarVape.Place)] and ' ' .. GAME_REGISTRY[tostring(LunarVape.Place)] or ''
 
-if isfile('Lunar Vape/Game modules/'..LunarVape.Place..GAME_NAME..'.lua') then
-	loadstring(readfile('Lunar Vape/Game modules/'..LunarVape.Place..GAME_NAME..'.lua'), 'Lunar Vape/Game modules/'..LunarVape.Place..GAME_NAME..'.lua')()
+if isfile('Lunar Vape/Game Modules/'..LunarVape.Place..GAME_NAME..'.lua') then
+	loadstring(readfile('Lunar Vape/Game Modules/'..LunarVape.Place..GAME_NAME..'.lua'), 'Lunar Vape/Game Modules/'..LunarVape.Place..GAME_NAME..'.lua')()
 else
 	if not _G.LunarVapeDeveloper then
 		local suc, res = pcall(function() 
-			return game:HttpGet('https://raw.githubusercontent.com/AtTheZenith/LunarVape/'..readfile('Lunar Vape/Profiles/Commit.txt')..'/Game modules/'..LunarVape.Place..GAME_NAME..'.lua', true) 
+			return game:HttpGet('https://raw.githubusercontent.com/AtTheZenith/LunarVape/'..readfile('Lunar Vape/Profiles/Commit.txt')..'/Game Modules/'..LunarVape.Place..GAME_NAME..'.lua', true) 
 		end)
 		if suc and res ~= '404: Not Found' then
-			loadstring(readfile('Lunar Vape/Game modules/'..LunarVape.Place..GAME_NAME..'.lua'), 'Lunar Vape/Game modules/'..LunarVape.Place..GAME_NAME..'.lua')()
+			loadstring(readfile('Lunar Vape/Game Modules/'..LunarVape.Place..GAME_NAME..'.lua'), 'Lunar Vape/Game Modules/'..LunarVape.Place..GAME_NAME..'.lua')()
 		end
 	end
 end
