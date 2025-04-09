@@ -23,7 +23,7 @@ local function downloadFile(path, func)
 		elseif not suc then
 			error(string.format('Error while downloading file %s: %s', path, res)); return
 		end
-		if path:find('.lua') then 
+		if path:find('.lua') then
 			res = '--This watermark is used to delete the file if its cached, remove it to make the file persist after LunarVape updates.\n'..res 
 		end
 		writefile(path, res)
@@ -33,14 +33,14 @@ end
 
 LunarVape.Place = 6872274481
 local GAME_REGISTRY = loadstring(downloadFile('Lunar Vape/Game Modules/Registry.lua'))()
-local GAME_NAME = GAME_REGISTRY[tostring(LunarVape.Place)] and ' ' .. GAME_REGISTRY[tostring(LunarVape.Place)] or ''
+local GAME_NAME = if GAME_REGISTRY[tostring(LunarVape.Place)] then ' ' .. GAME_REGISTRY[tostring(LunarVape.Place)] else false
 
-if isfile('Lunar Vape/Game Modules/'..LunarVape.Place..GAME_NAME..'.lua') then
+if GAME_NAME and isfile('Lunar Vape/Game Modules/'..LunarVape.Place..GAME_NAME..'.lua') then
 	loadstring(readfile('Lunar Vape/Game Modules/'..LunarVape.Place..GAME_NAME..'.lua'), 'Lunar Vape/Game Modules/'..LunarVape.Place..GAME_NAME..'.lua')()
 else
 	if not _G.LunarVapeDeveloper then
 		local suc, res = pcall(function() 
-			return game:HttpGet('https://raw.githubusercontent.com/AtTheZenith/LunarVape/'..readfile('Lunar Vape/Profiles/Commit.txt')..'/Game Modules/'..LunarVape.Place..GAME_NAME..'.lua', true) 
+			return downloadFile('Lunar Vape/Game Modules/'..LunarVape.Place..GAME_NAME..'.lua') 
 		end)
 		if suc and res ~= '404: Not Found' then
 			loadstring(readfile('Lunar Vape/Game Modules/'..LunarVape.Place..GAME_NAME..'.lua'), 'Lunar Vape/Game Modules/'..LunarVape.Place..GAME_NAME..'.lua')()
