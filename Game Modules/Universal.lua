@@ -2873,7 +2873,7 @@ run({'NX'}, function()
     Tooltip = 'Lets you swim midair'
   })
 end)
-  
+
 run(function()
   local TargetStrafe
   local Targets
@@ -2883,7 +2883,7 @@ run(function()
   local rayCheck = RaycastParams.new()
   rayCheck.RespectCanCollide = true
   local module, old
-  
+
   TargetStrafe = LunarVape.Categories.Blatant:CreateModule({
     Name = 'TargetStrafe',
     Function = function(callback)
@@ -2894,7 +2894,7 @@ run(function()
             module = {}
           end
         end
-        
+
         old = module.moveFunction
         local flymod, ang, oldent = LunarVape.Modules.Fly or {Enabled = false}
         module.moveFunction = function(self, vec, face)
@@ -2904,7 +2904,8 @@ run(function()
             Wallcheck = wallcheck,
             Part = 'RootPart',
             Players = Targets.Players.Enabled,
-            NPCs = Targets.NPCs.Enabled
+            NPCs = Targets.NPCs.Enabled,
+            IgnoreY = LunarVape.Modules.AntiHit and LunarVape.Modules.AntiHit.Enabled or false
           })
   
           if ent then

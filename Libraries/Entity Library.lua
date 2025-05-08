@@ -201,7 +201,9 @@ entitylib.AllPosition = function(entitysettings)
 			if not entitysettings.Players and v.Player then continue end
 			if not entitysettings.NPCs and v.NPC then continue end
 			if not v.Targetable then continue end
-			local mag = (v[entitysettings.Part].Position - localPosition).Magnitude
+			local mag = not entitysettings.IgnoreY and
+        (v[entitysettings.Part].Position - localPosition).Magnitude or
+        (Vector3.new(v[entitysettings.Part].Position.X, 0, v[entitysettings.Part].Position.Z) - Vector3.new(localPosition.X, 0, localPosition.Z)).Magnitude
 			if mag > entitysettings.Range then continue end
 			if entitylib.isVulnerable(v) then
 				table.insert(sortingTable, {Entity = v, Magnitude = v.Target and -1 or mag})
