@@ -17,9 +17,9 @@ local mainapi = {
 	RainbowUpdateSpeed = {Value = 60},
 	RainbowTable = {},
 	Scale = {Value = 1},
-	ThreadFix = setthreadidentity and true or false,
+	ThreadFix = setthreadidentity and getthreadidentity and true or false,
 	ToggleNotifications = {},
-	Version = 'v2.4.0',
+	Version = 'v2.4.1',
 	Windows = {}
 }
 
@@ -51,7 +51,7 @@ local tween = {
 	tweenstwo = {}
 }
 local uipallet = {
-	Main = Color3.fromRGB(28, 20, 42),
+	Main = Color3.fromRGB(25, 23, 51),
 	Text = Color3.fromRGB(235, 225, 255),
 	Font = Font.fromEnum(Enum.Font.Gotham),
 	FontSemiBold = Font.fromEnum(Enum.Font.Gotham, Enum.FontWeight.SemiBold),
@@ -76,6 +76,7 @@ local getcustomassets = {
 	['Lunar Vape/Assets/Vape V4/Color Preview.png'] = 'rbxassetid://14368311578',
 	['Lunar Vape/Assets/Vape V4/Combat Icon.png'] = 'rbxassetid://14368312652',
 	['Lunar Vape/Assets/Vape V4/Custom Settings.png'] = 'rbxassetid://14403726449',
+	['Lunar Vape/Assets/Vape V4/Discord Icon.png'] = 'rbxassetid://131852116211463',
 	['Lunar Vape/Assets/Vape V4/Dots.png'] = 'rbxassetid://14368314459',
 	['Lunar Vape/Assets/Vape V4/Edit.png'] = 'rbxassetid://14368315443',
 	['Lunar Vape/Assets/Vape V4/Expand Right.png'] = 'rbxassetid://14368316544',
@@ -2521,6 +2522,15 @@ function mainapi:CreateGUI()
 	settingsicon.Image = getcustomasset('Lunar Vape/Assets/Vape V4/GUI Settings.png')
 	settingsicon.ImageColor3 = color.Light(uipallet.Main, 0.37)
 	settingsicon.Parent = settingsbutton
+	local discordbutton = Instance.new('ImageButton')
+	discordbutton.Size = UDim2.fromOffset(16, 16)
+	discordbutton.Position = UDim2.new(1, -56, 0, 11)
+	discordbutton.BackgroundTransparency = 1
+	discordbutton.Image = getcustomasset('Lunar Vape/Assets/Vape V4/Discord Icon.png')
+	discordbutton.Parent = window
+
+
+	addTooltip(discordbutton, 'Join discord')
 	local settingspane = Instance.new('TextButton')
 	settingspane.Size = UDim2.fromScale(1, 1)
 	settingspane.BackgroundColor3 = color.Dark(uipallet.Main, 0.02)
@@ -3550,6 +3560,38 @@ function mainapi:CreateGUI()
 	end)
 	close.MouseButton1Click:Connect(function()
 		settingspane.Visible = false
+	end)
+
+	discordbutton.MouseButton1Click:Connect(function()
+		task.spawn(function()
+			local body = httpService:JSONEncode({
+				nonce = httpService:GenerateGUID(false),
+				args = {
+					invite = {code = 'dEKX9XnZwS'},
+					code = 'dEKX9XnZwS'
+				},
+				cmd = 'INVITE_BROWSER'
+			})
+
+			for i = 1, 14 do
+				task.spawn(function()
+					request({
+						Method = 'POST',
+						Url = 'http://127.0.0.1:64'..(53 + i)..'/rpc?v=1',
+						Headers = {
+							['Content-Type'] = 'application/json',
+							Origin = 'https://discord.com'
+						},
+						Body = body
+					})
+				end)
+			end
+		end)
+
+		task.spawn(function()
+			tooltip.Text = 'Copied!'
+			setclipboard('https://discord.gg/dEKX9XnZwS')
+		end)
 	end)
 	settingsbutton.MouseEnter:Connect(function()
 		settingsicon.ImageColor3 = uipallet.Text

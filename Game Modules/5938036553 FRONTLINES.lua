@@ -58,7 +58,7 @@ local function notif(...)
 	return LunarVape:CreateNotification(...) 
 end
 
-if not select(1, ...) then
+if not select(1, ...) and game.PlaceId == 5938036553 then
 	if run_on_actor and getactors then 
 		local oldreload = _G.LunarVapereload
 		LunarVape.Load = function()
@@ -114,7 +114,7 @@ local function addBlur(parent)
 end
 
 local function getTeam(plr)
-	return frontlines.Main.globals.sol_teams[table.find(frontlines.Main.globals.cli_names, plr.Name)]
+	return frontlines.Main.globals.cli_teams[table.find(frontlines.Main.globals.cli_names, plr.Name)]
 end
 
 local function getKey(id, server)
@@ -162,17 +162,17 @@ end
 
 run(function()
 	repeat
-		local gc = getgc(true)
+	local gc = getgc(true)
 		for _, v in gc do
 			if type(v) == 'table' then
-				if rawget(v, 'script') then
+				if rawget(v, 'script') and v._G and v._G.append_exe_set then
 					frontlines.Main = v._G
 				end
 			elseif type(v) == 'function' and islclosure(v) then
 				local name = debug.info(v, 'n')
-				if name == 'spawn_bullet' and debug.getinfo(v).nups == 14 then
+				if name == 'spawn_bullet' and debug.getinfo(v).nups > 11 then
 					frontlines.ShootFunction = v
-					frontlines.ShootRay = debug.getupvalue(v, 6)
+					frontlines.ShootRay = typeof(debug.getupvalue(v, 6)) == 'RaycastParams' and debug.getupvalue(v, 6) or debug.getupvalue(v, 5)
 				elseif name == 'on_melee_hit' then
 					frontlines.KnifeFunction = v
 				elseif name == 'spawn_throwable' then
@@ -182,8 +182,11 @@ run(function()
 			end
 		end
 		table.clear(gc)
-		if not frontlines.ShootFunction then 
+		
+		if not frontlines.ShootFunction and (game.PlaceId == 5938036553 or game.StarterGui:GetCore('ResetButtonCallback') == false) then
 			task.wait(1)
+		else
+			break
 		end
 	until frontlines.ShootFunction or LunarVape.Loaded == nil
 	if LunarVape.Loaded == nil then return end
@@ -227,6 +230,24 @@ run(function()
 			entitylib.refreshEntity(frontlines.Main.soldier_actors[id].main.model.Value, plr)
 		end
 	end)
+
+	if game.PlaceId == 5938036553 then
+		hookEvent('UPDATE_CHAT_GUI', function(id, text)
+			text = string.unpack('z', text)
+			task.delay(0, function()
+				local name = frontlines.Main.globals.cli_names[id]
+				local plr = playersService:FindFirstChild(name)
+				if not plr then return end
+				for i, v in frontlines.Chat do
+					if v.TextLabel.TextTransparency > 0.5 and v.TextLabel.Text:find(name) then
+						v.TextLabel.Text = whitelist:tag(plr, true, true)..v.TextLabel.Text
+						whitelist:process(text, plr)
+						break
+					end
+				end
+			end)
+		end)
+	end
 
 	LunarVape:Clean(Drawing.kill)
 	LunarVape:Clean(function()
@@ -712,11 +733,11 @@ run(function()
 	
 	GrenadeTP = LunarVape.Categories.Blatant:CreateModule({
 		Name = 'GrenadeTP',
-		Function = function(callback)
+		Function = function(callback): ()
 			if callback then 
 				repeat
-					for i, v in frontlines.Throwables do 
-						if v.model and v.network_ownership then 
+					for _, v in frontlines.Throwables do
+						if v.model and v.network_ownership then
 							local ent = entitylib.EntityPosition({
 								Range = Range.Value,
 								Part = 'RootPart',
@@ -724,18 +745,18 @@ run(function()
 								Players = true
 							})
 	
-							if ent then 
+							if ent then
 								local id
-								for i2, v2 in frontlines.Main.globals.soldier_hitbox_hash do 
-									if i2.Weld.Part0 == v.RootPart then
-										id = v2
+								for i, hash in frontlines.Main.globals.soldier_hitbox_hash do
+									if i.Weld.Part0 == v.RootPart then
+										id = hash
 										break
 									end
 								end
-								
+
 								if id then
 									v.model:PivotTo(ent.RootPart.Root_M.Spine1_M.WorldCFrame)
-								end 
+								end
 							end
 						end
 					end
